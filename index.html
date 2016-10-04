@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<style>
+	#container {
+		margin:auto;
+		width:80%;
+		border:1px solid;
+	}
+	
+	#input {
+		height:600px;
+		width:79%;
+		float:left;
+		border:1px solid blue;
+	}
+	
+	#in {
+		width:100%;
+		height:100%;
+		box-sizing:border-box;
+		resize:none;
+	}
+	
+	#panel {
+		height:600px;
+		width:19%;
+		float:left;
+		border:1px solid red;
+	}
+	
+	#output {
+		height:100px;
+		width:100%;
+		display:block;
+		float:left;
+		clear:both;
+		border:1px solid green;
+	}
+	
+	#compMean {
+		display:inline;
+	}
+	
+</style>
+</style>
+</head>
+<body>
+	<div id="container">
+	<div id="input"><textarea id="in"></textarea></div>
+	<div id="panel">
+		<button id="compMean">Mean</button>
+		<br/>
+		<button id="compStddev">Std Dev</button><br/>
+	</div>
+	<div id="output">
+		<p id="out"></p>
+	</div>
+	</div>
+</body>
+<script>
+document.getElementById("compMean").addEventListener("click", function() {
+	var data = document.getElementById("in").value.split(",");	
+	document.getElementById("out").innerHTML = "The mean is " + computeMean(data);
+});
+
+document.getElementById("compStddev").addEventListener("click", function() {
+	var data = document.getElementById("in").value.split(",");	
+	document.getElementById("out").innerHTML = "The population standard deviation is " + computeStandardDeviation(data);
+});
+function computeMean(data) {
+	var sum = 0.0;
+	for (var i = 0; i < data.length; i++) {
+		sum += parseInt(data[i]);
+	}
+	return sum / data.length;
+}
+
+function computeStandardDeviation(data) {
+
+	var mean = computeMean(data);
+	
+	var sum = 0.0;
+	for (var i = 0; i < data.length; i++) {
+		sum += (parseFloat(data[i]) - mean);	
+	}
+	
+	return Math.sqrt(sum / data.length);
+}
+
+</script>
+</html>
