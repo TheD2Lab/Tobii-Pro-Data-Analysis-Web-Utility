@@ -68,11 +68,13 @@ document.getElementById("compStddev").addEventListener("click", function() {
 	var data = document.getElementById("in").value.split(",");	
 	document.getElementById("out").innerHTML = "The population standard deviation is " + computeStandardDeviation(data);
 });
+
 function computeMean(data) {
 	var sum = 0.0;
 	for (var i = 0; i < data.length; i++) {
-		sum += parseInt(data[i]);
+		sum += parseFloat(data[i]);
 	}
+	
 	return sum / data.length;
 }
 
@@ -82,7 +84,8 @@ function computeStandardDeviation(data) {
 	
 	var sum = 0.0;
 	for (var i = 0; i < data.length; i++) {
-		sum += (parseFloat(data[i]) - mean);	
+		sum += Math.pow(data[i] - mean, 2);
+		console.log(sum);	
 	}
 	
 	return Math.sqrt(sum / data.length);
