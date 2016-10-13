@@ -49,9 +49,18 @@
 	<div id="container">
 	<div id="input"><textarea id="in"></textarea></div>
 	<div id="panel">
-		<button id="compMean">Mean</button>
+		<button id="sum">Sum</button>
 		<br/>
-		<button id="compStddev">Std Dev</button><br/>
+		<button id="mean">Mean</button>
+		<br/>
+		<button id="median">Median</button>
+		<br/>
+		<button id="stDev">Std Dev</button>
+		<br/>
+		<button id="min">Min</button>
+		<br/>
+		<button id="max">Max</button>
+		<br/>
 	</div>
 	<div id="output">
 		<p id="out"></p>
@@ -59,18 +68,54 @@
 	</div>
 </body>
 <script>
-document.getElementById("compMean").addEventListener("click", function() {
-	var data = document.getElementById("in").value.split(",");	
-	document.getElementById("out").innerHTML = "The mean is " + computeMean(data);
+
+
+/*
+ * Input and Output
+ */
+ 
+ function write(stat, val) {
+	document.getElementById("out").innerHTML = "The " + stat + " is " + val;
+}
+
+function read() {
+	return document.getElementById("in").value.split(",");	
+}
+
+/*
+ * Event Handlers
+ */
+ 
+document.getElementById("sum").addEventListener("click", function() {
+	write("sum", getSum(read()))
 });
 
-document.getElementById("compStddev").addEventListener("click", function() {
-	var data = document.getElementById("in").value.split(",");	
-	document.getElementById("out").innerHTML = "The population standard deviation is " + computeStandardDeviation(data);
+document.getElementById("mean").addEventListener("click", function() {
+	write("mean", getMean(read()));
 });
+
+document.getElementById("median").addEventListener("click", function() {
+	write("median", getMedian(read()));
+});
+
+document.getElementById("stDev").addEventListener("click", function() {
+	write("standard deviation", getStDev(read()));
+});
+
+document.getElementById("min").addEventListener("click", function() {
+	write("min", getMin(read()));
+});
+
+document.getElementById("max").addEventListener("click", function() {
+	write("max", getMax(read()));
+});
+
+/*
+ * Statistics Functions
+ */
 
 function getSum(numbers) {
-	double sum = 0.0;
+	var sum = 0.0;
 	for (var i = 0; i < numbers.length; i++) {
 		sum += parseFloat(numbers[i]);
 	}
@@ -89,29 +134,36 @@ function getMean(data) {
 function getMedian(numbers) {
 	
 	numbers.sort(function(a, b) {
-		return a < b;
-	}
+		return parseInt(a) < parseInt(b);
+	});
 	
 	var middle = numbers.length / 2;
 	if (numbers.length % 2 == 1) {
 		return numbers[middle];
 	}
 	else {
-		return (numbers[middle - 1] + numbers[middle]) / 2.0;
+		return (parseFloat(numbers[middle - 1]) + parseFloat(numbers[middle])) / 2.0;
 	}
-}	
+}
 
-function computeStandardDeviation(data) {
+function getStDev(data) {
 
-	var mean = computeMean(data);
+	var mean = getMean(data);
 	
 	var sum = 0.0;
 	for (var i = 0; i < data.length; i++) {
 		sum += Math.pow(data[i] - mean, 2);
-		console.log(sum);	
 	}
 	
 	return Math.sqrt(sum / data.length);
+}
+
+function getMin(numbers) {
+	return Math.min.apply(Math, numbers);
+}
+
+function getMax(numbers) {
+	return Math.max.apply(Math, numbers);
 }
 
 </script>
