@@ -86,6 +86,21 @@ function getMean(data) {
 	return sum / data.length;
 }
 
+function getMedian(numbers) {
+	
+	numbers.sort(function(a, b) {
+		return a < b;
+	}
+	
+	var middle = numbers.length / 2;
+	if (numbers.length % 2 == 1) {
+		return numbers[middle];
+	}
+	else {
+		return (numbers[middle - 1] + numbers[middle]) / 2.0;
+	}
+}	
+
 function computeStandardDeviation(data) {
 
 	var mean = computeMean(data);
