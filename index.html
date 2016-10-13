@@ -69,7 +69,15 @@ document.getElementById("compStddev").addEventListener("click", function() {
 	document.getElementById("out").innerHTML = "The population standard deviation is " + computeStandardDeviation(data);
 });
 
-function computeMean(data) {
+function getSum(numbers) {
+	double sum = 0.0;
+	for (var i = 0; i < numbers.length; i++) {
+		sum += parseFloat(numbers[i]);
+	}
+	return sum;
+}
+
+function getMean(data) {
 	var sum = 0.0;
 	for (var i = 0; i < data.length; i++) {
 		sum += parseFloat(data[i]);
