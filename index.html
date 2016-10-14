@@ -2,10 +2,19 @@
 <head>
 <meta charset="utf-8">
 <style>
+
+	body {
+		background-color:#bbb;
+		margin:0;
+	}
 	#container {
-		margin:auto;
-		width:80%;
-		border:1px solid;
+		margin:none;
+		border:none;
+		padding:none;
+		width:100%;
+		font-family:sans-serif;
+		font-size:16px;
+		background-color:white;
 	}
 	
 	#header {
@@ -24,19 +33,30 @@
 		vertical-align: middle;
 	}
 	
-	#automatic, #manual {
-	display:inline-block;
+	button {
+		display:inline-block;
 		height: 50px;
 		width: 40%;
-		margin: 20px 4.8%;
+		margin-top:20px;
+		margin-bottom:20px;
 		border:none;
-		font-size:15px;
 		line-height:50px;
 		text-align:center;
-		font-weight:bold;
-		font-family:sans-serif;
-		background-color: red;
+		font-size:inherit;
+		background-color: black;
+		color:gold;
+		border-radius:10px;
+		border:1px solid black;
 	}
+	
+	#automatic {
+		margin-left:10%;
+	}
+	
+	#manual {
+		margin-left:0;
+	}
+	
 	#input {
 		height:200px;
 		width:79%;
@@ -53,9 +73,13 @@
 	
 	#statistics {
 		margin:20px auto;
-		height:20px;
+		height:50px;
+		line-height:50px;
 		width:80%;
-		border:1px solid red;
+		border:1px solid black;
+		border-radius:10px;
+		background-color:black;
+		color:gold;
 	}
 	
 	label {
@@ -65,21 +89,38 @@
 	line-height:20px;
 		height:auto;
 	}
+
+	section {
+		display:inline-block;
+		width: 30%;
+		margin: 20px 1.3%;
+		height:170px;
+		background-color:black;
+	}
 	
-	
-	#output {
-		height:100px;
+	p {
 		width:100%;
-		display:block;
-		float:left;
-		clear:both;
-		border:1px solid green;
+		margin:0;
+		color:gold;
+		text-align:center;
 	}
 	
-	#compMean {
-		display:inline;
+	.secTitle {
+		height:50px;
+		line-height:50px;
+		font-weight:bold;
 	}
 	
+	.secNum {
+		height:120px;
+		line-height:120px;
+		font-size:50px;
+	}
+	
+	#statsOut {
+		width:80%;
+		margin:auto;
+	}
 </style>
 </style>
 </head>
@@ -98,8 +139,13 @@
 		<label><input type="checkbox" id="max">&nbsp;Max</input></label>
 		<br/>
 	</div>
-	<div id="output">
-		<p id="out"></p>
+	<div id="statsOut">
+		<section id="sumSec"><p class="secTitle">Sum</p><p class="secNum">1.33</p></section>
+		<section id="meanSec"><p class="secTitle">Mean</p><p class="secNum">1.33</p></section>
+		<section id="medianSec"><p class="secTitle">Median</p><p class="secNum">1.33</p></section>
+		<section id="stDevSec"><p class="secTitle">Sum</p><p class="secNum">1.33</p></section>
+		<section id="minSec"><p class="secTitle">Mean</p><p class="secNum">1.33</p></section>
+		<section id="maxSec"><p class="secTitle">Median</p><p class="secNum">1.33</p></section>
 	</div>
 	</div>
 </body>
