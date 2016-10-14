@@ -18,13 +18,29 @@
 	}
 	
 	img {
-		margin:0 40px 0 20px;
+		height: 125px;
+		width: 125px;
+		margin:12.5px 40px 12.5px 20px;
+		vertical-align: middle;
 	}
 	
+	#automatic, #manual {
+	display:inline-block;
+		height: 50px;
+		width: 40%;
+		margin: 20px 4.8%;
+		border:none;
+		font-size:15px;
+		line-height:50px;
+		text-align:center;
+		font-weight:bold;
+		font-family:sans-serif;
+		background-color: red;
+	}
 	#input {
-		height:600px;
+		height:200px;
 		width:79%;
-		float:left;
+		margin:auto;
 		border:1px solid blue;
 	}
 	
@@ -35,12 +51,21 @@
 		resize:none;
 	}
 	
-	#panel {
-		height:600px;
-		width:19%;
-		float:left;
+	#statistics {
+		margin:20px auto;
+		height:20px;
+		width:80%;
 		border:1px solid red;
 	}
+	
+	label {
+	display:inline-block;
+	width:16%;
+	text-align:center;
+	line-height:20px;
+		height:auto;
+	}
+	
 	
 	#output {
 		height:100px;
@@ -60,20 +85,17 @@
 </head>
 <body>
 	<div id="container">
-	<div id="header"><img height="150" width="150" src="csulb.png" align="left" />Tobii Eye Tracking Data Analysis</div>
+	<div id="header"><img src="csulb.png" align="left" />Tobii Eye Tracking Data Analysis</div>
+	<button id="automatic">Automatic Upload</button>
+	<button id="manual">Manual Entry</button>
 	<div id="input"><textarea id="in"></textarea></div>
-	<div id="panel">
-		<button id="sum">Sum</button>
-		<br/>
-		<button id="mean">Mean</button>
-		<br/>
-		<button id="median">Median</button>
-		<br/>
-		<button id="stDev">Std Dev</button>
-		<br/>
-		<button id="min">Min</button>
-		<br/>
-		<button id="max">Max</button>
+	<div id="statistics">
+		<label><input type="checkbox" id="sum">&nbsp;Sum</input></label>
+		<label><input type="checkbox" id="mean">&nbsp;Mean</input></label>
+		<label><input type="checkbox" id="median">&nbsp;Median</input></label>
+		<label><input type="checkbox" id="stDev">&nbsp;Std Dev</input></label>
+		<label><input type="checkbox" id="min">&nbsp;Min</input></label>
+		<label><input type="checkbox" id="max">&nbsp;Max</input></label>
 		<br/>
 	</div>
 	<div id="output">
