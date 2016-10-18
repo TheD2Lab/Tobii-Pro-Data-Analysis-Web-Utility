@@ -44,7 +44,7 @@
 		text-align:center;
 		font-size:inherit;
 		background-color: black;
-		color:gold;
+		color:white;
 		border-radius:10px;
 		border:1px solid black;
 	}
@@ -61,7 +61,7 @@
 		height:200px;
 		width:79%;
 		margin:auto;
-		border:1px solid blue;
+		border:1px solid black;
 	}
 	
 	#in {
@@ -79,7 +79,7 @@
 		border:1px solid black;
 		border-radius:10px;
 		background-color:black;
-		color:gold;
+		color:white;
 	}
 	
 	label {
@@ -98,10 +98,22 @@
 		background-color:black;
 	}
 	
+	#calculate {
+		margin:20px auto;
+		height:50px;
+		line-height:50px;
+		width:80%;
+		border:1px solid black;
+		border-radius:10px;
+		background-color:black;
+		color:white;
+		text-align:center;
+	}
+	
 	p {
 		width:100%;
 		margin:0;
-		color:gold;
+		color:white;
 		text-align:center;
 	}
 	
@@ -139,13 +151,14 @@
 		<label><input type="checkbox" id="max">&nbsp;Max</input></label>
 		<br/>
 	</div>
+	<div id="calculate">Compute</div>
 	<div id="statsOut">
-		<section id="sumSec"><p class="secTitle">Sum</p><p class="secNum">1.33</p></section>
-		<section id="meanSec"><p class="secTitle">Mean</p><p class="secNum">1.33</p></section>
-		<section id="medianSec"><p class="secTitle">Median</p><p class="secNum">1.33</p></section>
-		<section id="stDevSec"><p class="secTitle">Sum</p><p class="secNum">1.33</p></section>
-		<section id="minSec"><p class="secTitle">Mean</p><p class="secNum">1.33</p></section>
-		<section id="maxSec"><p class="secTitle">Median</p><p class="secNum">1.33</p></section>
+		<section id="sumSec"><p class="secTitle">Sum</p><p id="sumOut" class="secNum"></p></section>
+		<section id="meanSec"><p class="secTitle">Mean</p><p id="meanOut" class="secNum"></p></section>
+		<section id="medianSec"><p class="secTitle">Median</p><p id="medianOut" class="secNum"></p></section>
+		<section id="stDevSec"><p class="secTitle">St Dev</p><p id="stDevOut" class="secNum"></p></section>
+		<section id="minSec"><p class="secTitle">Min</p><p id="minOut" class="secNum"></p></section>
+		<section id="maxSec"><p class="secTitle">Max</p><p id="maxOut" class="secNum"></p></section>
 	</div>
 	</div>
 </body>
@@ -157,7 +170,7 @@
  */
  
  function write(stat, val) {
-	document.getElementById("out").innerHTML = "The " + stat + " is " + val;
+	document.getElementById(stat + "Out").innerHTML = val;
 }
 
 function read() {
@@ -168,28 +181,20 @@ function read() {
  * Event Handlers
  */
  
-document.getElementById("sum").addEventListener("click", function() {
-	write("sum", getSum(read()))
-});
-
-document.getElementById("mean").addEventListener("click", function() {
-	write("mean", getMean(read()));
-});
-
-document.getElementById("median").addEventListener("click", function() {
-	write("median", getMedian(read()));
-});
-
-document.getElementById("stDev").addEventListener("click", function() {
-	write("standard deviation", getStDev(read()));
-});
-
-document.getElementById("min").addEventListener("click", function() {
-	write("min", getMin(read()));
-});
-
-document.getElementById("max").addEventListener("click", function() {
-	write("max", getMax(read()));
+document.getElementById("calculate").addEventListener("click", function() {
+	var data = read();
+	write("sum", getSum(data))
+	console.log(data);
+	write("mean", getMean(data));
+	console.log(data);
+	write("median", getMedian(data));
+	console.log(data);
+	write("stDev", getStDev(data));
+	console.log(data);
+	write("min", getMin(data));
+	console.log(data);
+	write("max", getMax(data));
+	console.log(data);
 });
 
 /*
@@ -214,12 +219,11 @@ function getMean(data) {
 }
 
 function getMedian(numbers) {
-	
 	numbers.sort(function(a, b) {
 		return parseInt(a) < parseInt(b);
 	});
 	
-	var middle = numbers.length / 2;
+	var middle = Math.floor(numbers.length / 2);
 	if (numbers.length % 2 == 1) {
 		return numbers[middle];
 	}
