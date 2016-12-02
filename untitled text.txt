@@ -1,0 +1,44 @@
+Bo,
+
+Again, apologies for the delay. I have the following tasks scheduled for this week:
+
+1. Gain approval to the research lab GitHub Repository.
+
+I will use to access to add my working commits for the Tobii Data Analysis Tool. I will also integrate any descriptive stats function currently in the repo with the other Java statistics classes I will be working on.
+
+2. Implement Java preprocessing class.
+
+This class will be responsible for filtering any gaze samples that do not possess validity code 0 for both eyes. I will also use this class to capture sample set attribute statistics such as the following in order to highlight qualities of the collected dataset:
+
+	- Ratio between valid samples and total samples.
+	- Ratio between valid and invalid time periods.
+	- Largest invalid time period.
+	- Shortest invalid time period.
+	
+3. Implement Java Output class.
+
+This will provide an abstraction layer of the output file formatting. I'm going ahead with JSON now but will build with consideration for CSV and XLSX file formats support as well. 
+
+4. Design the Output HTML page.
+
+Initially this will just be a page show all computed metrics in a structured fashion. The second phase of this page will be implementation the graphic visualizations highlighting relevant measures within the dataset.
+
+5. Provide a Tobii Measure Definition Document.
+
+This document, likely in the Markdown format will define all Tobii metrics used by the Tobii Data Analysis Tool. I will have this document included in my first commit to the lab repository.
+
+Currently I have the following running list of necessary columns:
+
+- Convex Hull
+- Fixation (Descriptive Stats) 
+- Saccade (Descriptive Stats) 
+- Absolute Angles (Descriptive Stats) 
+- Relative Angles (Descriptive Stats) 
+- Fixation to Saccade Ratio 
+- Scanpath Durations (Descriptive Stats) 
+- Num Valid Recordings / Num Recordings 
+- Pupil L (Descriptive Stats) 
+- Pupil R (Descriptive Stats) 
+- Pupil B (Descriptive Stats) 
+- Visits to AOI 
+- Dwell Time in AOI

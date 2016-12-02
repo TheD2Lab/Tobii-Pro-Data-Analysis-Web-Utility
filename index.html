@@ -135,6 +135,7 @@
 	}
 </style>
 </style>
+
 </head>
 <body>
 	<div id="container">
@@ -161,7 +162,12 @@
 		<section id="maxSec"><p class="secTitle">Max</p><p id="maxOut" class="secNum"></p></section>
 	</div>
 	</div>
+	<form action="upload.php" method="post" enctype="multipart/form-data">
+		<input type="file" name="fileToUpload" id="fileToUpload">
+		<input type="submit" value="Upload" name="submit">
+	</form>
 </body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
 
 
@@ -184,17 +190,16 @@ function read() {
 document.getElementById("calculate").addEventListener("click", function() {
 	var data = read();
 	write("sum", getSum(data))
-	console.log(data);
 	write("mean", getMean(data));
-	console.log(data);
 	write("median", getMedian(data));
-	console.log(data);
 	write("stDev", getStDev(data));
-	console.log(data);
 	write("min", getMin(data));
-	console.log(data);
 	write("max", getMax(data));
-	console.log(data);
+	
+	var top = $(this).offset().top;
+	$("html, body").animate({
+		scrollTop: top
+	}, 500);
 });
 
 /*
@@ -241,7 +246,7 @@ function getStDev(data) {
 		sum += Math.pow(data[i] - mean, 2);
 	}
 	
-	return Math.sqrt(sum / data.length);
+	return Math.sqrt(sum / data.length).toFixed(2);
 }
 
 function getMin(numbers) {
