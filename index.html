@@ -50,7 +50,14 @@
 	
 	#progress {
 		display:inline-block;
-		line-height: 15px;;
+		line-height: 15px;
+	}
+	
+	.secTitle {
+		font-weight:bold;
+		width:80%;
+		height:40px;
+		margin:auto;
 	}
 	
 	.box {
@@ -88,6 +95,15 @@
 		color:white;
 		text-align:center;
 	}
+	
+	
+	.cell {
+		width:90px;
+		font-size:13px;
+		line-height:15px;
+		display:inline-block;
+		margin-left:10px;
+	}
 </style>
 </style>
 
@@ -95,6 +111,7 @@
 <body>
 	<div id="container">
 	<div id="header"><img src="csulb.png" align="left" />Tobii Eye Tracking Data Analysis</div>
+		<p class="secTitle">Input</p>
 		<section id="uploadSec">
 			<p id="step1" class="step">1. Select a file to upload</p>
 				<div class="box">
@@ -129,6 +146,14 @@
 				<p id="progress"></p>
 			</div>
 		</section>
+		<p class="secTitle">Output</p>
+		<section id="outSec">
+			<div class="subsection">
+				<p class="substep">Dataset Metrics</p>
+					<div class="box" id="metricOut"></div>
+				<p class="substep">Descriptive Stats</p>
+					<div class="box" id="statOut"></div>
+			</div>
 	</div>
 <!-- 
 	<div id="statsOut">
@@ -158,7 +183,41 @@
  	fd.append("stats", "PupilLeft");
  	
  	xhr.onload = function() {
- 		console.log(JSON.parse(this.response));
+ 		var json = JSON.parse(this.response);
+ 		console.log(json);
+ 		
+ 		var metricsHtml = "";
+ 		var metrics = json["metrics"];
+ 		for (key in metrics) {
+ 			metricsHtml += key + " = " + metrics[key];
+ 		}
+ 		
+ 		document.getElementById("metricOut").innerHTML = metricsHtml;
+ 		
+ 		
+ 		var statsHtml = "<span class='cell'>Attribute</span>"
+ 			+ "<span class='cell'>Mean</span>"
+ 			+ "<span class='cell'>Median</span>"
+ 			+ "<span class='cell'>Mode</span>"
+ 			+ "<span class='cell'>Variance</span>"
+ 			+ "<span class='cell'>Std Dev</span>"
+ 			+ "<span class='cell'>Min</span>"
+ 			+ "<span class='cell'>Max</span>"
+ 			+ "<br/>";
+ 		var stats = json["stats"];
+ 		for (key in stats) {
+ 			var attribute = stats[key];
+			statsHtml += "<span class='cell'>" + key + "</span>"
+				+ "<span class='cell'>" + parseFloat(attribute["mean"]).toFixed(2) + "</span>"
+				+ "<span class='cell'>" + parseFloat(attribute["median"]).toFixed(2) + "</span>"
+				+ "<span class='cell'>" + parseFloat(attribute["mode"]).toFixed(2) + "</span>"
+				+ "<span class='cell'>" + parseFloat(attribute["variance"]).toFixed(2) + "</span>"
+				+ "<span class='cell'>" + parseFloat(attribute["standard deviation"]).toFixed(2) + "</span>"
+				+ "<span class='cell'>" + parseFloat(attribute["min"]).toFixed(2) + "</span>"
+				+ "<span class='cell'>" + parseFloat(attribute["max"]).toFixed(2) + "</span>";			
+ 		}
+ 		
+ 		document.getElementById("statOut").innerHTML = statsHtml;
  	};
  	
  	xhr.addEventListener('error', function(event) {
@@ -186,24 +245,6 @@ function read() {
 	return document.getElementById("in").value.split(",");	
 }
 
-/*
- * Event Handlers
- */
- 
-//  document.getElementById("calculate").addEventListener("click", function() {
-// 	var data = read();
-// 	write("sum", getSum(data))
-// 	write("mean", getMean(data));
-// 	write("median", getMedian(data));
-// 	write("stDev", getStDev(data));
-// 	write("min", getMin(data));
-// 	write("max", getMax(data));
-// 	
-// 	var top = $(this).offset().top;
-// 	$("html, body").animate({
-// 		scrollTop: top
-// 	}, 500);
-// });
 
 /*
  * Statistics Functions
