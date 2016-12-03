@@ -19,11 +19,9 @@ if ($uploadOk == 0) {
 }
 else {
 	if (move_uploaded_file($_FILES["file"]["tmp_name"], $target_file)) {
-	echo 'Hello ' . htmlspecialchars($_REQUEST["name"]) . '?';
-// 		echo "The file ". basename($_FILES["fileToUpload"]["name"]). " has been uploaded.";
-// 		$response = array();
-// 		exec("java Hello", $response);
-// 		print_r($response);
+		$response = array();
+		exec("java -jar tobii_analysis.jar " . $_FILES["file"]["name"] . " " . $_REQUEST["stats"] , $response);
+		echo current($response);
 	}
 	else {
 		echo "Sorry, there was an error uploading the file.";
