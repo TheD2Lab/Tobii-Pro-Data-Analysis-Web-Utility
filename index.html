@@ -96,6 +96,13 @@
 		text-align:center;
 	}
 	
+	.largeCell {
+		width:300px;
+		font-size:13px;
+		line-height:15px;
+		display:inline-block;
+		margin-left:10px;
+	}
 	
 	.cell {
 		width:90px;
@@ -127,15 +134,18 @@
 					</div>
 				<p class="substep">B. Descriptive Stats</p>
 					<div class="box">
+<!-- 
 						<label><input type="checkbox" id="fixDur">&nbsp;Fixation Duration</input></label>
 						<label><input type="checkbox" id="sacDur">&nbsp;Saccade Duration</input></label>
 						<label><input type="checkbox" id="sacLength">&nbsp;Saccade Length</input></label>
-						<label><input type="checkbox" id="pupL">&nbsp;Pupil Left</input></label>
-						<label><input type="checkbox" id="pupR">&nbsp;Pupil Right</input></label>
-						<label><input type="checkbox" id="pupB">&nbsp;Pupil Both</input></label>
+ -->
+						<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+						<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+<!-- 
 						<label><input type="checkbox" id="absAng">&nbsp;Absolute Angles</input></label>
 						<label><input type="checkbox" id="relAng">&nbsp;Relative Angles</input></label>
 						<label><input type="checkbox" id="dwellAOI">&nbsp;Dwell Time in AOIs</input></label>
+ -->
 					</div>
 			</div>
 		</section>
@@ -155,16 +165,6 @@
 					<div class="box" id="statOut"></div>
 			</div>
 	</div>
-<!-- 
-	<div id="statsOut">
-		<section id="sumSec"><p class="secTitle">Sum</p><p id="sumOut" class="secNum"></p></section>
-		<section id="meanSec"><p class="secTitle">Mean</p><p id="meanOut" class="secNum"></p></section>
-		<section id="medianSec"><p class="secTitle">Median</p><p id="medianOut" class="secNum"></p></section>
-		<section id="stDevSec"><p class="secTitle">St Dev</p><p id="stDevOut" class="secNum"></p></section>
-		<section id="minSec"><p class="secTitle">Min</p><p id="minOut" class="secNum"></p></section>
-		<section id="maxSec"><p class="secTitle">Max</p><p id="maxOut" class="secNum"></p></section>
-	</div>
- -->
 </body>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <script>
@@ -180,7 +180,24 @@
  	var fd = new FormData();
  
  	fd.append("file", document.getElementById("file").files[0]);
- 	fd.append("stats", "PupilLeft");
+ 	
+ 	var stats = "";
+ 	var stack = [];
+ 	var elems = document.getElementsByClassName("descStat");
+ 	for (var i = 0; i < elems.length; i++) {
+ 		if (elems[i].checked) {
+			stack.push(elems[i].getAttribute("data-value"));
+		}
+	}
+	
+	for (var i = 0; i < stack.length; i++) {
+		stats += stack[i];
+		if (i != stack.length - 1) {
+			stats += ":";
+		}
+	}
+ 	
+ 	fd.append("stats", stats);
  	
  	xhr.onload = function() {
  		var json = JSON.parse(this.response);
@@ -189,10 +206,10 @@
  		var metricsHtml = "";
  		var metrics = json["metrics"];
  		for (key in metrics) {
- 			metricsHtml += key + " = " + metrics[key];
+ 			metricsHtml += "<span class='largeCell'>" + key + " = " + metrics[key] + "</span>";
  		}
  		
- 		document.getElementById("metricOut").innerHTML = metricsHtml;
+ 		if (document.getElementById("validity").checked) document.getElementById("metricOut").innerHTML = metricsHtml;
  		
  		
  		var statsHtml = "<span class='cell'>Attribute</span>"
