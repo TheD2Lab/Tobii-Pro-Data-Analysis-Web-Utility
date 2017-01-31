@@ -8,10 +8,10 @@
 	}
 	
 	.blue {
-		background-color: #0F183D ;
+		background-color: #0F183D;
 	}
 	
-	#container {
+	#content {
 		margin:none;
 		border:none;
 		padding:none;
@@ -37,22 +37,36 @@
 		font-family:sans-serif;
 	}
 	
+	h1 {
+		width:70%;
+		height: 80px;
+		margin:50px auto 0 auto;
+		max-width:640px;
+		min-width:480px;
+		line-height: 80px;
+		color: #0F183D;
+	}
+	
+	#formContainer {
+		background-color: #0F183D;
+		width:70%;
+		max-width:640px;
+		min-width:480px;
+		display:block;
+		margin: 0 auto;
+		border:1px solid #0F183D;
+		border-radius:10px;
+	}
+	
 	#uploadForm {
 		color:white;
-		width:75%;
-		max-width:700px;
-		min-width: 300px;
-		margin: 80px auto;
-		display:block;
-		border:1px solid #0F183D ;
-		border-radius:10px;
-/* 		box-shadow: 0 0 0 20px #920C25; */
+		width:90%;
+		margin:auto;
 	}
 	
 	.formSec {
 		width:100%;
 		min-height:40px;
-		padding:20px;
 	}
 	
 	.secTitle {
@@ -71,9 +85,12 @@
 		border:none;
 	}
 	
+	.metricTitle {
+		padding-left:40px;
+	}
+	
 	.metricContentBox {
-		width:70%;
-		min-width:150px;
+		width:120px;
 		margin:auto;
 	}
 	
@@ -84,10 +101,7 @@
 		margin:0 0 0 20px;
 		font-size:12px;
 	}
-	
-	.formSubSec {
-		margin: 0 0 40px 0;
-	}
+
 	
 	.leftRange {
 		width:25%;
@@ -108,73 +122,3 @@
 		display:inline-block;
 	}
 	
-	
-	
-	
-	
-	section {
-		width: 80%;
-		margin:auto;
-	}
-	
-	.substep {
-		margin-left:30px;
-	}
-	
-	.step {
-		width: 100%;
-	}
-	
-	img {
-		height: 125px;
-		width: 125px;
-		margin:12.5px 40px 12.5px 20px;
-		vertical-align: middle;
-	}
-	
-	#progress {
-		display:inline-block;
-		line-height: 15px;
-	}
-	
-
-	
-	.box {
-		margin:20px auto;
-		padding:0 20px;
-		min-height:50px;
-		height:auto;
-		line-height:50px;
-		width:80%;
-		background-color:black;
-		color:white;
-	}
-	
-	
-	#calculate {
-		margin:20px auto;
-		height:50px;
-		line-height:50px;
-		width:80%;
-		border:1px solid black;
-		border-radius:10px;
-		background-color:black;
-		color:white;
-		text-align:center;
-	}
-	
-	.largeCell {
-		width:300px;
-		font-size:13px;
-		line-height:15px;
-		display:inline-block;
-		margin-left:10px;
-	}
-	
-	.cell {
-		width:90px;
-		font-size:13px;
-		line-height:15px;
-		display:inline-block;
-		margin-left:10px;
-	}

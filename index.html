@@ -7,21 +7,23 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 </head>
 <body>
-	<div id="container">
+	<div id="content">
 		<div id="header" class="blue">
 			<p id="title">Tobii Eye Tracking Data Analysis</p>
 		</div>
 		<div id="body">
-			<form id="uploadForm" class="blue">
-					<div id="sec1" class="formSec">
-						<p class="secTitle">1. Select the Tobii output file you would like to process.</p>
-							<input type="file" id="file" />
-					</div> <!-- end section 1 -->
-					<div id="sec2" class="formSec">
-						<p class="secTitle">2. Select the metrics you would like to compute.</p>
-						<div class="metricBox">
-							<div class="metricContentBox">
-								<p>a. Metadata</p>
+			<h1>Upload Form</h1>
+			<div id="formContainer">
+				<form id="uploadForm" class="blue">
+						<div id="sec1" class="formSec">
+							<p class="secTitle">1. Select the Tobii output file you would like to process.</p>
+								<input type="file" id="file" />
+						</div> <!-- end section 1 -->
+						<div id="sec2" class="formSec">
+							<p class="secTitle">2. Select the metrics you would like to compute.</p>
+							<div class="metricBox">
+								<p class="metricTitle">a. Metadata</p>
+								<div class="metricContentBox">
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
@@ -29,9 +31,9 @@
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 								</div>
 							</div>
-						<div class="metricBox">
-							<div class="metricContentBox">
-								<p>b. Pupil metrics</p>
+							<div class="metricBox">
+								<p class="metricTitle">b. Pupil metrics</p>
+								<div class="metricContentBox">
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
@@ -39,9 +41,9 @@
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 								</div>
 							</div>
-						<div class="metricBox">
-							<div class="metricContentBox">
-								<p>c. Fixation metrics</p>
+							<div class="metricBox">
+								<p class="metricTitle">c. Fixation metrics</p>
+								<div class="metricContentBox">
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
@@ -49,9 +51,9 @@
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 								</div>
 							</div>
-						<div class="metricBox">
-							<div class="metricContentBox">
-								<p>d. Saccade metrics</p>
+							<div class="metricBox">
+								<p class="metricTitle">d. Saccade metrics</p>
+								<div class="metricContentBox">
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
@@ -59,9 +61,9 @@
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 								</div>			
 							</div>			
-						<div class="metricBox">
-							<div class="metricContentBox">
-								<p>e. Relative Angle metrics</p>
+							<div class="metricBox">
+								<p class="metricTitle">e. Relative Angle metrics</p>
+								<div class="metricContentBox">
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
@@ -69,9 +71,9 @@
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 								</div>								
 							</div>
-						<div class="metricBox">
-							<div class="metricContentBox">
-								<p>f. Absolute Angle metrics</p>
+							<div class="metricBox">
+								<p class="metricTitle">f. Absolute Angle metrics</p>
+								<div class="metricContentBox">
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
@@ -79,33 +81,34 @@
 									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
 								</div>	
 							</div>
-					</div> <!-- end section 2 -->
-					<div id="sec3" class="formSec">
-						<p class="secTitle">3. Configure specific options regarding the data being analyzed.</p>
-						<p class="secSubTitle">a. Set the validity tolerance</p>
-						<div class="formSubSec">
-							<div id="validityLeftRange" class="leftRange">0</div>
-							<div id="validitySlider" class="slider"></div>
-							<div id="validityRightRange" class="rightRange">4</div>
-						</div>
-						<p class="secSubTitle">b. Set the time interval to consider</p>
-						<div class="formSubSec">
-							<div id="timeLeftRange" class="leftRange">0</div>
-							<div id="timeSlider" class="slider"></div>
-							<div id="timeRightRange" class="rightRange">0</div>
-						</div>
-						<p class"secSubTitle">c. Select the studio events to consider</p>
-						<div class="formSubSec">
-							<div id="eventLeftRange" class="leftRange">0</div>
-							<div id="eventSlider" class="slider"></div>
-							<div id="eventRightRange" class="rightRange">0</div>
-						</div>
-					</div> <!-- end section 3 -->
-					<div id="sec4" class="formSec">
-						<p class="secTitle">4. Click the button to submit the form.</p>
-							<button id="compute">Compute</button>
-					</div> <!-- end section 4 -->
-				</form>
+						</div> <!-- end section 2 -->
+						<div id="sec3" class="formSec">
+							<p class="secTitle">3. Configure specific options regarding the data being analyzed.</p>
+							<p class="secSubTitle">a. Set the validity tolerance</p>
+							<div class="formSubSec">
+								<div id="validityLeftRange" class="leftRange">0</div>
+								<div id="validitySlider" class="slider"></div>
+								<div id="validityRightRange" class="rightRange">4</div>
+							</div>
+							<p class="secSubTitle">b. Set the time interval to consider</p>
+							<div class="formSubSec">
+								<div id="timeLeftRange" class="leftRange">0</div>
+								<div id="timeSlider" class="slider"></div>
+								<div id="timeRightRange" class="rightRange">0</div>
+							</div>
+							<p class"secSubTitle">c. Select the studio events to consider</p>
+							<div class="formSubSec">
+								<div id="eventLeftRange" class="leftRange">0</div>
+								<div id="eventSlider" class="slider"></div>
+								<div id="eventRightRange" class="rightRange">0</div>
+							</div>
+						</div> <!-- end section 3 -->
+						<div id="sec4" class="formSec">
+							<p class="secTitle">4. Click the button to submit the form.</p>
+								<button id="compute">Compute</button>
+						</div> <!-- end section 4 -->
+					</form>
+			</div>
 		</div>
 	</div> <!-- end container -->
 </body>
