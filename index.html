@@ -1,322 +1,101 @@
 <!DOCTYPE html>
 <head>
-<meta charset="utf-8">
-<style>
-
-	body {
-		background-color:#fff;
-		margin:0;
-	}
-	
-	#container {
-		margin:none;
-		border:none;
-		padding:none;
-		width:100%;
-		min-width:700px;
-		font-family:sans-serif;
-		font-size:16px;
-		background-color:white;
-	}
-	
-	#header {
-		width:100%;
-		height:150px;
-		line-height:150px;
-		font-size:30px;
-		font-weight:bold;
-		font-family:sans-serif;
-	}
-	
-	section {
-		width: 80%;
-		margin:auto;
-	}
-	
-	.substep {
-		margin-left:30px;
-	}
-	
-	.step {
-		width: 100%;
-	}
-	
-	img {
-		height: 125px;
-		width: 125px;
-		margin:12.5px 40px 12.5px 20px;
-		vertical-align: middle;
-	}
-	
-	#progress {
-		display:inline-block;
-		line-height: 15px;
-	}
-	
-	.secTitle {
-		font-weight:bold;
-		width:80%;
-		height:40px;
-		margin:auto;
-	}
-	
-	.box {
-		margin:20px auto;
-		padding:0 20px;
-		min-height:50px;
-		height:auto;
-		line-height:50px;
-		width:80%;
-		border:1px solid black;
-		border-radius:10px;
-		background-color:black;
-		color:white;
-	}
-	
-	label {
-	display:inline-block;
-	min-width:80px;
-	width:auto;
-	margin-left:10px;
-	text-align:left;
-	line-height:20px;
-	height:auto;
-	font-size:12px;
-	}
-	
-	#calculate {
-		margin:20px auto;
-		height:50px;
-		line-height:50px;
-		width:80%;
-		border:1px solid black;
-		border-radius:10px;
-		background-color:black;
-		color:white;
-		text-align:center;
-	}
-	
-	.largeCell {
-		width:300px;
-		font-size:13px;
-		line-height:15px;
-		display:inline-block;
-		margin-left:10px;
-	}
-	
-	.cell {
-		width:90px;
-		font-size:13px;
-		line-height:15px;
-		display:inline-block;
-		margin-left:10px;
-	}
-</style>
-</style>
-
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 </head>
 <body>
 	<div id="container">
-	<div id="header"><img src="csulb.png" align="left" />Tobii Eye Tracking Data Analysis</div>
-		<p class="secTitle">Input</p>
-		<section id="uploadSec">
-			<p id="step1" class="step">1. Select a file to upload</p>
-				<div class="box">
-					<input type="file" id="file" />
-				</div>
-		</section>
-		<section id="statSec">
-			<p id="step2" class="step">2. Select the desired statistics</p>
-			<div class="subsection">
-				<p class="substep">A. Dataset Metrics</p>
-					<div class="box">
-						<label><input type="checkbox" id="validity">&nbsp;Export Validity</input></label>
-					</div>
-				<p class="substep">B. Descriptive Stats</p>
-					<div class="box">
-<!-- 
-						<label><input type="checkbox" id="fixDur">&nbsp;Fixation Duration</input></label>
-						<label><input type="checkbox" id="sacDur">&nbsp;Saccade Duration</input></label>
-						<label><input type="checkbox" id="sacLength">&nbsp;Saccade Length</input></label>
- -->
-						<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
-						<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
-<!-- 
-						<label><input type="checkbox" id="absAng">&nbsp;Absolute Angles</input></label>
-						<label><input type="checkbox" id="relAng">&nbsp;Relative Angles</input></label>
-						<label><input type="checkbox" id="dwellAOI">&nbsp;Dwell Time in AOIs</input></label>
- -->
-					</div>
-			</div>
-		</section>
-		<section id="compSec">
-			<p id="step3" class="step">3. Click the button to compute</p>
-			<div class="box">
-				<button id="compute">Compute</button>
-				<p id="progress"></p>
-			</div>
-		</section>
-		<p class="secTitle">Output</p>
-		<section id="outSec">
-			<div class="subsection">
-				<p class="substep">Dataset Metrics</p>
-					<div class="box" id="metricOut"></div>
-				<p class="substep">Descriptive Stats</p>
-					<div class="box" id="statOut"></div>
-			</div>
-	</div>
+		<div id="header" class="blue">
+			<p id="title">Tobii Eye Tracking Data Analysis</p>
+		</div>
+		<div id="body">
+			<form id="uploadForm" class="blue">
+					<div id="sec1" class="formSec">
+						<p class="secTitle">1. Select the Tobii output file you would like to process.</p>
+							<input type="file" id="file" />
+					</div> <!-- end section 1 -->
+					<div id="sec2" class="formSec">
+						<p class="secTitle">2. Select the metrics you would like to compute.</p>
+						<div class="metricBox">
+							<div class="metricContentBox">
+								<p>a. Metadata</p>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+								</div>
+							</div>
+						<div class="metricBox">
+							<div class="metricContentBox">
+								<p>b. Pupil metrics</p>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+								</div>
+							</div>
+						<div class="metricBox">
+							<div class="metricContentBox">
+								<p>c. Fixation metrics</p>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+								</div>
+							</div>
+						<div class="metricBox">
+							<div class="metricContentBox">
+								<p>d. Saccade metrics</p>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+								</div>			
+							</div>			
+						<div class="metricBox">
+							<div class="metricContentBox">
+								<p>e. Relative Angle metrics</p>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+								</div>								
+							</div>
+						<div class="metricBox">
+							<div class="metricContentBox">
+								<p>f. Absolute Angle metrics</p>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupL" class="descStat" data-value="PupilLeft">&nbsp;Pupil Left</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+									<label><input type="checkbox" id="pupR" class="descStat" data-value="PupilRight">&nbsp;Pupil Right</input></label>
+								</div>	
+							</div>
+					</div> <!-- end section 2 -->
+					<div id="sec3" class="formSec">
+						<p class="secTitle">3. Configure specific options regarding the data being analyzed.</p>
+						<p class="secSubTitle">a. Set the validity tolerance</p>
+						<div id="validitySlider" class="slider"></div>
+						<p class="secSubTitle">b. Set the time interval to consider</p>
+						<div id="timeSlider" class="slider"></div>
+						<p class"secSubTitle">c. Select the studio events to consider</p>
+						<div id="eventSlider" class="slider"></div>
+					</div> <!-- end section 3 -->
+					<div id="sec4" class="formSec">
+						<p class="secTitle">4. Click the button to submit the form.</p>
+							<button id="compute">Compute</button>
+					</div> <!-- end section 4 -->
+				</form>
+		</div>
+	</div> <!-- end container -->
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script>
-
-
-/*
- * Input and Output
- */
- 
- document.getElementById("compute").addEventListener('click', function() {
- 	
- 	var xhr = new XMLHttpRequest();
- 	var fd = new FormData();
- 
- 	fd.append("file", document.getElementById("file").files[0]);
- 	
- 	var stats = "";
- 	var stack = [];
- 	var elems = document.getElementsByClassName("descStat");
- 	for (var i = 0; i < elems.length; i++) {
- 		if (elems[i].checked) {
-			stack.push(elems[i].getAttribute("data-value"));
-		}
-	}
-	
-	for (var i = 0; i < stack.length; i++) {
-		stats += stack[i];
-		if (i != stack.length - 1) {
-			stats += ":";
-		}
-	}
- 	
- 	fd.append("stats", stats);
- 	
- 	xhr.onload = function() {
- 		var json = JSON.parse(this.response);
- 		console.log(json);
- 		
- 		var metricsHtml = "";
- 		var metrics = json["metrics"];
- 		for (key in metrics) {
- 			metricsHtml += "<span class='largeCell'>" + key + " = " + metrics[key] + "</span>";
- 		}
- 		
- 		if (document.getElementById("validity").checked) document.getElementById("metricOut").innerHTML = metricsHtml;
- 		
- 		
- 		var statsHtml = "<span class='cell'>Attribute</span>"
- 			+ "<span class='cell'>Mean</span>"
- 			+ "<span class='cell'>Median</span>"
- 			+ "<span class='cell'>Mode</span>"
- 			+ "<span class='cell'>Variance</span>"
- 			+ "<span class='cell'>Std Dev</span>"
- 			+ "<span class='cell'>Min</span>"
- 			+ "<span class='cell'>Max</span>"
- 			+ "<br/>";
- 		var stats = json["stats"];
- 		for (key in stats) {
- 			var attribute = stats[key];
-			statsHtml += "<span class='cell'>" + key + "</span>"
-				+ "<span class='cell'>" + parseFloat(attribute["mean"]).toFixed(2) + "</span>"
-				+ "<span class='cell'>" + parseFloat(attribute["median"]).toFixed(2) + "</span>"
-				+ "<span class='cell'>" + parseFloat(attribute["mode"]).toFixed(2) + "</span>"
-				+ "<span class='cell'>" + parseFloat(attribute["variance"]).toFixed(2) + "</span>"
-				+ "<span class='cell'>" + parseFloat(attribute["standard deviation"]).toFixed(2) + "</span>"
-				+ "<span class='cell'>" + parseFloat(attribute["min"]).toFixed(2) + "</span>"
-				+ "<span class='cell'>" + parseFloat(attribute["max"]).toFixed(2) + "</span>";			
- 		}
- 		
- 		document.getElementById("statOut").innerHTML = statsHtml;
- 	};
- 	
- 	xhr.addEventListener('error', function(event) {
- 		alert("Error");
- 	});
- 	
- 	xhr.upload.onprogress = function(e) {
- 		if (e.lengthComputable) {
- 			var percentComplete = (e.loaded / e.total) * 100;
- 			document.getElementById("progress").innerHTML = percentComplete;
- 		}
- 	};
- 	
- 	xhr.open("POST", "upload.php");
- 	
- 	xhr.send(fd);
- 	
-});
- 	
-function write(stat, val) {
-	document.getElementById(stat + "Out").innerHTML = val;
-}
-
-function read() {
-	return document.getElementById("in").value.split(",");	
-}
-
-
-/*
- * Statistics Functions
- */
-
-function getSum(numbers) {
-	var sum = 0.0;
-	for (var i = 0; i < numbers.length; i++) {
-		sum += parseFloat(numbers[i]);
-	}
-	return sum;
-}
-
-function getMean(data) {
-	var sum = 0.0;
-	for (var i = 0; i < data.length; i++) {
-		sum += parseFloat(data[i]);
-	}
-	
-	return sum / data.length;
-}
-
-function getMedian(numbers) {
-	numbers.sort(function(a, b) {
-		return parseInt(a) < parseInt(b);
-	});
-	
-	var middle = Math.floor(numbers.length / 2);
-	if (numbers.length % 2 == 1) {
-		return numbers[middle];
-	}
-	else {
-		return (parseFloat(numbers[middle - 1]) + parseFloat(numbers[middle])) / 2.0;
-	}
-}
-
-function getStDev(data) {
-
-	var mean = getMean(data);
-	
-	var sum = 0.0;
-	for (var i = 0; i < data.length; i++) {
-		sum += Math.pow(data[i] - mean, 2);
-	}
-	
-	return Math.sqrt(sum / data.length).toFixed(2);
-}
-
-function getMin(numbers) {
-	return Math.min.apply(Math, numbers);
-}
-
-function getMax(numbers) {
-	return Math.max.apply(Math, numbers);
-}
-
-</script>
+	<script type="text/javascript" src="script.js"></script>
 </html>
