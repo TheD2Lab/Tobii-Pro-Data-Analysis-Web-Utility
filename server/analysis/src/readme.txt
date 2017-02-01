@@ -25,30 +25,46 @@
  
 This analysis tool is compatible with Tobii 2150  eye tracker and the ClearView 2.7.1. 
 
-Inputs: FXD; EVD; GZD data. 
+Inputs: Tobii Recording Data 
 
 Outputs (validated results):
 
-1. baseline analysis including
-- average pupil size of left eye; 
-- average pupil size of right eye; 
+A. Measures of Search:
+
+1. Pupil Metrics
+- average pupil size of left eye
+- average pupil size of right eye. 
 - average pupil size of both eyes.
 
-2.  FXD analysis including: 
-- total number of fixations; 
+
+2.  Fixation Metrics 
+
+a. General
+- total number of fixations;
+
+b. Duration Descriptive Stats
 - sum of all fixation duration; 
 - mean duration; 
 - median duration;
 - StDev of durations; 
 - Min. duration;
 - Max. duration;  
-- total number of saccades; 
+
+
+3. Saccade Metrics
+
+a. General
+- total number of saccades;
+ 
+b. Length Descriptive Stats
 - sum of all saccade length; 
 - mean saccade length;
 - median saccade length; 
 - StDev of saccade lengths;
 - min saccade length; 
 - max saccade length; 
+
+c. Duration Descriptive Stats
 - sum of all saccade durations;
 - mean saccade duration;
 - median saccade duration; 
@@ -56,25 +72,25 @@ Outputs (validated results):
 - Min. saccade duration;
 - Max. saccade duration; 
 - scanpath duration; 
-- fixation to saccade ratio; 
+
+d. Absolute Angle Descriptive Stats
 - sum of all absolute degrees; 
 - mean absolute degree; 
 - median absolute degree; 
 - StDev of absolute degrees; 
 - min absolute degree; 
 - max absolute degree; 
+
+e. Relative Angle Descriptive Stats
 - sum of all relative degrees; 
 - mean relative degree; 
 - median relative degree; 
 - StDev of relative degrees; 
 - min relative degree; 
-- max relative degree; 
+- max relative degree;
+
+4. Fixation and Saccades
+- fixation to saccade ratio; 
 - convex hull area. 
 
-3. EVD analysis including: 
-- total number of L mouse clicks. 
 
-4. GZD analysis including: 
-- average pupil size of left eye;
-- average pupil size of right eye;
-- average pupil size of both eyes.

@@ -1,4 +1,3 @@
-package analysis;
 /*
  * Copyright (c) 2013, Bo Fu 
  *
@@ -24,76 +23,38 @@ package analysis;
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 
-public class main {
+public class Main {
+	
+	public static final String PUPIL_METRICS = "pupil";
+	
 	
 	public static void main(String args[]) throws IOException{
 		
-		//specify the location of the raw data files
-		String inputURL = "/Users/.../";
-		//specify the location of the analyzed results 
-		String outputURL = "/Users/.../";
-		//specify the subject, e.g. p1, as analysis is generated per-participant
-		String participant = "...";
+		File f = new File(args[0]);
+		TobiiExport exportData = new TobiiExport(f);
 		
-		String inputLocation = inputURL + participant + "/";
-		String outputLocation = outputURL + participant + "/";
+		HashMap<String, Object> outputMap = new HashMap<String, Object>();
+        
+		outputMap.put(PUPIL_METRICS, getPupilMetrics(exportData));
+	}
+	
+	
+	public static HashMap<String, Object> getPupilMetrics(TobiiExport te) {
 		
-		//FXD data
-		//testing cases where X axis values are the same
-		//String fixationData = "fxdSameXValues.txt";
-		String treeFixation = participant + ".treeFXD.txt";
-		String treeFixationResults = "treeFXDResults.txt";
-		String treeFixationInput = inputLocation + treeFixation;
-        String treeFixationOutput = outputLocation + treeFixationResults; 
-        
-        String graphFixation = participant + ".graphFXD.txt";
-        String graphFixationResults = "graphFXDResults.txt";
-        String graphFixationInput = inputLocation + graphFixation;
-        String graphFixationOutput = outputLocation + graphFixationResults;
+		String[] pupilMeasures = { "PupilLeft", "PupilRight", "PupilBoth" };
 		
-		//EVD data
-		String treeEvent = participant + ".treeEVD.txt";
-		String treeEventResults = "treeEVDResults.txt";
-		String treeEventInput = inputLocation + treeEvent;
-        String treeEventOutput = outputLocation + treeEventResults;
-        
-        String graphEvent = participant + ".graphEVD.txt";
-        String graphEventResults = "graphEVDResults.txt";
-        String graphEventInput = inputLocation + graphEvent;
-        String graphEventOutput = outputLocation + graphEventResults;
-;
-        
-        //GZD data
-        String gazeBaseline = participant + "GZD.txt";
-        String baselineResults = "baselineResults.txt";
-        String baselineInput = inputLocation + gazeBaseline;
-        String baselineOutput = outputLocation + baselineResults;
-        
-        String treeGaze = participant + ".treeGZD.txt";
-        String treeGazeResults = "treeGZDResults.txt";
-        String treeGazeInput = inputLocation + treeGaze;
-        String treeGazeOutput = outputLocation + treeGazeResults;
-        
-        String graphGaze = participant + ".graphGZD.txt";
-        String graphGazeResults = "graphGZDResults.txt";
-        String graphGazeInput = inputLocation + graphGaze;
-        String graphGazeOutput = outputLocation + graphGazeResults;
-        
-        //analyze gaze baseline
-        gaze.processGaze(baselineInput, baselineOutput);
-        
-        //analyze tree related data
-        fixation.processFixation(treeFixationInput, treeFixationOutput);
-        event.processEvent(treeEventInput, treeEventOutput);
-        gaze.processGaze(treeGazeInput, treeGazeOutput);
-        
-        //analyze graph related data
-        fixation.processFixation(graphFixationInput, graphFixationOutput);
-        event.processEvent(graphEventInput, graphEventOutput);
-        gaze.processGaze(graphGazeInput, graphGazeOutput);
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		for (String measure : pupilMeasures) {
+			String[] samples = te.getColumn(measure);
+			map.put(measure, DescriptiveStats.getAllStats(samples));
+		}
+		
+		return map;
 	}
 
 }

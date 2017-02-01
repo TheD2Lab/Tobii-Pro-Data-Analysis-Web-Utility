@@ -1,4 +1,4 @@
-package analysis;
+
 /*
  * Copyright (c) 2013, Bo Fu 
  *
@@ -24,139 +24,140 @@ package analysis;
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
 
-public class descriptiveStats {
+public class DescriptiveStats {
 	
-	public static double getSumOfIntegers(ArrayList<Integer> allIntegers){
+	public static final String MEAN = "mean";
+	public static final String MEDIAN = "median";
+	public static final String MODE = "mode";
+	public static final String VARIANCE = "variance";
+	public static final String STD_DEV = "standard deviation";
+	public static final String MIN = "min";
+	public static final String MAX = "max";
+	public static final String SUM = "sum";
+	
+	public static HashMap<String, Double> getAllStats(String[] column) {
+		HashMap<String, Double> stats = new HashMap<String, Double>();
 		
-		double total = 0.0;
-		for (Integer i:allIntegers){
-			total = total + i;
-		}
-		return total; 
+		double[] data = Arrays.stream(column)
+				.mapToDouble(s -> Double.parseDouble(s))
+				.sorted()
+				.toArray();
+		
+		stats.put(MEAN, getMean(data));
+		stats.put(MEDIAN, getMedian(data));
+		stats.put(MODE, getMode(data));
+		stats.put(VARIANCE, getVariance(data));
+		stats.put(STD_DEV, getStdDev(data));
+		stats.put(MIN, getMin(data));
+		stats.put(MAX, getMax(data));
+		stats.put(SUM, getSum(data));
+		
+		return stats;
 	}
 	
-	public static double getSumOfDoubles(ArrayList<Double> allDoubles){
-		double total = 0.0;
-		for(int i=0; i<allDoubles.size(); i++){
-			double value = allDoubles.get(i);
-			total += value;
-		}
-		
-		return total;
+	/*
+	 * Basic descriptive statistics.
+	 */
+	public static double getMin(double[] data)  {
+		return Arrays.stream(data)
+				.min()
+				.getAsDouble();
 	}
 	
-	public static double getSum(Double[] allDoubles){
-		
-		double total = 0.0;
-		for (Double i:allDoubles){
-			total = total + i;
+	
+	public static double getMax(double[] data)  {
+		return Arrays.stream(data)
+				.max()
+				.getAsDouble();
+	}
+	
+	
+	public static double getSum(double[] data) {
+		return Arrays.stream(data).sum();
+	}
+	
+	
+	/*
+	 * Center descriptive statistics.
+	 */
+	public static double getMean(double[] data) {
+		return Arrays.stream(data)
+				.average()
+				.getAsDouble();
+	}
+	
+	
+	public static double getMedian(double[] data) {
+		int length = data.length;
+		int mid = (int)Math.floor(length / 2.0); 
+		if (length % 2 == 0) {
+			return (data[mid - 1] + data[mid]) / 2.0;
 		}
-		return total; 
+		else {
+			return data[mid];
+		}
+	}
+	
+	
+	public static double getMode(double[] data) {
+		// TODO could be linear if you assume data is sorted.
+		HashMap<Double, Integer> frequencyMap = new HashMap<Double, Integer>();
+		for (double d : data) {
+			Integer count = frequencyMap.get(d);
+			if (count == null) {
+				frequencyMap.put(d, 1);
+			}
+			else {
+				frequencyMap.put(d, ++count);
+			}
+		}
 		
+		double mode = 0.0;
+		double maxFrequency = 0.0;
+		Iterator<Double> it = frequencyMap.keySet().iterator();
+		while (it.hasNext()) {
+			double d = it.next();
+			int frequency = frequencyMap.get(d);
+			if (frequency > maxFrequency) {
+				mode = d;
+				maxFrequency = frequency;
+			}
+			else {
+				// Keep looking.
+			}
+		}
+		
+		return mode;
 	}
 	
 
-	public static double getMeanOfIntegers(ArrayList<Integer> allIntegers){
-		return getSumOfIntegers(allIntegers)/allIntegers.size();
+	/*
+	 * Dispersion descriptive statistics.
+	 */
+	public static double getVariance(double[] data) {
+		return Math.pow(getSigma(data), 2);
 	}
 	
-	public static double getMeanOfDoubles(ArrayList<Double> allDoubles){
-		return getSumOfDoubles(allDoubles)/allDoubles.size();
+	
+	public static double getStdDev(double[] data) {
+		return getSigma(data);
 	}
 	
-	public static double getMean(Double[] allDoubles){
-		double average = getSum(allDoubles)/allDoubles.length;
-		return average;
-	}
 	
-	public static double getMedianOfIntegers(ArrayList<Integer> allIntegers){
-		Collections.sort(allIntegers);
-		int middle = allIntegers.size()/2;
-		if(allIntegers.size()%2 == 1){
-			return allIntegers.get(middle);
-		}else{
-			return (allIntegers.get(middle-1) + allIntegers.get(middle))/2.0; 
-		}
-	}
-	
-	public static double getMedianOfDoubles(ArrayList<Double> allDoubles){
-		Collections.sort(allDoubles);
-		int middle = allDoubles.size()/2;
-		if(allDoubles.size()%2 == 1){
-			return allDoubles.get(middle);
-		}else{
-			return (allDoubles.get(middle-1) + allDoubles.get(middle))/2.0;
-		}
-	}
-	
-	public static double getMedian(Double[] allDoubles){
-		Arrays.sort(allDoubles);
-		if (allDoubles.length%2 == 1){
-			return (double) allDoubles[allDoubles.length/2];
-		}else{
-			return ((double)allDoubles[allDoubles.length/2] + (double)allDoubles[allDoubles.length/2+1])/2;
-		}
+	public static double getSigma(double[] data) {
+		double mean = getMean(data);
 		
-	}
-	
-	public static double getStDevOfIntegers(ArrayList<Integer> allIntegers){
-		double sum = 0;
-        double mean = getMeanOfIntegers(allIntegers);
- 
-        for (double i : allIntegers){
-            sum += Math.pow((i - mean), 2);
-        }
-        
-        return Math.sqrt( sum / (allIntegers.size()-1) );
-	}
-	
-	public static double getStDevOfDoubles(ArrayList<Double> allDoubles){
-		double sum = 0;
-		double mean = getMeanOfDoubles(allDoubles);
-		for(double i:allDoubles){
-			sum += Math.pow((i-mean), 2);
-		}
-		return Math.sqrt(sum/(allDoubles.size()-1));
-	}
-	
-	public static double getStDev(Double[] allDoubles){
-		double sum = 0;
-        double mean = getMean(allDoubles);
- 
-        for (double i : allDoubles){
-            sum += Math.pow((i - mean), 2);
-        }
-        
-        return Math.sqrt( sum / (allDoubles.length-1) );
-	}
-	
-	public static double getMinOfIntegers(ArrayList<Integer> allIntegers){
-		return Collections.min(allIntegers);
-	}
-	
-	public static double getMinOfDoubles(ArrayList<Double> allDoubles){
-		return Collections.min(allDoubles);
-	}
-	
-	public static double getMin(Double[] allDoubles){
-		return Collections.min(Arrays.asList(allDoubles));
-	}
-	
-	public static double getMaxOfIntegers(ArrayList<Integer> allIntegers){
-		return Collections.max(allIntegers);
-	}
-	
-	public static double getMaxOfDoubles(ArrayList<Double> allDoubles){
-		return Collections.max(allDoubles);
-	}
-	
-	public static double getMax(Double[] allDoubles){
-		return Collections.max(Arrays.asList(allDoubles));
+		double sum = Arrays.stream(data)
+					.map(d -> Math.pow((d - mean), 2))
+					.sum();
+		
+		return Math.sqrt(sum / data.length);
 	}
 
-}
+	
+} // End class DescriptiveStats
