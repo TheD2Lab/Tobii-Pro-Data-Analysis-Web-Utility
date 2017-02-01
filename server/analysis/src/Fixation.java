@@ -1,4 +1,4 @@
-package analysis;
+
 /*
  * Copyright (c) 2013, Bo Fu 
  *
@@ -35,11 +35,30 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 
-public class fixation {
+public class Fixation {
+	
+	public static final String FIXATION = "Fixation";
+	
+	
+	public Fixation(TobiiExport export) {
+		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FIXATION);
+	}
+	
+	
+	public int getCount() {
+		return export.getSampleCount();
+	}
+	
+	public Map<String, Double> getDurationStats() {
+		String[] durations = export.getColumn(TobiiExport.GAZE_EVENT_DURATION);
+		return DescriptiveStats.getAllStats(durations);
+	}
 	
 	public static void processFixation(String inputFile, String outputFile) throws IOException{
 
@@ -310,5 +329,8 @@ public class fixation {
 		double saccadeDuration = descriptiveStats.getSumOfIntegers(allSaccadeDurations);
 		return fixationDuration/saccadeDuration;
 	}
+	
+	
+	private TobiiExport export;
 	
 }

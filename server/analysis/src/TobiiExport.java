@@ -6,6 +6,8 @@ import file.TsvUtilities;
 
 public class TobiiExport {
 
+	public static final String GAZE_EVENT_TYPE = "GazeEventType";
+	public static final String GAZE_EVENT_DURATION = "GazeEventDuration";
 	public static final String VALIDITY_LEFT = "ValidityLeft";
 	public static final String VALIDITY_RIGHT = "ValidityRight";
 	
@@ -19,38 +21,40 @@ public class TobiiExport {
 	
 	// Constructor
 	public TobiiExport(File f) {
-		table = TsvUtilities.read(f);
-		columnMap = buildColumnMap(table);
+		this(TsvUtilities.read(f));
+	}
+	
+	
+	public TobiiExport(String[][] data) {
+		table = data;
+		columnTitleToIndexMap = buildColumnMap(table);
 		validity = null;
 	}
 	
-	// Removes invalid samples
-	public TobiiExport filter() {
+	
+	public TobiiExport filtered(String column, String value) {
 		
 		ArrayList<String[]> filteredRows = new ArrayList<String[]>();
 		
+		int col = getColumnIndex(column);
 		for (int row = 1; row < table.length; row++) {
 			String[] currentRow = table[row];
-			if (rowIsValid(currentRow)) {
+			if (currentRow[col].equals(value)) {
 				filteredRows.add(currentRow);
 			}
 			else {
-				// Do nothing.
+				// Do not add row.
 			}
 		}
-		
-		// Reset the export object's data.
-		table = filteredRows.toArray(new String[0][0]);
-		
-		// Return the export object which has new composing data. 
-		return this;
+	 
+		return new TobiiExport(filteredRows.toArray(new String[0][0]));
 	}
 	
 	private boolean rowIsValid(String[] row) {
 		
 		// TODO this only needs to be assigned once, in constructor.
-		int leftCol = columnMap.get(VALIDITY_LEFT);
-		int rightCol = columnMap.get(VALIDITY_RIGHT);
+		int leftCol = columnTitleToIndexMap.get(VALIDITY_LEFT);
+		int rightCol = columnTitleToIndexMap.get(VALIDITY_RIGHT);
 	
 		String left = row[leftCol];
 		String right = row[rightCol];
@@ -61,12 +65,18 @@ public class TobiiExport {
 		return leftIsValid && rightIsValid;
 	}
 	
+	
+	public int getColumnIndex(String columnTitle) {
+		return columnTitleToIndexMap.get(columnTitle);
+	}
+	
+	
 	// Gets all samples for a particular dimension
 	public String[] getColumn(String columnTitle) {
 		
 		ArrayList<String> columnEntryList = new ArrayList<String>();
 		
-		int col = columnMap.get(columnTitle);
+		int col = columnTitleToIndexMap.get(columnTitle);
 		
 		for (int row = 0; row < table.length; row++) {
 			columnEntryList.add(table[row][col]);
@@ -75,15 +85,18 @@ public class TobiiExport {
 		return columnEntryList.toArray(new String[0]);
 	}
 	
+	
 	// Gets the number of samples for a dimension
 	public int getDimensionCount() {
 		return table[0].length;
 	}
 	
+	
 	// Gets the number of samples
 	public int getSampleCount() {
 		return table.length;
 	}
+	
 	
 	private static HashMap<String, Integer> buildColumnMap(String[][] table) {
 		HashMap<String, Integer> map = new HashMap<String, Integer>();
@@ -94,7 +107,7 @@ public class TobiiExport {
 	}
 	
 	
-	private HashMap<String, Integer> columnMap;
+	private HashMap<String, Integer> columnTitleToIndexMap;
 	private String[][] table;
 	private Double validity;
 }
