@@ -47,7 +47,10 @@ public class Fixation {
 	
 	
 	public Fixation(TobiiExport export) {
-		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FIXATION);
+		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FIXATION)
+				.removingDuplicates(TobiiExport.FIXATION_INDEX);
+		
+		locations = getLocations(export);
 	}
 	
 	
@@ -59,6 +62,15 @@ public class Fixation {
 		String[] durations = export.getColumn(TobiiExport.GAZE_EVENT_DURATION);
 		return DescriptiveStats.getAllStats(durations);
 	}
+	
+	public ArrayList<Point> getLocations(TobiiExport export) {
+		for (int i = 0; i < export.getSampleCount(); i++) {
+			// Build 2d points prev, curr
+		}
+		return null;
+	}
+	
+	
 	
 	public static void processFixation(String inputFile, String outputFile) throws IOException{
 
@@ -332,5 +344,6 @@ public class Fixation {
 	
 	
 	private TobiiExport export;
+	private ArrayList<Point> locations;
 	
 }

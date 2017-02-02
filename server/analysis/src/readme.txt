@@ -31,24 +31,24 @@ Outputs (validated results):
 
 A. Measures of Search:
 
-1. Pupil Metrics
-- average pupil size of left eye
-- average pupil size of right eye. 
-- average pupil size of both eyes.
+	1. Pupil Metrics
+	- average pupil size of left eye
+	- average pupil size of right eye. 
+	- average pupil size of both eyes.
 
 
 2.  Fixation Metrics 
 
-a. General
-- total number of fixations;
+	a. General
+	- total number of fixations;
 
-b. Duration Descriptive Stats
-- sum of all fixation duration; 
-- mean duration; 
-- median duration;
-- StDev of durations; 
-- Min. duration;
-- Max. duration;  
+	b. Duration Descriptive Stats
+	- sum of all fixation duration; 
+	- mean duration; 
+	- median duration;
+	- StDev of durations; 
+	- Min. duration;
+	- Max. duration;  
 
 
 3. Saccade Metrics
@@ -64,15 +64,7 @@ b. Length Descriptive Stats
 - min saccade length; 
 - max saccade length; 
 
-c. Duration Descriptive Stats
-- sum of all saccade durations;
-- mean saccade duration;
-- median saccade duration; 
-- StDev of saccade durations; 
-- Min. saccade duration;
-- Max. saccade duration; 
-- scanpath duration; 
-
+	
 d. Absolute Angle Descriptive Stats
 - sum of all absolute degrees; 
 - mean absolute degree; 

@@ -1,11 +1,17 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import file.TsvUtilities;
 
 public class TobiiExport {
 
+	public static final String GAZE_POINT_X = "GazePointX (ADCSpx)";
+	public static final String GAZE_POINT_Y = "GazePointY (ADCSpx)";
+	public static final String SACCADE_INDEX = "SaccadeIndex";
+	public static final String FIXATION_INDEX = "FixationIndex";
 	public static final String GAZE_EVENT_TYPE = "GazeEventType";
 	public static final String GAZE_EVENT_DURATION = "GazeEventDuration";
 	public static final String VALIDITY_LEFT = "ValidityLeft";
@@ -43,12 +49,40 @@ public class TobiiExport {
 				filteredRows.add(currentRow);
 			}
 			else {
-				// Do not add row.
+				// Do nothing.
 			}
 		}
 	 
 		return new TobiiExport(filteredRows.toArray(new String[0][0]));
 	}
+	
+	
+	public TobiiExport removingDuplicates(String column) {
+				
+		Map<String, String[]> uniqueMap = new HashMap<String, String[]>();
+		int col = getColumnIndex(column);
+		for (int row = 1; row < table.length; row++) {
+			String[] currentRow = table[row];
+			String key = currentRow[col];
+			if (!uniqueMap.containsKey(key)) {
+				uniqueMap.put(key, currentRow);
+			}
+			else {
+				// Do nothing.
+			}
+			
+		}
+		
+		ArrayList<String[]> uniqueRows = new ArrayList<String[]>();
+		Iterator<String> it = uniqueMap.keySet().iterator();
+		while (it.hasNext()) {
+			String key = it.next();
+			uniqueRows.add(uniqueMap.get(key));
+		}
+		
+		return new TobiiExport(uniqueRows.toArray(new String[0][0]));
+	}
+	
 	
 	private boolean rowIsValid(String[] row) {
 		
