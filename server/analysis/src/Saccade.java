@@ -24,6 +24,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -36,6 +37,11 @@ public class Saccade {
 	public Saccade(TobiiExport export) {
 		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, SACCADE)
 				.removingDuplicates(TobiiExport.SACCADE_INDEX);
+		
+		TobiiExport fixationSamples = export.filtered(TobiiExport.GAZE_EVENT_TYPE, Fixation.FIXATION)
+				.removingDuplicates(TobiiExport.FIXATION_INDEX);
+		
+		fixationPoints = Fixation.getLocations(fixationSamples);
 	}
 	
 	
@@ -48,43 +54,33 @@ public class Saccade {
 		return DescriptiveStats.getAllStats(durations);
 	}
 
-	public static Double[] getAllSaccadeLength(ArrayList<Object> allCoordinates){
-		int objectSize = allCoordinates.size();
-		Double[] allLengths = new Double[(objectSize-1)];
-		for(int i=0; i<objectSize; i++){
-			Integer[] earlyCoordinate = (Integer[]) allCoordinates.get(i);
-			
-			if(i+1<objectSize){
-				Integer[] laterCoordinate = (Integer[]) allCoordinates.get(i+1);
-				allLengths[i] = Math.sqrt(Math.pow((laterCoordinate[0] - earlyCoordinate[0]), 2) + Math.pow((laterCoordinate[1] - earlyCoordinate[1]), 2));
-			}
-			
-		}
-		
-		return allLengths;
+	public Map<String, Double> getLengthStats() {
+		double[] lengths = getSaccadeLengths(fixationPoints);
+		return DescriptiveStats.getAllStats(lengths);
 	}
 	
-	//the saccade duration is the duration between two fixations
-	//e.g. given a fixation A that has timestamp T1 and duration D1,
-	//and a subsequent fixation B that has timestamp T2 and duration T2,
-	//the saccade duration between A and B is: T2-(T1+D1)
-	public static ArrayList<Integer> getAllSaccadeDurations(ArrayList<Object> saccadeDetails){
-		ArrayList<Integer> allSaccadeDurations = new ArrayList<Integer>();
-		for (int i=0; (i+1)<saccadeDetails.size(); i++){
-			Integer[] currentDetail = (Integer[]) saccadeDetails.get(i);
-			Integer[] subsequentDetail = (Integer[]) saccadeDetails.get(i+1);
+	public static double[] getSaccadeLengths(ArrayList<Point> fixationPoints) {
+		
+		int fixationCount = fixationPoints.size();
+		
+		double[] lengths = new double[fixationCount];
+		
+		Point earlierFixation = fixationPoints.get(0);
+		for (int i = 1; i < fixationCount; i++) {
 			
-			int currentTimestamp = currentDetail[0];
-			int currentFixationDuration = currentDetail[1];
-			int subsequentTimestamp = subsequentDetail[0];
+			Point laterFixation = fixationPoints.get(i);
 			
-			int eachSaccadeDuration = subsequentTimestamp - (currentTimestamp + currentFixationDuration);
+			double length = laterFixation.distance(earlierFixation); 
+			lengths[i - 1] = length;
 			
-			allSaccadeDurations.add(eachSaccadeDuration);
+			earlierFixation = laterFixation;
 		}
-		return allSaccadeDurations;
+		
+		return lengths;
 	}
 	
 	
 	private TobiiExport export;
+	
+	private ArrayList<Point> fixationPoints;
 }

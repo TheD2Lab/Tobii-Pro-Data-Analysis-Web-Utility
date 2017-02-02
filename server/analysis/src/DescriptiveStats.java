@@ -41,21 +41,27 @@ public class DescriptiveStats {
 	public static final String SUM = "sum";
 	
 	public static HashMap<String, Double> getAllStats(String[] column) {
-		HashMap<String, Double> stats = new HashMap<String, Double>();
 		
-		double[] data = Arrays.stream(column)
+		double[] samples = Arrays.stream(column)
 				.mapToDouble(s -> Double.parseDouble(s))
 				.sorted()
 				.toArray();
 		
-		stats.put(MEAN, getMean(data));
-		stats.put(MEDIAN, getMedian(data));
-		stats.put(MODE, getMode(data));
-		stats.put(VARIANCE, getVariance(data));
-		stats.put(STD_DEV, getStdDev(data));
-		stats.put(MIN, getMin(data));
-		stats.put(MAX, getMax(data));
-		stats.put(SUM, getSum(data));
+		return getAllStats(samples);
+	}
+	
+	public static HashMap<String, Double> getAllStats(double[] samples) {
+		
+		HashMap<String, Double> stats = new HashMap<String, Double>();
+		
+		stats.put(MEAN, getMean(samples));
+		stats.put(MEDIAN, getMedian(samples));
+		stats.put(MODE, getMode(samples));
+		stats.put(VARIANCE, getVariance(samples));
+		stats.put(STD_DEV, getStdDev(samples));
+		stats.put(MIN, getMin(samples));
+		stats.put(MAX, getMax(samples));
+		stats.put(SUM, getSum(samples));
 		
 		return stats;
 	}
