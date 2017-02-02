@@ -69,8 +69,9 @@ public class Main {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		FixationProcessor f = new FixationProcessor(export);
-		map.put("Duration", f.getDurationStats());
+		FixationProcessor fProc = new FixationProcessor(export);
+		map.put("Count", fProc.getCount());
+		map.put("Duration", fProc.getDurationStats());
 		
 		return map;
 	}
@@ -80,9 +81,10 @@ public class Main {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		SaccadeProcessor s = new SaccadeProcessor(export);
-		map.put("Duration", s.getDurationStats());
-		map.put("Length", s.getLengthStats());
+		SaccadeProcessor sProc = new SaccadeProcessor(export);
+		map.put("Count", sProc.getCount());
+		map.put("Duration", sProc.getDurationStats());
+		map.put("Length", sProc.getLengthStats());
 		
 		return map;
 	}

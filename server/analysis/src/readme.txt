@@ -53,33 +53,33 @@ A. Measures of Search:
 
 3. Saccade Metrics
 
-a. General
-- total number of saccades;
+	a. General
+	- total number of saccades;
  
-b. Length Descriptive Stats
-- sum of all saccade length; 
-- mean saccade length;
-- median saccade length; 
-- StDev of saccade lengths;
-- min saccade length; 
-- max saccade length; 
+	b. Length Descriptive Stats
+	- sum of all saccade length; 
+	- mean saccade length;
+	- median saccade length; 
+	- StDev of saccade lengths;
+	- min saccade length; 
+	- max saccade length; 
 
 	
-d. Absolute Angle Descriptive Stats
-- sum of all absolute degrees; 
-- mean absolute degree; 
-- median absolute degree; 
-- StDev of absolute degrees; 
-- min absolute degree; 
-- max absolute degree; 
+	d. Absolute Angle Descriptive Stats
+	- sum of all absolute degrees; 
+	- mean absolute degree; 
+	- median absolute degree; 
+	- StDev of absolute degrees; 
+	- min absolute degree; 
+	- max absolute degree; 
 
-e. Relative Angle Descriptive Stats
-- sum of all relative degrees; 
-- mean relative degree; 
-- median relative degree; 
-- StDev of relative degrees; 
-- min relative degree; 
-- max relative degree;
+	e. Relative Angle Descriptive Stats
+	- sum of all relative degrees; 
+	- mean relative degree; 
+	- median relative degree; 
+	- StDev of relative degrees; 
+	- min relative degree; 
+	- max relative degree;
 
 4. Fixation and Saccades
 - fixation to saccade ratio; 

@@ -1,6 +1,6 @@
-package analysis;
+
 /*
- * Copyright (c) 2013, Bo Fu
+ * Copyright (c) 2017, Bo Fu, HSDC Lab
  * Copyright (c) 2010, Bart Kiers
  *
  * Permission is hereby granted, free of charge, to any person
@@ -29,12 +29,12 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.*;
 
-public class convexHull {
+public class ConvexHull {
 	
 	 /**
      * An enum denoting a directional-turn between 3 points (vectors).
      */
-    protected static enum Turn { CLOCKWISE, COUNTER_CLOCKWISE, COLLINEAR }
+    private static enum Turn { CLOCKWISE, COUNTER_CLOCKWISE, COLLINEAR }
 
     /**
      * Returns true iff all points in <code>points</code> are collinear.
@@ -42,7 +42,7 @@ public class convexHull {
      * @param points the list of points.
      * @return       true iff all points in <code>points</code> are collinear.
      */
-    protected static boolean areAllCollinear(List<Point> points) {
+    private static boolean areAllCollinear(List<Point> points) {
 
         if(points.size() < 2) {
             return true;
@@ -63,34 +63,6 @@ public class convexHull {
         return true;
     }
 
-    /**
-     * Returns the convex hull of the points created from <code>xs</code>
-     * and <code>ys</code>. Note that the first and last point in the returned
-     * <code>List&lt;java.awt.Point&gt;</code> are the same point.
-     *
-     * @param xs the x coordinates.
-     * @param ys the y coordinates.
-     * @return   the convex hull of the points created from <code>xs</code>
-     *           and <code>ys</code>.
-     * @throws IllegalArgumentException if <code>xs</code> and <code>ys</code>
-     *                                  don't have the same size, if all points
-     *                                  are collinear or if there are less than
-     *                                  3 unique points present.
-     */
-    public static List<Point> getConvexHull(int[] xs, int[] ys) throws IllegalArgumentException {
-
-        if(xs.length != ys.length) {
-            throw new IllegalArgumentException("xs and ys don't have the same size");
-        }
-
-        List<Point> points = new ArrayList<Point>();
-
-        for(int i = 0; i < xs.length; i++) {
-            points.add(new Point(xs[i], ys[i]));
-        }
-
-        return getConvexHull(points);
-    }
 
     /**
      * Returns the convex hull of the points created from the list
@@ -157,7 +129,7 @@ public class convexHull {
      *               1 such point exists, the one with the lowest x coordinate
      *               is returned.
      */
-    protected static Point getLowestPoint(List<Point> points) {
+    private static Point getLowestPoint(List<Point> points) {
 
         Point lowest = points.get(0);
 
@@ -184,7 +156,7 @@ public class convexHull {
      * @return       a sorted set of points from the list <code>points</code>.
      * @see GrahamScan#getLowestPoint(java.util.List)
      */
-    protected static Set<Point> getSortedPointSet(List<Point> points) {
+    private static Set<Point> getSortedPointSet(List<Point> points) {
 
         final Point lowest = getLowestPoint(points);
 
@@ -249,7 +221,7 @@ public class convexHull {
      *         ordered points <code>a</code>, <code>b</code> and
      *         <code>c</code>.
      */
-    protected static Turn getTurn(Point a, Point b, Point c) {
+    private static Turn getTurn(Point a, Point b, Point c) {
 
         // use longs to guard against int-over/underflow
         long crossProduct = (((long)b.x - a.x) * ((long)c.y - a.y)) -
@@ -266,7 +238,7 @@ public class convexHull {
         }
     }
     
-	public static double getPolygonArea(Point2D[] allPoints) {
+	public static double getPolygonArea(Point[] allPoints) {
 		int i, j, n = allPoints.length;
 		double area = 0;
 

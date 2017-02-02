@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import file.TsvUtilities;
 
@@ -35,15 +34,8 @@ public class TobiiExport {
 	
 	
 	public TobiiExport(String[][] data) {
-		
-		table = data;
-		
+		table = data;		
 		columnTitleToIndexMap = buildColumnMap(table);
-		
-		columnIndexToTitleMap = columnTitleToIndexMap.entrySet()
-				.stream()
-				.collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
-		
 		validity = null;
 	}
 	
@@ -158,7 +150,6 @@ public class TobiiExport {
 	
 	
 	private Map<String, Integer> columnTitleToIndexMap;
-	private Map<Integer, String> columnIndexToTitleMap;
 	private String[][] table;
 	private Double validity;
 }

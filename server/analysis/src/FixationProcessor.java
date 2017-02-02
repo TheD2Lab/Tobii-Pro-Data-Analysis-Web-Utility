@@ -59,6 +59,14 @@ public class FixationProcessor {
 		return DescriptiveStats.getAllStats(durations);
 	}
 	
+	public List<Point> getConvexHull() {
+		return ConvexHull.getConvexHull(points);
+	}
+	
+	public Double getConvexHullArea() {
+		return ConvexHull.getPolygonArea(getConvexHull().toArray(new Point[0]));
+	}
+	
 	
 	public static ArrayList<Point> buildPointList(TobiiExport export) {
 		
