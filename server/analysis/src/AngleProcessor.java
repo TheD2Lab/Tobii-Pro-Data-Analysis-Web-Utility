@@ -28,6 +28,8 @@ import java.util.Map;
 
 public class AngleProcessor {
 	
+	
+	
 	public AngleProcessor(TobiiExport export) {
 		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationProcessor.FIXATION)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
@@ -41,13 +43,16 @@ public class AngleProcessor {
 				.toArray();
 	}
 	
+	
 	public Map<String, Object> getRelativeAngleStats() {
 		return DescriptiveStats.getAllStats(relativeAngles);
 	}
 	
+	
 	public Map<String, Object> getAbsoluteAngleStats() {
 		return DescriptiveStats.getAllStats(absoluteAngles);
 	}
+	
 	
 	
 	private double[] relativeAngles;

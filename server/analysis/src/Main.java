@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Bo Fu 
+ * Copyright (c) 2017, Bo Fu, HDSC Lab 
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -70,8 +70,11 @@ public class Main {
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		FixationProcessor fProc = new FixationProcessor(export);
+		
 		map.put("Count", fProc.getCount());
 		map.put("Duration", fProc.getDurationStats());
+		map.put("ConvexHullArea", fProc.getConvexHullArea());
+		map.put("ConvexHull", fProc.getMappedConvexHull());
 		
 		return map;
 	}

@@ -27,13 +27,24 @@
 import java.awt.Point;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
 public class FixationProcessor {
 	
+	/*
+	 * Public Constants.
+	 */
+	
+	
 	public static final String FIXATION = "Fixation";
+	
+	
+	/*
+	 * Method Definitions.
+	 */
 	
 	
 	public FixationProcessor(TobiiExport export) {
@@ -59,12 +70,33 @@ public class FixationProcessor {
 		return DescriptiveStats.getAllStats(durations);
 	}
 	
+	
 	public List<Point> getConvexHull() {
 		return ConvexHull.getConvexHull(points);
 	}
 	
+	
 	public Double getConvexHullArea() {
 		return ConvexHull.getPolygonArea(getConvexHull().toArray(new Point[0]));
+	}
+	
+	
+	public List<Map<String, Object>> getMappedConvexHull() {
+		
+		List<Map<String, Object>> pointList = new ArrayList<Map<String, Object>>();
+		
+		List<Point> convexHull = getConvexHull();
+		for (int i = 0; i < convexHull.size(); i++) {
+			Map<String, Object> m = new HashMap<String, Object>();
+			
+			Point p = convexHull.get(i);
+			m.put("x", p.getX());
+			m.put("y", p.getY());
+			
+			pointList.add(m);
+		}
+		
+		return pointList;
 	}
 	
 	
@@ -89,6 +121,11 @@ public class FixationProcessor {
 		return new Point(x, y);
 	}
 
+	
+	/*
+	 * Private Member Variables.
+	 */
+	
 	
 	private TobiiExport export;
 	private ArrayList<Point> points;
