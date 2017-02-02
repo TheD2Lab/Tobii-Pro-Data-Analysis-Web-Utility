@@ -24,6 +24,7 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -48,20 +49,24 @@ public class Saccade {
 		return DescriptiveStats.getAllStats(durations);
 	}
 
-	public static Double[] getAllSaccadeLength(ArrayList<Object> allCoordinates){
-		int objectSize = allCoordinates.size();
-		Double[] allLengths = new Double[(objectSize-1)];
-		for(int i=0; i<objectSize; i++){
-			Integer[] earlyCoordinate = (Integer[]) allCoordinates.get(i);
+	public static double[] getSaccadeLengths(ArrayList<Point> fixationPoints) {
+		
+		int fixationCount = fixationPoints.size();
+		
+		double[] lengths = new double[fixationCount];
+		
+		Point earlierFixation = fixationPoints.get(0);
+		for (int i = 1; i < fixationCount; i++) {
 			
-			if(i+1<objectSize){
-				Integer[] laterCoordinate = (Integer[]) allCoordinates.get(i+1);
-				allLengths[i] = Math.sqrt(Math.pow((laterCoordinate[0] - earlyCoordinate[0]), 2) + Math.pow((laterCoordinate[1] - earlyCoordinate[1]), 2));
-			}
+			Point laterFixation = fixationPoints.get(i);
 			
+			double length = laterFixation.distance(earlierFixation); 
+			lengths[i - 1] = length;
+			
+			earlierFixation = laterFixation;
 		}
 		
-		return allLengths;
+		return lengths;
 	}
 	
 	//the saccade duration is the duration between two fixations
