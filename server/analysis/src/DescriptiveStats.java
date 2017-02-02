@@ -27,6 +27,7 @@
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 
 public class DescriptiveStats {
@@ -40,7 +41,7 @@ public class DescriptiveStats {
 	public static final String MAX = "max";
 	public static final String SUM = "sum";
 	
-	public static HashMap<String, Double> getAllStats(String[] column) {
+	public static Map<String, Object> getAllStats(String[] column) {
 		
 		double[] samples = Arrays.stream(column)
 				.mapToDouble(s -> Double.parseDouble(s))
@@ -50,20 +51,20 @@ public class DescriptiveStats {
 		return getAllStats(samples);
 	}
 	
-	public static HashMap<String, Double> getAllStats(double[] samples) {
-		
-		HashMap<String, Double> stats = new HashMap<String, Double>();
-		
-		stats.put(MEAN, getMean(samples));
-		stats.put(MEDIAN, getMedian(samples));
-		stats.put(MODE, getMode(samples));
-		stats.put(VARIANCE, getVariance(samples));
-		stats.put(STD_DEV, getStdDev(samples));
-		stats.put(MIN, getMin(samples));
-		stats.put(MAX, getMax(samples));
-		stats.put(SUM, getSum(samples));
-		
-		return stats;
+	public static Map<String, Object> getAllStats(double[] samples) {
+		return addAllStats(samples, new HashMap<String, Object>());
+	}
+	
+	public static Map<String, Object> addAllStats(double[] samples, Map<String, Object> map) {
+		map.put(MEAN, getMean(samples));
+		map.put(MEDIAN, getMedian(samples));
+		map.put(MODE, getMode(samples));
+		map.put(VARIANCE, getVariance(samples));
+		map.put(STD_DEV, getStdDev(samples));
+		map.put(MIN, getMin(samples));
+		map.put(MAX, getMax(samples));
+		map.put(SUM, getSum(samples));
+		return map;
 	}
 	
 	/*

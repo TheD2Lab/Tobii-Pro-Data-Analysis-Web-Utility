@@ -26,11 +26,15 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 
 public class Main {
 	
-	public static final String PUPIL_METRICS = "pupil";
+	public static final String PUPIL_METRICS = "Pupil";
+	public static final String FIXATION_METRICS = "Fixation";
+	public static final String SACCADE_METRICS = "Saccade";
+	public static final String ANGLE_METRICS = "Angle";
 	
 	
 	public static void main(String args[]) throws IOException{
@@ -41,18 +45,55 @@ public class Main {
 		HashMap<String, Object> outputMap = new HashMap<String, Object>();
         
 		outputMap.put(PUPIL_METRICS, getPupilMetrics(exportData));
+		outputMap.put(FIXATION_METRICS, getFixationMetrics(exportData));
+		outputMap.put(SACCADE_METRICS, getSaccadeMetrics(exportData));
+		outputMap.put(ANGLE_METRICS, getSaccadeMetrics(exportData));
 	}
 	
 	
-	public static HashMap<String, Object> getPupilMetrics(TobiiExport te) {
+	public static Map<String, Object> getPupilMetrics(TobiiExport export) {
 		
 		String[] pupilMeasures = { "PupilLeft", "PupilRight", "PupilBoth" };
 		
-		HashMap<String, Object> map = new HashMap<String, Object>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		for (String measure : pupilMeasures) {
-			String[] samples = te.getColumn(measure);
+			String[] samples = export.getColumn(measure); 
 			map.put(measure, DescriptiveStats.getAllStats(samples));
 		}
+		
+		return map;
+	}
+	
+	
+	public static Map<String, Object> getFixationMetrics(TobiiExport export) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		FixationProcessor f = new FixationProcessor(export);
+		map.put("Duration", f.getDurationStats());
+		
+		return map;
+	}
+	
+	
+	public static Map<String, Object> getSaccadeMetrics(TobiiExport export) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		SaccadeProcessor s = new SaccadeProcessor(export);
+		map.put("Duration", s.getDurationStats());
+		map.put("Length", s.getLengthStats());
+		
+		return map;
+	}
+	
+	public static Map<String, Object> getAngleMetrics(TobiiExport export) {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		AngleProcessor aProc = new AngleProcessor(export);
+		map.put("RelativeAngle", aProc.getRelativeAngleStats());
+		map.put("AbsoluteAngle", aProc.getAbsoluteAngleStats());
 		
 		return map;
 	}

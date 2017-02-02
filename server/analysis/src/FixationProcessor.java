@@ -25,23 +25,22 @@
  */
 
 import java.awt.Point;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 
-public class Saccade {
+public class FixationProcessor {
 	
-	public static final String SACCADE = "Saccade";
+	public static final String FIXATION = "Fixation";
 	
 	
-	public Saccade(TobiiExport export) {
-		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, SACCADE)
-				.removingDuplicates(TobiiExport.SACCADE_INDEX);
-		
-		TobiiExport fixationSamples = export.filtered(TobiiExport.GAZE_EVENT_TYPE, Fixation.FIXATION)
+	public FixationProcessor(TobiiExport export) {
+		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FIXATION)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
 		
-		fixationPoints = Fixation.getLocations(fixationSamples);
+		points = buildPointList(export);
 	}
 	
 	
@@ -49,38 +48,41 @@ public class Saccade {
 		return export.getSampleCount();
 	}
 	
-	public Map<String, Double> getDurationStats() {
+	
+	public List<Point> getPoints() {
+		return points;
+	}
+	
+	
+	public Map<String, Object> getDurationStats() {
 		String[] durations = export.getColumn(TobiiExport.GAZE_EVENT_DURATION);
 		return DescriptiveStats.getAllStats(durations);
 	}
-
-	public Map<String, Double> getLengthStats() {
-		double[] lengths = getSaccadeLengths(fixationPoints);
-		return DescriptiveStats.getAllStats(lengths);
-	}
 	
-	public static double[] getSaccadeLengths(ArrayList<Point> fixationPoints) {
+	
+	public static ArrayList<Point> buildPointList(TobiiExport export) {
 		
-		int fixationCount = fixationPoints.size();
+		ArrayList<Point> points = new ArrayList<Point>();
 		
-		double[] lengths = new double[fixationCount];
+		int xCol = export.getColumnIndex(TobiiExport.GAZE_POINT_X);
+		int yCol = export.getColumnIndex(TobiiExport.GAZE_POINT_Y);
 		
-		Point earlierFixation = fixationPoints.get(0);
-		for (int i = 1; i < fixationCount; i++) {
-			
-			Point laterFixation = fixationPoints.get(i);
-			
-			double length = laterFixation.distance(earlierFixation); 
-			lengths[i - 1] = length;
-			
-			earlierFixation = laterFixation;
+		for (int i = 1; i < export.getSampleCount(); i++) {
+			points.add(makePoint(export.getRow(i), xCol, yCol));
 		}
 		
-		return lengths;
+		return points;
 	}
 	
 	
-	private TobiiExport export;
+	private static Point makePoint(String[] record, int xCol, int yCol) {
+		int x = Integer.parseInt(record[xCol]);
+		int y = Integer.parseInt(record[yCol]);
+		return new Point(x, y);
+	}
+
 	
-	private ArrayList<Point> fixationPoints;
+	private TobiiExport export;
+	private ArrayList<Point> points;
+	
 }

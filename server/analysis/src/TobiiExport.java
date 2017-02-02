@@ -17,6 +17,8 @@ public class TobiiExport {
 	public static final String GAZE_EVENT_DURATION = "GazeEventDuration";
 	public static final String VALIDITY_LEFT = "ValidityLeft";
 	public static final String VALIDITY_RIGHT = "ValidityRight";
+	public static final String ABSOLUTE_SACCADIC_DIRECTION = "AbsoluteSaccadicDirection";
+	public static final String RELATIVE_SACCADIC_DIRECTION = "RelativeSaccadicDirection";
 	
 	public Double getValidity() {
 		return validity;
