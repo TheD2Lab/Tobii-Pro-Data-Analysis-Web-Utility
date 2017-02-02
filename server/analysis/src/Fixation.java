@@ -63,13 +63,25 @@ public class Fixation {
 		return DescriptiveStats.getAllStats(durations);
 	}
 	
-	public ArrayList<Point> getLocations(TobiiExport export) {
-		for (int i = 0; i < export.getSampleCount(); i++) {
-			// Build 2d points prev, curr
+	public static ArrayList<Point> getLocations(TobiiExport export) {
+		
+		ArrayList<Point> points = new ArrayList<Point>();
+		
+		int xCol = export.getColumnIndex(TobiiExport.GAZE_POINT_X);
+		int yCol = export.getColumnIndex(TobiiExport.GAZE_POINT_Y);
+		
+		for (int i = 1; i < export.getSampleCount(); i++) {
+			points.add(makePoint(export.getRow(i), xCol, yCol));
 		}
-		return null;
+		
+		return points;
 	}
 	
+	private static Point makePoint(String[] record, int xCol, int yCol) {
+		int x = Integer.parseInt(record[xCol]);
+		int y = Integer.parseInt(record[yCol]);
+		return new Point(x, y);
+	}
 	
 	
 	public static void processFixation(String inputFile, String outputFile) throws IOException{

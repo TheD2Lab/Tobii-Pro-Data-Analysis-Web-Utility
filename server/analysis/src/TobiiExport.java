@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import file.TsvUtilities;
 
@@ -32,8 +33,15 @@ public class TobiiExport {
 	
 	
 	public TobiiExport(String[][] data) {
+		
 		table = data;
+		
 		columnTitleToIndexMap = buildColumnMap(table);
+		
+		columnIndexToTitleMap = columnTitleToIndexMap.entrySet()
+				.stream()
+				.collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+		
 		validity = null;
 	}
 	
@@ -103,14 +111,20 @@ public class TobiiExport {
 	public int getColumnIndex(String columnTitle) {
 		return columnTitleToIndexMap.get(columnTitle);
 	}
+
+	
+	public String[] getRow(int row) {
+		return table[row];
+	}
 	
 	
-	// Gets all samples for a particular dimension
-	public String[] getColumn(String columnTitle) {
-		
+	public String[] getColumn(String title) {
+		return getColumn(columnTitleToIndexMap.get(title));
+	}
+	
+	
+	public String[] getColumn(int col) {
 		ArrayList<String> columnEntryList = new ArrayList<String>();
-		
-		int col = columnTitleToIndexMap.get(columnTitle);
 		
 		for (int row = 0; row < table.length; row++) {
 			columnEntryList.add(table[row][col]);
@@ -141,7 +155,8 @@ public class TobiiExport {
 	}
 	
 	
-	private HashMap<String, Integer> columnTitleToIndexMap;
+	private Map<String, Integer> columnTitleToIndexMap;
+	private Map<Integer, String> columnIndexToTitleMap;
 	private String[][] table;
 	private Double validity;
 }
