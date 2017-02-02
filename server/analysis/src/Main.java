@@ -25,8 +25,14 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.json.JsonObject;
+
+import file.JsonUtilities;
+import measure.TimeUtilities;
 
 
 public class Main {
@@ -39,6 +45,8 @@ public class Main {
 	
 	public static void main(String args[]) throws IOException{
 		
+		long start = TimeUtilities.getCurrentTime();
+		
 		File f = new File(args[0]);
 		TobiiExport exportData = new TobiiExport(f);
 		
@@ -48,16 +56,25 @@ public class Main {
 		outputMap.put(FIXATION_METRICS, getFixationMetrics(exportData));
 		outputMap.put(SACCADE_METRICS, getSaccadeMetrics(exportData));
 		outputMap.put(ANGLE_METRICS, getSaccadeMetrics(exportData));
+		
+		JsonObject json = JsonUtilities.getObject(outputMap);
+		JsonUtilities.write(json, "out.json");
+		
+		long stop = TimeUtilities.getCurrentTime();
+		System.out.printf("Analysis runtime duration: %s\n", TimeUtilities.parseDuration(stop - start));
 	}
 	
 	
 	public static Map<String, Object> getPupilMetrics(TobiiExport export) {
 		
-		String[] pupilMeasures = { "PupilLeft", "PupilRight", "PupilBoth" };
+		String[] pupilMeasures = { "PupilLeft", "PupilRight" };
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (String measure : pupilMeasures) {
-			String[] samples = export.getColumn(measure); 
+			String[] samples = Arrays.stream(export.getColumn(measure))
+					.filter(s -> !s.equals("-1"))
+					.toArray(size -> new String[size]);
+			
 			map.put(measure, DescriptiveStats.getAllStats(samples));
 		}
 		

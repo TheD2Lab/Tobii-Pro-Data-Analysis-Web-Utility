@@ -32,11 +32,11 @@ import java.util.Map;
 
 public class DescriptiveStats {
 	
-	public static final String MEAN = "mean";
-	public static final String MEDIAN = "median";
-	public static final String MODE = "mode";
-	public static final String VARIANCE = "variance";
-	public static final String STD_DEV = "standard deviation";
+	public static final String MEN = "mean";
+	public static final String MED = "median";
+	public static final String MOD = "mode";
+	public static final String VAR = "variance";
+	public static final String DEV = "standard deviation";
 	public static final String MIN = "min";
 	public static final String MAX = "max";
 	public static final String SUM = "sum";
@@ -56,11 +56,11 @@ public class DescriptiveStats {
 	}
 	
 	public static Map<String, Object> addAllStats(double[] samples, Map<String, Object> map) {
-		map.put(MEAN, getMean(samples));
-		map.put(MEDIAN, getMedian(samples));
-		map.put(MODE, getMode(samples));
-		map.put(VARIANCE, getVariance(samples));
-		map.put(STD_DEV, getStdDev(samples));
+		map.put(MEN, getMean(samples));
+		map.put(MED, getMedian(samples));
+		map.put(MOD, getMode(samples));
+		map.put(VAR, getVariance(samples));
+		map.put(DEV, getStdDev(samples));
 		map.put(MIN, getMin(samples));
 		map.put(MAX, getMax(samples));
 		map.put(SUM, getSum(samples));

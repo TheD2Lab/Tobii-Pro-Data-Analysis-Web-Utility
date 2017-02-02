@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Utilities"/>
+	<classpathentry kind="lib" path="/Users/dms/Developer/Web/TobiiAnalysis/server/analysis/dep/javax.json-api-1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -36,13 +36,40 @@ public class TobiiExport {
 	public TobiiExport(String[][] data) {
 		table = data;		
 		columnTitleToIndexMap = buildColumnMap(table);
-		validity = null;
+		removeInvalidRecords();
 	}
 	
+	
+	private void removeInvalidRecords() {
+		
+		int originalLength = table.length;
+		
+		ArrayList<String[]> validRows = new ArrayList<String[]>();
+		
+		// Add header.
+		validRows.add(table[0]);
+		
+		for (int i = 1; i < table.length; i++) {
+			String[] row = table[i];
+			if (rowIsValid(row)) {
+				validRows.add(row);
+			}
+			else {
+				// Do not add row.
+			}
+		}
+		
+		table = validRows.toArray(new String[0][0]);
+		
+		setValidity((double)table.length / originalLength);
+	}
 	
 	public TobiiExport filtered(String column, String value) {
 		
 		ArrayList<String[]> filteredRows = new ArrayList<String[]>();
+		
+		// Add header.
+		filteredRows.add(table[0]);
 		
 		int col = getColumnIndex(column);
 		for (int row = 1; row < table.length; row++) {
@@ -62,6 +89,7 @@ public class TobiiExport {
 	public TobiiExport removingDuplicates(String column) {
 				
 		Map<String, String[]> uniqueMap = new HashMap<String, String[]>();
+		
 		int col = getColumnIndex(column);
 		for (int row = 1; row < table.length; row++) {
 			String[] currentRow = table[row];
@@ -76,6 +104,9 @@ public class TobiiExport {
 		}
 		
 		ArrayList<String[]> uniqueRows = new ArrayList<String[]>();
+		
+		uniqueRows.add(table[0]);
+		
 		Iterator<String> it = uniqueMap.keySet().iterator();
 		while (it.hasNext()) {
 			String key = it.next();
@@ -88,7 +119,6 @@ public class TobiiExport {
 	
 	private boolean rowIsValid(String[] row) {
 		
-		// TODO this only needs to be assigned once, in constructor.
 		int leftCol = columnTitleToIndexMap.get(VALIDITY_LEFT);
 		int rightCol = columnTitleToIndexMap.get(VALIDITY_RIGHT);
 	
@@ -120,7 +150,7 @@ public class TobiiExport {
 	public String[] getColumn(int col) {
 		ArrayList<String> columnEntryList = new ArrayList<String>();
 		
-		for (int row = 0; row < table.length; row++) {
+		for (int row = 1; row < table.length; row++) {
 			columnEntryList.add(table[row][col]);
 		}
 		
