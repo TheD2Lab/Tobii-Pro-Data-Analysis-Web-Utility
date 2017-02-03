@@ -1,6 +1,8 @@
 var express = require('express')
 var multer = require('multer')
 var exec = require('child_process').exec;
+var fs = require('fs');
+
 var app = express()
 
 var storage = multer.diskStorage({
@@ -24,7 +26,7 @@ app.post('/uploads', function(req, res) {
 		else {
 			exec('java -jar ./server/analysis.jar uploads/tobii_export.tsv server/out.json', 
 				function(error, stdout, stderr) {
-					console.log(stderr);
+					fs.unlink('./uploads/tobii_export.tsv');
 					res.sendFile("server/out.json", { root: './'});
 			})
 		}
