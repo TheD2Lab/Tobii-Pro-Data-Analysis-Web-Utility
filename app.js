@@ -1,39 +1,58 @@
-var express = require('express')
-var multer = require('multer')
-var exec = require('child_process').exec;
-var fs = require('fs');
+const express = require('express');
+const multer = require('multer');
+const exec = require('child_process').exec;
+const fs = require('fs');
 
-var app = express()
+const app = express();
 
-var storage = multer.diskStorage({
+const INPUT_FILE = 'in.tsv';
+const OUTPUT_FILE = 'out.json';
+const UPLOAD_DIR = './uploads/';
+const INPUT_PATH = UPLOAD_DIR + INPUT_FILE;
+const OUTPUT_PATH = './process/' + OUTPUT_FILE;
+const JAVA_PATH = './process/process.jar';
+const JAVA_COMMAND = 'java -jar ' + JAVA_PATH + ' ' + INPUT_PATH + ' ' + OUTPUT_PATH;
+ 
+const storage = multer.diskStorage({
 	destination: function(req, file, cb) {
-		cb(null, './uploads')
+		cb(null, UPLOAD_DIR)
 	},
 	filename: function(req, file, cb) {
-		cb(null, 'tobii_export.tsv')
+		cb(null, INPUT_FILE)
 	}
-})
+});
 
-var upload = multer({ storage: storage }).single('file')
+const upload = multer({ storage: storage }).single('file')
 
-app.use('/', express.static('client'))
+
+/*
+ * Middleware Definitions
+ */
+ 
+app.use('/', express.static('static'))
 
 app.post('/uploads', function(req, res) {
 	upload(req, res, function(err) {
 		if (err) {
-			return res.end('File upload error.')
+			res.status(err.status).send('Upload Failed');
 		}
 		else {
-			exec('java -jar ./server/analysis.jar uploads/tobii_export.tsv server/out.json', 
-				function(error, stdout, stderr) {
-					fs.unlink('./uploads/tobii_export.tsv');
-					res.sendFile("server/out.json", { root: './'});
-			})
+			exec(JAVA_COMMAND, function(error, stdout, stderr) {
+				res.sendFile(OUTPUT_PATH, { root: './'}, function(err) {
+					if (err) {
+						res.status(err.status).send('Error Executing Java');
+					}
+					else {
+						fs.unlink(INPUT_PATH);
+						fs.unlink(OUTPUT_PATH);
+					}
+				});	
+			});
 		}
-	})
-})
+	});
+});
 
 
 app.listen(3000, function() {
 	console.log('App listening on port 3000.')
-})
+});
