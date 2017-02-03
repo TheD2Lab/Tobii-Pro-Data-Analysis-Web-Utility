@@ -1,0 +1,22 @@
+{
+  "name": "tobii-analysis",
+  "version": "1.0.0",
+  "description": "Data cleaning and analysis for Tobii Pro eye tracker.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/drewmstiles/TobiiAnalysis.git"
+  },
+  "author": "Drew Stiles",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/drewmstiles/TobiiAnalysis/issues"
+  },
+  "homepage": "https://github.com/drewmstiles/TobiiAnalysis#readme",
+  "dependencies": {
+    "express": "^4.14.1"
+  }
+}
