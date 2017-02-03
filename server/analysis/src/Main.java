@@ -37,8 +37,8 @@ import measure.TimeUtilities;
 
 public class Main {
 	
-	public static final String INPUT_PATH = "../uploads/tobii_export.tsv";
-	public static final String OUTPUT_PATH = "out/tobii_analysis_out.json";
+	public static final int INPUT_PATH_INDEX = 0;
+	public static final int OUTPUT_PATH_INDEX = 1;
 	
 	public static final String PUPIL_METRICS = "Pupil";
 	public static final String FIXATION_METRICS = "Fixation";
@@ -50,7 +50,7 @@ public class Main {
 		
 		long start = TimeUtilities.getCurrentTime();
 		
-		File f = new File(INPUT_PATH);
+		File f = new File(args[INPUT_PATH_INDEX]);
 		TobiiExport exportData = new TobiiExport(f);
 		
 		HashMap<String, Object> outputMap = new HashMap<String, Object>();
@@ -61,7 +61,7 @@ public class Main {
 		outputMap.put(ANGLE_METRICS, getSaccadeMetrics(exportData));
 		
 		JsonObject json = JsonUtilities.getObject(outputMap);
-		JsonUtilities.write(json, OUTPUT_PATH);
+		JsonUtilities.write(json, args[OUTPUT_PATH_INDEX]);
 		
 		long stop = TimeUtilities.getCurrentTime();
 		System.out.printf("Analysis runtime duration: %s\n", TimeUtilities.parseDuration(stop - start));

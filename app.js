@@ -12,15 +12,25 @@ var storage = multer.diskStorage({
 	}
 })
 
-var upload = multer({ storage: storage })
+var upload = multer({ storage: storage }).single('file')
 
 app.use('/', express.static('client'))
 
-app.post('/uploads', upload.single('file'), function(req, res) {
-	exec('java -jar server/analysis.jar', function(error, stdout, stderr) {
-		res.send("Success");
+app.post('/uploads', function(req, res) {
+	upload(req, res, function(err) {
+		if (err) {
+			return res.end('File upload error.')
+		}
+		else {
+			exec('java -jar ./server/analysis.jar uploads/tobii_export.tsv server/out.json', 
+				function(error, stdout, stderr) {
+					console.log(stderr);
+					res.send("Success");
+			})
+		}
 	})
 })
+
 
 app.listen(3000, function() {
 	console.log('App listening on port 3000.')
