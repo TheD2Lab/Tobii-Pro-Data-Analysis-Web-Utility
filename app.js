@@ -25,7 +25,7 @@ app.post('/uploads', function(req, res) {
 			exec('java -jar ./server/analysis.jar uploads/tobii_export.tsv server/out.json', 
 				function(error, stdout, stderr) {
 					console.log(stderr);
-					res.send("Success");
+					res.sendFile("server/out.json", { root: './'});
 			})
 		}
 	})
