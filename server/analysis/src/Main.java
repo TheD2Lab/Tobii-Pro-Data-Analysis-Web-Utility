@@ -37,6 +37,7 @@ import measure.TimeUtilities;
 
 public class Main {
 	
+	public static final String INPUT_PATH = "../uploads/tobii_export.tsv";
 	public static final String OUTPUT_PATH = "out/tobii_analysis_out.json";
 	
 	public static final String PUPIL_METRICS = "Pupil";
@@ -49,7 +50,7 @@ public class Main {
 		
 		long start = TimeUtilities.getCurrentTime();
 		
-		File f = new File(args[0]);
+		File f = new File(INPUT_PATH);
 		TobiiExport exportData = new TobiiExport(f);
 		
 		HashMap<String, Object> outputMap = new HashMap<String, Object>();

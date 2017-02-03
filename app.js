@@ -1,7 +1,26 @@
 var express = require('express')
+var multer = require('multer')
+var exec = require('child_process').exec;
 var app = express()
 
+var storage = multer.diskStorage({
+	destination: function(req, file, cb) {
+		cb(null, './uploads')
+	},
+	filename: function(req, file, cb) {
+		cb(null, 'tobii_export.tsv')
+	}
+})
+
+var upload = multer({ storage: storage })
+
 app.use('/', express.static('client'))
+
+app.post('/uploads', upload.single('file'), function(req, res) {
+	exec('java -jar server/analysis.jar', function(error, stdout, stderr) {
+		res.send("Success");
+	})
+})
 
 app.listen(3000, function() {
 	console.log('App listening on port 3000.')
