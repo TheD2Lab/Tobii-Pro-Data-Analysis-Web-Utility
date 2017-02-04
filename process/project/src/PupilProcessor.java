@@ -3,7 +3,8 @@ import java.util.Map;
 
 public class PupilProcessor {
 	
-	private enum PupilMetric { LEFT, RIGHT };
+	public static final int LEFT = 0;
+	public static final int RIGHT = 1;
 	
 	public PupilProcessor(TobiiExport export) {
 		
@@ -15,13 +16,19 @@ public class PupilProcessor {
 	}
 	
 	
-	public Map<String, Object> getMetric(PupilMetric metric) {
+	public Map<String, Object> getDescriptiveStats(int metric) {
 		
 		double[] samples = null;
 		
 		switch (metric) {
-			case LEFT: samples = pupilLeftSamples;
-			case RIGHT: samples = pupilRightSamples;
+			case LEFT:
+				samples = pupilLeftSamples;
+				break;
+			case RIGHT: 
+				samples = pupilRightSamples;
+				break;
+			default: 
+				throw new RuntimeException("Unkown metric number: " + metric);
 		}
 		
 		return DescriptiveStats.getAllStats(samples);

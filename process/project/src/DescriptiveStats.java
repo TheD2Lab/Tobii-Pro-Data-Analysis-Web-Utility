@@ -55,15 +55,17 @@ public class DescriptiveStats {
 		return addAllStats(samples, new HashMap<String, Object>());
 	}
 	
-	public static Map<String, Object> addAllStats(double[] samples, Map<String, Object> map) {
-		map.put(MEN, getMean(samples));
-		map.put(MED, getMedian(samples));
-		map.put(MOD, getMode(samples));
-		map.put(VAR, getVariance(samples));
-		map.put(DEV, getStdDev(samples));
-		map.put(MIN, getMin(samples));
-		map.put(MAX, getMax(samples));
-		map.put(SUM, getSum(samples));
+	public static Map<String, Object> addAllStats(double[] samples, Map<String, Object> statMap) {
+		Map<String, Object> map = new HashMap<String, Object>();
+		statMap.put(MEN, getMean(samples));
+		statMap.put(MED, getMedian(samples));
+		statMap.put(MOD, getMode(samples));
+		statMap.put(VAR, getVariance(samples));
+		statMap.put(DEV, getStdDev(samples));
+		statMap.put(MIN, getMin(samples));
+		statMap.put(MAX, getMax(samples));
+		statMap.put(SUM, getSum(samples));
+		map.put("DescriptiveStats", statMap);
 		return map;
 	}
 	

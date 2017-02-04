@@ -24,6 +24,7 @@
  */
 
 import java.io.File;
+
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -70,16 +71,12 @@ public class Main {
 	
 	public static Map<String, Object> getPupilMetrics(TobiiExport export) {
 		
-		String[] pupilMeasures = { "PupilLeft", "PupilRight" };
-		
 		Map<String, Object> map = new HashMap<String, Object>();
-		for (String measure : pupilMeasures) {
-			String[] samples = Arrays.stream(export.getColumn(measure))
-					.filter(s -> !s.equals("-1"))
-					.toArray(size -> new String[size]);
-			
-			map.put(measure, DescriptiveStats.getAllStats(samples));
-		}
+		
+		PupilProcessor pProc = new PupilProcessor(export);
+		
+		map.put("PupilRight", pProc.getDescriptiveStats(PupilProcessor.RIGHT));
+		map.put("PupilLeft", pProc.getDescriptiveStats(PupilProcessor.LEFT));
 		
 		return map;
 	}
