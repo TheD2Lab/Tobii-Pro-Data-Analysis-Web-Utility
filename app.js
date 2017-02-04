@@ -46,7 +46,7 @@ app.post('/uploads', function(req, res) {
 					}
 					else {
 						fs.unlink(INPUT_PATH);
-// 						fs.unlink(OUTPUT_PATH);
+						fs.unlink(OUTPUT_PATH);
 					}
 				});	
 			});

@@ -20,7 +20,7 @@ function showResults(data) {
 
 	console.log(data);
 
-	var table = d3.select('#tableContainer')
+	var table = d3.select('#resultContainer')
 		.append('table')
 	
 	table.append('thead').append('tr')

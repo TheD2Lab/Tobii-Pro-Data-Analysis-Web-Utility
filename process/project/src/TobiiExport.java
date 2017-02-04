@@ -18,6 +18,8 @@ public class TobiiExport {
 	public static final String VALIDITY_RIGHT = "ValidityRight";
 	public static final String ABSOLUTE_SACCADIC_DIRECTION = "AbsoluteSaccadicDirection";
 	public static final String RELATIVE_SACCADIC_DIRECTION = "RelativeSaccadicDirection";
+	public static final String PUPIL_LEFT = "PupilLeft";
+	public static final String PUPIL_RIGHT = "PupilRight";
 	
 	public Double getValidity() {
 		return validity;
