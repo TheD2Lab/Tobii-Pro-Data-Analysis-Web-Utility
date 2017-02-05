@@ -139,11 +139,37 @@
 		display:inline-block;
 	}
 	
-	
-	table {
-		width:75%;
-		min-height:20px;
-		margin:20px auto;
+	.tableBounds {
+		width: 75%;
+		margin:40px auto;
+		padding:20px;
 		color:white;
 		background-color: #0F183D;
+		border:1px solid #0F183D;
+		border-radius: 10px;
+	}
+	
+	table {
+		width:100%;
+		padding:20px;
+		border-collapse: collapse;
+	}
+	
+	caption {
+		font-size:20px;
+		height:40px;
+		font-weight:bold;
+	}
+
+	th {
+		text-align:center;
+		vertical-align: middle;
+	}
+	
+	td {
+		height:40px;
+		padding:5px;
+		text-align: right;
+		vertical-align: middle;
+	}
 	

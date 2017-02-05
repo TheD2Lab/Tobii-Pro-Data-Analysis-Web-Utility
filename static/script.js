@@ -55,11 +55,17 @@ function showResults(response) {
 	
 	
  	var tables = d3.select('#resultContainer')
- 		.selectAll('table')
+ 		.selectAll('.tableBounds')
  		.data(Object.keys(tableData))
  		.enter()
+ 		.append('div')
+ 		.attr('class', 'tableBounds')
  		.append('table');
  		
+	tables
+		.append('caption')
+		.text(function(d) { return d; });
+	
 	tables
 		.append('thead')
 		.append('tr')
@@ -67,6 +73,8 @@ function showResults(response) {
 		.data(TABLE_KEYS)
 		.enter()
 		.append('th')
+		.style('text-align', 'center')
+		.style('border-left', function(d, i) { return getCellBorderLeft(i); })
 		.html(function (d) { return d; });
 	
 	tables
@@ -75,6 +83,7 @@ function showResults(response) {
 		.data(function(d) { return tableData[d]; })
 		.enter()
 		.append('tr')
+		.style('border-top', '1px solid white')
 		.selectAll('td')
 		.data(function(d) { 
 			var data = [];
@@ -85,9 +94,25 @@ function showResults(response) {
 		})
 		.enter()
 		.append('td')
+		.style('border-left', function(d, i) { return i == 0 ? 'none' : '1px solid white' })
+		.style('text-align', function(d, i) { return getCellAlignment(i); })
+		.style('font-style', function(d, i) { return i == 0 ? 'italic' : 'normal'; })
 		.html(function (d, i) { 
 			return i == 0 ? d : d3.format('.2f')(d);
 		});
+		
+		$('html, body').animate( {
+			scrollTop: $('#resultContainer').offset().top
+		}, 500);
+}
+
+
+function getCellAlignment(i) {
+	return i == 0 ? 'center' : 'right';
+}
+
+function getCellBorderLeft(i) {
+	return i == 0 ? 'none' : '1px solid white';
 }
 
 
