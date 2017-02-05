@@ -1,3 +1,5 @@
+'use strict'
+
 const express = require('express');
 const multer = require('multer');
 const exec = require('child_process').exec;
@@ -9,8 +11,10 @@ const INPUT_FILE = 'in.tsv';
 const OUTPUT_FILE = 'out.json';
 const UPLOAD_DIR = './uploads/';
 const INPUT_PATH = UPLOAD_DIR + INPUT_FILE;
-const OUTPUT_PATH = './process/' + OUTPUT_FILE;
-const JAVA_PATH = './process/process.jar';
+const JAVA_DIR = './analysis/';
+const OUTPUT_PATH = JAVA_DIR + OUTPUT_FILE;
+const JAVA_FILE = 'analysis.jar';
+const JAVA_PATH = JAVA_DIR + JAVA_FILE;
 const JAVA_COMMAND = 'java -jar ' + JAVA_PATH + ' ' + INPUT_PATH + ' ' + OUTPUT_PATH;
  
 const storage = multer.diskStorage({

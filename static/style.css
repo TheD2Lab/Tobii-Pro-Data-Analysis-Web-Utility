@@ -139,3 +139,11 @@
 		display:inline-block;
 	}
 	
+	
+	table {
+		width:75%;
+		min-height:20px;
+		margin:20px auto;
+		color:white;
+		background-color: #0F183D;
+	
