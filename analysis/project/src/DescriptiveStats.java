@@ -41,7 +41,7 @@ public class DescriptiveStats {
 	public static final String MAX = "max";
 	public static final String SUM = "sum";
 	
-	public static Map<String, Object> getAllStats(String[] column) {
+	public static Map<String, Double> getAllStats(String[] column) {
 		
 		double[] samples = Arrays.stream(column)
 				.mapToDouble(s -> Double.parseDouble(s))
@@ -51,13 +51,10 @@ public class DescriptiveStats {
 		return getAllStats(samples);
 	}
 	
-	public static Map<String, Object> getAllStats(double[] samples) {
-		return addAllStats(samples, new HashMap<String, Object>());
-	}
-	
-	public static Map<String, Object> addAllStats(double[] samples, Map<String, Object> statMap) {
-		Map<String, Object> map = new HashMap<String, Object>();
-		statMap.put(MEN, getMean(samples));
+	public static Map<String, Double> getAllStats(double[] samples) {
+		
+		Map<String, Double> statMap = new HashMap<String, Double>();
+		
 		statMap.put(MED, getMedian(samples));
 		statMap.put(MOD, getMode(samples));
 		statMap.put(VAR, getVariance(samples));
@@ -65,9 +62,10 @@ public class DescriptiveStats {
 		statMap.put(MIN, getMin(samples));
 		statMap.put(MAX, getMax(samples));
 		statMap.put(SUM, getSum(samples));
-		map.put("DescriptiveStats", statMap);
-		return map;
+		
+		return statMap;
 	}
+
 	
 	/*
 	 * Basic descriptive statistics.

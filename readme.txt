@@ -30,59 +30,38 @@ Inputs: Tobii Recording Data
 Outputs (validated results):
 
 A. Measures of Search:
-
-	1. Pupil Metrics
-	- average pupil size of left eye
-	- average pupil size of right eye. 
-	- average pupil size of both eyes.
-
-
-2.  Fixation Metrics 
-
-	a. General
-	- total number of fixations;
-
-	b. Duration Descriptive Stats
-	- sum of all fixation duration; 
-	- mean duration; 
-	- median duration;
-	- StDev of durations; 
-	- Min. duration;
-	- Max. duration;  
-
-
-3. Saccade Metrics
-
-	a. General
-	- total number of saccades;
- 
-	b. Length Descriptive Stats
-	- sum of all saccade length; 
-	- mean saccade length;
-	- median saccade length; 
-	- StDev of saccade lengths;
-	- min saccade length; 
-	- max saccade length; 
-
 	
-	d. Absolute Angle Descriptive Stats
-	- sum of all absolute degrees; 
-	- mean absolute degree; 
-	- median absolute degree; 
-	- StDev of absolute degrees; 
-	- min absolute degree; 
-	- max absolute degree; 
+	- fixation count (int)
+	- saccade count  (int)
+	- saccade length  (px)
+	- scanpath length (px)
+	- convex hull (px^2)
+	
+B. Measures of Information Processing:
 
-	e. Relative Angle Descriptive Stats
-	- sum of all relative degrees; 
-	- mean relative degree; 
-	- median relative degree; 
-	- StDev of relative degrees; 
-	- min relative degree; 
-	- max relative degree;
+	- average fixation duration (ms)
+	- average saccade duration (ms)
+	- saccade-to-fixation duration ratio (float)
+	
+C. Measures of Cognitive Workload
 
-4. Fixation and Saccades
-- fixation to saccade ratio; 
-- convex hull area. 
+	- left pupil dilation (mm)
+	- right pupil dilation (mm)
+	- absolute angle (degrees)
+	- relative saccade angles (degrees)
+
+D. Raw data 
+
+	- right pupil dilation (mm)
+	- left pupil dilation (mm)
+	- fixation duration (ms)
+	- saccade duration (ms)
+	- saccade length (px)
+ 	- absolute angle (degrees)
+ 	- relative angle (degrees)
+ 	
+	- saccade count
+	- fixation count
+	
 
 

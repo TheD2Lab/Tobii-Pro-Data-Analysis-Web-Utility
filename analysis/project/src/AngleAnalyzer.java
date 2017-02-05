@@ -1,5 +1,5 @@
-import java.util.Arrays;
-import java.util.Map;
+
+import java.util.List;
 
 /*
  * Copyright (c) 2013, Bo Fu 
@@ -26,40 +26,20 @@ import java.util.Map;
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-public class AngleProcessor {
+public class AngleAnalyzer extends Analyzer{
 	
-	
-	
-	public AngleProcessor(TobiiExport export) {
+	public AngleAnalyzer(TobiiExport export) {
 		
 		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationProcessor.FIXATION)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
-		
-		relativeAngles = getAngleSamples(TobiiExport.RELATIVE_SACCADIC_DIRECTION);
-		
-		absoluteAngles = getAngleSamples(TobiiExport.ABSOLUTE_SACCADIC_DIRECTION);
 	}
 	
-	
-	public Map<String, Object> getRelativeAngleStats() {
-		return DescriptiveStats.getAllStats(relativeAngles);
+	public void addRelativeAngleStats(List<Node<String>> list) {
+		addStats(TobiiExport.RELATIVE_SACCADIC_DIRECTION, list);
 	}
 	
-	
-	public Map<String, Object> getAbsoluteAngleStats() {
-		return DescriptiveStats.getAllStats(absoluteAngles);
+	public void addAbsoluteAngleStats(List<Node<String>> list) {
+		addStats(TobiiExport.ABSOLUTE_SACCADIC_DIRECTION, list);
 	}
 	
-	private double[] getAngleSamples(String column) {
-		return Arrays.stream(this.export.getColumn(column))
-		.filter(s -> !s.isEmpty())
-		.mapToDouble(Double::parseDouble)
-		.toArray();
-	}
-	
-	
-	
-	private double[] relativeAngles;
-	private double[] absoluteAngles;
-	private TobiiExport export;
 }

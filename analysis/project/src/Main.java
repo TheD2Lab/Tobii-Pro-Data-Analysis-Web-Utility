@@ -26,8 +26,10 @@
 import java.io.File;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.json.JsonObject;
@@ -41,6 +43,11 @@ public class Main {
 	public static final int INPUT_PATH_INDEX = 0;
 	public static final int OUTPUT_PATH_INDEX = 1;
 	
+	public static final String SEARCH = "Search";
+	public static final String INFO_PROC = "Information Processing";
+	public static final String COG_WORK = "Cognitive Workload";
+	public static final String RAW = "Raw Data";
+	
 	public static final String PUPIL_METRICS = "Pupil";
 	public static final String FIXATION_METRICS = "Fixation";
 	public static final String SACCADE_METRICS = "Saccade";
@@ -52,9 +59,14 @@ public class Main {
 		long start = TimeUtilities.getCurrentTime();
 		
 		File f = new File(args[INPUT_PATH_INDEX]);
-		TobiiExport exportData = new TobiiExport(f);
+		TobiiExport export = new TobiiExport(f);
 		
-		HashMap<String, Object> outputMap = new HashMap<String, Object>();
+		Map<String, Map<String, Double>> rawMap = getRawData(export);
+		
+		Node<String> rawTree = new Node<String>("rawData");
+		rawTree.addChildren(getRawData(export));
+		
+		outputMap.put(RAW, getAllRawData(exportData));
         
 		outputMap.put(PUPIL_METRICS, getPupilMetrics(exportData));
 		outputMap.put(FIXATION_METRICS, getFixationMetrics(exportData));
@@ -69,20 +81,30 @@ public class Main {
 	}
 	
 	
-	public static Map<String, Object> getPupilMetrics(TobiiExport export) {
+	public static List<Node<String>> getRawData(TobiiExport export) {
 		
-		Map<String, Object> map = new HashMap<String, Object>();
+		List<Node<String>> metrics = new ArrayList<Node<String>>();
 		
-		PupilProcessor pProc = new PupilProcessor(export);
+		addPupilMetrics(metrics, export);
+		addFixationMetrics(rawMap, export);
 		
-		map.put("PupilRight", pProc.getDescriptiveStats(PupilProcessor.RIGHT));
-		map.put("PupilLeft", pProc.getDescriptiveStats(PupilProcessor.LEFT));
 		
-		return map;
+		
+		
+		return rawMap;
 	}
 	
 	
-	public static Map<String, Object> getFixationMetrics(TobiiExport export) {
+	public static void addPupilMetrics(List<Node<String>> metrics , TobiiExport export) {
+		
+		PupilProcessor pProc = new PupilProcessor(export);
+		
+		pProc.addRightStats(metrics);
+		pProc.addLeftStats(metrics);
+	}
+	
+	
+	public static Map<String, Object> addixationMetrics(Map<String, Map<String, Double>> map, TobiiExport export) {
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		

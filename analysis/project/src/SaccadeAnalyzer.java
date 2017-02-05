@@ -27,39 +27,47 @@
 import java.awt.Point;
 
 import java.util.List;
-import java.util.Map;
 
 
-public class SaccadeProcessor {
+public class SaccadeAnalyzer extends Analyzer {
 	
+	/*
+	 * Public Class Constants.
+	 */
 	public static final String SACCADE = "Saccade";
 	
 	
-	public SaccadeProcessor(TobiiExport export) {
+	/*
+	 * Constructors.
+	 */
+	
+	public SaccadeAnalyzer(TobiiExport export) {
 		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, SACCADE)
 				.removingDuplicates(TobiiExport.SACCADE_INDEX);
 		
-		TobiiExport fixationSamples = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationProcessor.FIXATION)
+		TobiiExport fixationSamples = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationAnalyzer.FIXATION)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
 		
-		fixationPoints = FixationProcessor.buildPointList(fixationSamples);
+		fixationPoints = FixationAnalyzer.buildPointList(fixationSamples);
 	}
 	
+	
+	/*
+	 * Statistics Methods.
+	 */
 	
 	public int getCount() {
 		return export.getSampleCount();
 	}
 	
 	
-	public Map<String, Object> getDurationStats() {
-		String[] durations = export.getColumn(TobiiExport.GAZE_EVENT_DURATION);
-		return DescriptiveStats.getAllStats(durations);
+	public void getDurationStats(List<Node<String>> list) {
+		addStats(TobiiExport.GAZE_EVENT_DURATION, list);
 	}
 
 	
-	public Map<String, Object> getLengthStats() {
-		double[] lengths = getSaccadeLengths(fixationPoints);
-		return DescriptiveStats.getAllStats(lengths);
+	public void getLengthStats(List<Node<String>> list) {
+		addStats("SaccadeLength", list,  getSaccadeLengths(fixationPoints));
 	}
 	
 	
@@ -84,7 +92,9 @@ public class SaccadeProcessor {
 	}
 	
 	
-	private TobiiExport export;
+	/*
+	 * Private Member Variables.
+	 */
 	
 	private List<Point> fixationPoints;
 }

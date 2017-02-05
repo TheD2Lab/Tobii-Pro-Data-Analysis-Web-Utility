@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class FixationProcessor {
+public class FixationAnalyzer extends Analyzer {
 	
 	/*
 	 * Public Constants.
@@ -47,10 +47,10 @@ public class FixationProcessor {
 	 */
 	
 	
-	public FixationProcessor(TobiiExport export) {
+	public FixationAnalyzer(TobiiExport export) {
 		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FIXATION)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
-		
+		 
 		points = buildPointList(export);
 	}
 	
@@ -65,9 +65,8 @@ public class FixationProcessor {
 	}
 	
 	
-	public Map<String, Object> getDurationStats() {
-		String[] durations = export.getColumn(TobiiExport.GAZE_EVENT_DURATION);
-		return DescriptiveStats.getAllStats(durations);
+	public void DurationStats(List<Node<String>> list) {
+		addStats(TobiiExport.GAZE_EVENT_DURATION, list);
 	}
 	
 	
@@ -126,8 +125,6 @@ public class FixationProcessor {
 	 * Private Member Variables.
 	 */
 	
-	
-	private TobiiExport export;
 	private ArrayList<Point> points;
 	
 }
