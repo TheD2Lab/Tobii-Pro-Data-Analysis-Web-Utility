@@ -38,8 +38,8 @@ public class TobiiExport {
 		int duration = times[times.length - 1] - times[0];
 		
 		return String.format("%d min, %d sec", 
-				TimeUnit.MILLISECONDS.toMinutes(duration),
-				TimeUnit.MILLISECONDS.toSeconds(duration));
+				TimeUnit.MICROSECONDS.toMinutes(duration),
+				TimeUnit.MICROSECONDS.toSeconds(duration));
 	}
 	
 	public void setValidity(Double v) {

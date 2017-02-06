@@ -32,7 +32,7 @@ public class Analyzer {
 	}
 	
 	public void addStats(Map<String, Object> map, String column, double[] samples) {
-		map.put(column, DescriptiveStats.getAllStats(metrics));
+		map.put(column, DescriptiveStats.getAllStats(samples));
 	}
 	
 	protected TobiiExport export;
