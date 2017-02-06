@@ -62,18 +62,43 @@ public class Main {
 		File f = new File(args[INPUT_PATH_INDEX]);
 		TobiiExport export = new TobiiExport(f);
 		
-		Map<String, Object> rawMap = getRawData(export);
-
-		Map<String, Object> outputMap = new HashMap<>();
-		outputMap.put("Search", getMeasuresOfSearch(rawMap));
-		outputMap.put("Process", getMeasuresOfProcessing(rawMap));
-		outputMap.put("Cognition", getMeasuresOfCognition(rawMap));
-		outputMap.put("Raw", rawMap);
+		Map<String, Object> rawMap = parseRawData(export);
+		Map<String, Object> outputMap = structureOutput(rawMap);
 		
 		JsonUtilities.write(outputMap, args[OUTPUT_PATH_INDEX]);
 		
 		long stop = TimeUtilities.getCurrentTime();
 		System.out.printf("Analysis runtime duration: %s\n", TimeUtilities.parseDuration(stop - start));
+	}
+	
+	
+	public static Map<String, Object> parseRawData(TobiiExport export) {
+		
+		Map<String, Object> rawMap = new HashMap<>();
+		
+		PupilAnalyzer pupLyz = new PupilAnalyzer(export);
+		pupLyz.addAllStats(rawMap);
+		
+		FixationAnalyzer fixLyz = new FixationAnalyzer(export);
+		fixLyz.addAllStats(rawMap);
+		
+		SaccadeAnalyzer saccLyz = new SaccadeAnalyzer(export);
+		saccLyz.addAllStats(rawMap);
+		
+		AngleAnalyzer angLyz = new AngleAnalyzer(export);
+		angLyz.addAllStats(rawMap);
+		
+		return rawMap;
+	}
+	
+	public static Map<String, Object> structureOutput(Map<String, Object> rawMap) {
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("Search", getMeasuresOfSearch(rawMap));
+		map.put("Process", getMeasuresOfProcessing(rawMap));
+		map.put("Cognition", getMeasuresOfCognition(rawMap));
+		map.put("Raw", rawMap);
 	}
 	
 	public static Map<String, Object> getMeasuresOfSearch(Map<String, Object> map) {
@@ -86,74 +111,6 @@ public class Main {
 
 	public static Map<String, Object> getMeasuresOfCognition(Map<String, Object> map) {
 		return null;
-	}
-	
-	public static Map<String, Object> getRawData(TobiiExport export) {
-		
-		Map<String, Object> rawMap = new HashMap<>();
-		
-		addPupilMetrics(rawMap, export);
-		addFixationMetrics(rawMap, export);
-		addSaccadeMetrics(rawMap, export);
-		addAngleMetrics(rawMap, export);
-		
-		return rawMap;
-	}
-	
-	
-	public static void addPupilMetrics(Map<String, Object> map, TobiiExport export) {
-		
-		Map<String, Object> pupMap = new HashMap<>();
-		
-		PupilAnalyzer pupLyz = new PupilAnalyzer(export);
-		
-		pupMap.put("PupilRight", pupLyz.getRightStats());
-		pupMap.put("PupilLeft", pupLyz.getLeftStats());
-		
-		map.put("Pupil", pupMap);
-	}
-	
-	
-	public static void addFixationMetrics(Map<String, Object> map, TobiiExport export) {
-		
-		Map<String, Object> fixMap = new HashMap<>();
-		
-		FixationAnalyzer fixLyz = new FixationAnalyzer(export);
-		
-		List<Point> convexHull = fixLyz.getConvexHull();
-		
-		fixMap.put("Count", fixLyz.getCount());
-		fixMap.put("Duration", fixLyz.getDurationStats());
-		fixMap.put("ConvexHull", fixLyz.transformPoints(convexHull));
-		fixMap.put("ConvexHullArea", fixLyz.getPolygonArea(convexHull));
-		
-		map.put("Fixation", fixMap);
-	}
-	
-	
-	public static void addSaccadeMetrics(Map<String, Object> map, TobiiExport export) {
-		
-		Map<String, Object> saccMap = new HashMap<>();
-		
-		SaccadeAnalyzer saccLyz = new SaccadeAnalyzer(export);
-		
-		saccMap.put("Count", saccLyz.getCount());
-		saccMap.put("Duration", saccLyz.getDurationStats());
-		saccMap.put("Length", saccLyz.getLengthStats());
-		
-		map.put("Saccade", saccMap);
-	}
-	
-	public static void addAngleMetrics(Map<String, Object> map, TobiiExport export) {
-		
-		Map<String, Object> angMap = new HashMap<String, Object>();
-		
-		AngleAnalyzer angLyz = new AngleAnalyzer(export);
-		
-		angMap.put("RelativeAngle", angLyz.getRelativeAngleStats());
-		angMap.put("AbsoluteAngle", angLyz.getAbsoluteAngleStats());
-		
-		map.put("Angle", angMap);
 	}
 
 }

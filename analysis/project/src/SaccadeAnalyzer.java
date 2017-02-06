@@ -25,7 +25,7 @@
  */
 
 import java.awt.Point;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,22 +57,30 @@ public class SaccadeAnalyzer extends Analyzer {
 	 * Statistics Methods.
 	 */
 	
-	public int getCount() {
-		return export.getSampleCount();
+	
+	@Override
+	public void addAllStats(Map<String, Object> map) {
+		Map<String, Object> saccMap = new HashMap<>();
+		
+		addCountStats(saccMap);
+		addDurationStats(saccMap);
+		addLengthStats(saccMap);
+		
+		map.put(SACCADE, saccMap);
+		
 	}
 	
-	
-	public Map<String, Object> getDurationStats() {
-		return getStats(TobiiExport.GAZE_EVENT_DURATION);
+	public void addDurationStats(Map<String, Object> map) {
+		addStats(map, TobiiExport.GAZE_EVENT_DURATION);
 	}
 
 	
-	public Map<String, Object> getLengthStats() {
-		return getStats("SaccadeLength", getSaccadeLengths(fixationPoints));
+	public void addLengthStats(Map<String, Object> map) {
+		addStats(map, "SaccadeLength", getSaccadeLengths(fixationPoints));
 	}
 	
 	
-	public static double[] getSaccadeLengths(List<Point> fixationPoints) {
+	private static double[] getSaccadeLengths(List<Point> fixationPoints) {
 		
 		int fixationCount = fixationPoints.size();
 		

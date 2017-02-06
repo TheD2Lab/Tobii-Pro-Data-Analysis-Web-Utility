@@ -1,24 +1,19 @@
 
-import java.util.Map;
 import java.util.function.Predicate;
 
 public class PupilAnalyzer extends Analyzer {
 	
+	public static final String[] METRICS = {
+		TobiiExport.PUPIL_LEFT,
+		TobiiExport.PUPIL_RIGHT
+	};
+	
 	
 	public PupilAnalyzer(TobiiExport export) {
 		this.export = export;
+		this.metrics = METRICS;
+		this.isValid = IS_VALID;
 	}
 	
-	
-	public Map<String, Object> getLeftStats() {
-		return getStats(TobiiExport.PUPIL_LEFT, isValid); 
-	}
-	
-	
-	public Map<String, Object> getRightStats() {
-		return getStats(TobiiExport.PUPIL_RIGHT,isValid); 
-	}
-	
-	
-	private static Predicate<String> isValid = (s -> !s.isEmpty() && !s.equals("-1"));
+	private static final Predicate<String> IS_VALID = (s -> !s.isEmpty() && !s.equals("-1"));
 }

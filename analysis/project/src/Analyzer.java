@@ -5,25 +5,37 @@ import java.util.function.Predicate;
 
 public class Analyzer {
 
-	
-	public Map<String, Object> getStats(String column) {
-		 return getStats(column, (s -> !s.isEmpty()));
+	public void addAllStats(Map<String, Object> map) {
+		for (String metric : metrics) {
+			addStats(map, metric, isValid);
+		}
+	}
+
+	public void addCountStats(Map<String, Object> map) {
+		map.put("Count", export.getSampleCount());
 	}
 	
 	
-	public Map<String, Object> getStats(String column, Predicate<String> isValid) {
+	public void addStats(Map<String, Object> map, String column) {
+		addStats(map, column, isValid);
+	}
+	
+	
+	public void addStats(Map<String, Object> map, String column, Predicate<String> isValid) {
 		
-		double[] metrics = Arrays.stream(this.export.getColumn(column))
+		double[] samples = Arrays.stream(this.export.getColumn(column))
 				.filter(isValid)
 				.mapToDouble(Double::parseDouble)
 				.toArray();
 		
-		return getStats(column,metrics);
+		addStats(map, column, samples);
 	}
 	
-	public Map<String, Object> getStats(String column, double[] metrics) {
-		return DescriptiveStats.getAllStats(metrics);
+	public void addStats(Map<String, Object> map, String column, double[] samples) {
+		map.put(column, DescriptiveStats.getAllStats(metrics));
 	}
 	
 	protected TobiiExport export;
+	protected String[] metrics;
+	protected Predicate<String> isValid = (s -> !s.isEmpty());
 }

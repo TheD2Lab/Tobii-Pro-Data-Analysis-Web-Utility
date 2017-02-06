@@ -1,6 +1,4 @@
 
-import java.util.Map;
-
 /*
  * Copyright (c) 2013, Bo Fu 
  *
@@ -28,18 +26,16 @@ import java.util.Map;
 
 public class AngleAnalyzer extends Analyzer{
 	
+	public static final String[] METRICS = {
+			TobiiExport.ABSOLUTE_SACCADIC_DIRECTION,
+			TobiiExport.RELATIVE_SACCADIC_DIRECTION
+	};
+	
 	public AngleAnalyzer(TobiiExport export) {
 		
 		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationAnalyzer.FIXATION)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
+		
+		this.metrics = METRICS;
 	}
-	
-	public Map<String, Object> getRelativeAngleStats() {
-		return getStats(TobiiExport.RELATIVE_SACCADIC_DIRECTION);
-	}
-	
-	public Map<String, Object> getAbsoluteAngleStats() {
-		return getStats(TobiiExport.ABSOLUTE_SACCADIC_DIRECTION);
-	}
-	
 }

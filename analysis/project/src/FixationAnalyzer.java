@@ -55,41 +55,44 @@ public class FixationAnalyzer extends Analyzer {
 	}
 	
 	
-	public int getCount() {
-		return export.getSampleCount();
+	@Override
+	public void addAllStats(Map<String, Object> map) {
+		
+		Map<String, Object> fixMap = new HashMap<>();
+		
+		addCountStats(fixMap);
+		addDurationStats(fixMap);
+		addConvexHullStats(fixMap);
+		
+		map.put(FIXATION, fixMap);
 	}
 	
+	public void addDurationStats(Map<String, Object> map) {
+		addStats(map, TobiiExport.GAZE_EVENT_DURATION);
+	}
 	
 	public List<Point> getPoints() {
 		return points;
 	}
 	
 	
-	public Map<String, Object> getDurationStats() {
-		return getStats(TobiiExport.GAZE_EVENT_DURATION);
+	public void addConvexHullStats(Map<String, Object> map) {
+		
+		Map<String, Object> hullMap = new HashMap<>();
+		
+		List<Point> convexHull = getConvexHull();
+		
+		hullMap.put("Area", ConvexHull.getPolygonArea(convexHull.toArray(new Point[0])));
+		hullMap.put("Points", transformPoints(convexHull));
+		
+		map.put("ConvexHull", hullMap);
 	}
-	
 	
 	public List<Point> getConvexHull() {
 		return ConvexHull.getConvexHull(points);
 	}
 	
-	
-	public Double getPolygonArea(List<Point> points) {
-		
-		Point first = points.get(0);
-		Point last = points.get(points.size() - 1);
-		
-		if (first != last) {
-			throw new RuntimeException("Point list is not a enclosed region.");
-		}
-		else {
-			return ConvexHull.getPolygonArea(points.toArray(new Point[0]));
-		}
-	}
-	
-	
-	public List<Map<String, Object>> transformPoints(List<Point> points) {
+	private static List<Map<String, Object>> transformPoints(List<Point> points) {
 		
 		List<Map<String, Object>> pointList = new ArrayList<Map<String, Object>>();
 		
