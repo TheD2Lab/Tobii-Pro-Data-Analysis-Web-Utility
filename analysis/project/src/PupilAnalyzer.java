@@ -1,4 +1,5 @@
-import java.util.List;
+
+import java.util.Map;
 import java.util.function.Predicate;
 
 public class PupilAnalyzer extends Analyzer {
@@ -9,13 +10,13 @@ public class PupilAnalyzer extends Analyzer {
 	}
 	
 	
-	public void addLeftStats(List<Node<String>> list) {
-		addStats(TobiiExport.PUPIL_LEFT, list, isValid); 
+	public Map<String, Object> getLeftStats() {
+		return getStats(TobiiExport.PUPIL_LEFT, isValid); 
 	}
 	
 	
-	public void addRightStats(List<Node<String>> list) {
-		addStats(TobiiExport.PUPIL_LEFT, list ,isValid); 
+	public Map<String, Object> getRightStats() {
+		return getStats(TobiiExport.PUPIL_RIGHT,isValid); 
 	}
 	
 	

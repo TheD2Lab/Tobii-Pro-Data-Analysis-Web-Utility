@@ -41,7 +41,7 @@ public class DescriptiveStats {
 	public static final String MAX = "max";
 	public static final String SUM = "sum";
 	
-	public static Map<String, Double> getAllStats(String[] column) {
+	public static Map<String, Object> getAllStats(String[] column) {
 		
 		double[] samples = Arrays.stream(column)
 				.mapToDouble(s -> Double.parseDouble(s))
@@ -51,9 +51,9 @@ public class DescriptiveStats {
 		return getAllStats(samples);
 	}
 	
-	public static Map<String, Double> getAllStats(double[] samples) {
+	public static Map<String, Object> getAllStats(double[] samples) {
 		
-		Map<String, Double> statMap = new HashMap<String, Double>();
+		Map<String, Object> statMap = new HashMap<>();
 		
 		statMap.put(MED, getMedian(samples));
 		statMap.put(MOD, getMode(samples));

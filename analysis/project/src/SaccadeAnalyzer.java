@@ -27,6 +27,7 @@
 import java.awt.Point;
 
 import java.util.List;
+import java.util.Map;
 
 
 public class SaccadeAnalyzer extends Analyzer {
@@ -61,13 +62,13 @@ public class SaccadeAnalyzer extends Analyzer {
 	}
 	
 	
-	public void getDurationStats(List<Node<String>> list) {
-		addStats(TobiiExport.GAZE_EVENT_DURATION, list);
+	public Map<String, Object> getDurationStats() {
+		return getStats(TobiiExport.GAZE_EVENT_DURATION);
 	}
 
 	
-	public void getLengthStats(List<Node<String>> list) {
-		addStats("SaccadeLength", list,  getSaccadeLengths(fixationPoints));
+	public Map<String, Object> getLengthStats() {
+		return getStats("SaccadeLength", getSaccadeLengths(fixationPoints));
 	}
 	
 	

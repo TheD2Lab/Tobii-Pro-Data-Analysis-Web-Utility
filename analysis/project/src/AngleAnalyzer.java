@@ -1,5 +1,5 @@
 
-import java.util.List;
+import java.util.Map;
 
 /*
  * Copyright (c) 2013, Bo Fu 
@@ -30,16 +30,16 @@ public class AngleAnalyzer extends Analyzer{
 	
 	public AngleAnalyzer(TobiiExport export) {
 		
-		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationProcessor.FIXATION)
+		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationAnalyzer.FIXATION)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
 	}
 	
-	public void addRelativeAngleStats(List<Node<String>> list) {
-		addStats(TobiiExport.RELATIVE_SACCADIC_DIRECTION, list);
+	public Map<String, Object> getRelativeAngleStats() {
+		return getStats(TobiiExport.RELATIVE_SACCADIC_DIRECTION);
 	}
 	
-	public void addAbsoluteAngleStats(List<Node<String>> list) {
-		addStats(TobiiExport.ABSOLUTE_SACCADIC_DIRECTION, list);
+	public Map<String, Object> getAbsoluteAngleStats() {
+		return getStats(TobiiExport.ABSOLUTE_SACCADIC_DIRECTION);
 	}
 	
 }

@@ -65,8 +65,8 @@ public class FixationAnalyzer extends Analyzer {
 	}
 	
 	
-	public void DurationStats(List<Node<String>> list) {
-		addStats(TobiiExport.GAZE_EVENT_DURATION, list);
+	public Map<String, Object> getDurationStats() {
+		return getStats(TobiiExport.GAZE_EVENT_DURATION);
 	}
 	
 	
@@ -75,20 +75,28 @@ public class FixationAnalyzer extends Analyzer {
 	}
 	
 	
-	public Double getConvexHullArea() {
-		return ConvexHull.getPolygonArea(getConvexHull().toArray(new Point[0]));
+	public Double getPolygonArea(List<Point> points) {
+		
+		Point first = points.get(0);
+		Point last = points.get(points.size() - 1);
+		
+		if (first != last) {
+			throw new RuntimeException("Point list is not a enclosed region.");
+		}
+		else {
+			return ConvexHull.getPolygonArea(points.toArray(new Point[0]));
+		}
 	}
 	
 	
-	public List<Map<String, Object>> getMappedConvexHull() {
+	public List<Map<String, Object>> transformPoints(List<Point> points) {
 		
 		List<Map<String, Object>> pointList = new ArrayList<Map<String, Object>>();
 		
-		List<Point> convexHull = getConvexHull();
-		for (int i = 0; i < convexHull.size(); i++) {
+		for (int i = 0; i < points.size(); i++) {
 			Map<String, Object> m = new HashMap<String, Object>();
 			
-			Point p = convexHull.get(i);
+			Point p = points.get(i);
 			m.put("x", p.getX());
 			m.put("y", p.getY());
 			
