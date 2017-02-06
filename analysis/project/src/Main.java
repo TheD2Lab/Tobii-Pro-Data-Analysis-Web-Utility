@@ -62,43 +62,36 @@ public class Main {
 		File f = new File(args[INPUT_PATH_INDEX]);
 		TobiiExport export = new TobiiExport(f);
 		
-		Map<String, Object> rawMap = parseRawData(export);
-		Map<String, Object> outputMap = structureOutput(rawMap);
+		Map<String, Object> analysisMap = analyze(export);
 		
-		JsonUtilities.write(outputMap, args[OUTPUT_PATH_INDEX]);
+		JsonUtilities.write(analysisMap, args[OUTPUT_PATH_INDEX]);
 		
 		long stop = TimeUtilities.getCurrentTime();
 		System.out.printf("Analysis runtime duration: %s\n", TimeUtilities.parseDuration(stop - start));
 	}
 	
 	
-	public static Map<String, Object> parseRawData(TobiiExport export) {
-		
-		Map<String, Object> rawMap = new HashMap<>();
-		
-		PupilAnalyzer pupLyz = new PupilAnalyzer(export);
-		pupLyz.addAllStats(rawMap);
-		
-		FixationAnalyzer fixLyz = new FixationAnalyzer(export);
-		fixLyz.addAllStats(rawMap);
-		
-		SaccadeAnalyzer saccLyz = new SaccadeAnalyzer(export);
-		saccLyz.addAllStats(rawMap);
-		
-		AngleAnalyzer angLyz = new AngleAnalyzer(export);
-		angLyz.addAllStats(rawMap);
-		
-		return rawMap;
-	}
-	
-	public static Map<String, Object> structureOutput(Map<String, Object> rawMap) {
+	public static Map<String, Object> analyze(TobiiExport export) {
 		
 		Map<String, Object> map = new HashMap<>();
 		
-		map.put("Search", getMeasuresOfSearch(rawMap));
-		map.put("Process", getMeasuresOfProcessing(rawMap));
-		map.put("Cognition", getMeasuresOfCognition(rawMap));
-		map.put("Raw", rawMap);
+		// add experiment metadata
+		map.put("Validity", export.getValidity());
+		map.put("Duration", export.getDuration());
+		
+		PupilAnalyzer pupLyz = new PupilAnalyzer(export);
+		pupLyz.addAllStats(map);
+		
+		FixationAnalyzer fixLyz = new FixationAnalyzer(export);
+		fixLyz.addAllStats(map);
+		
+		SaccadeAnalyzer saccLyz = new SaccadeAnalyzer(export);
+		saccLyz.addAllStats(map);
+		
+		AngleAnalyzer angLyz = new AngleAnalyzer(export);
+		angLyz.addAllStats(map);
+		
+		return map;
 	}
 	
 	public static Map<String, Object> getMeasuresOfSearch(Map<String, Object> map) {

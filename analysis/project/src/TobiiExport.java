@@ -1,8 +1,10 @@
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import file.TsvUtilities;
 
@@ -20,9 +22,24 @@ public class TobiiExport {
 	public static final String RELATIVE_SACCADIC_DIRECTION = "RelativeSaccadicDirection";
 	public static final String PUPIL_LEFT = "PupilLeft";
 	public static final String PUPIL_RIGHT = "PupilRight";
+	public static final String EYE_TRACKER_TIMESTAMP = "EyeTrackerTimestamp";
 	
 	public Double getValidity() {
 		return validity;
+	}
+
+	
+	public String getDuration() {
+		
+		int[] times = Arrays.stream(getColumn(EYE_TRACKER_TIMESTAMP))
+				.mapToInt(Integer::parseInt)
+				.toArray();
+		
+		int duration = times[times.length - 1] - times[0];
+		
+		return String.format("%d min, %d sec", 
+				TimeUnit.MILLISECONDS.toMinutes(duration),
+				TimeUnit.MILLISECONDS.toSeconds(duration));
 	}
 	
 	public void setValidity(Double v) {
