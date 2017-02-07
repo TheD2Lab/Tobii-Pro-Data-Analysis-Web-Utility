@@ -8,7 +8,7 @@
 	}
 	
 	.blue {
-		background-color: #0F183D;
+		background-color: #426895;
 	}
 	
 	#content {
@@ -61,7 +61,7 @@
 		max-width:720px;
 		min-width:480px;
 		line-height: 80px;
-		color: #0F183D;
+		color: #426895;
 	}
 	
 	h2 {
@@ -69,13 +69,13 @@
 	}
 	
 	#formContainer {
-		background-color: #0F183D;
+		background-color: #426895;
 		width:80%;
 		max-width:720px;
 		min-width:480px;
 		display:block;
 		margin: 0 auto;
-		border:1px solid #0F183D;
+		border:1px solid #426895;
 		border-radius:10px;
 	}
 	
@@ -160,8 +160,8 @@
 		width: 100%;
 		margin:40px auto;
 		color:white;
-		background-color: #0F183D;
-		border:1px solid #0F183D;
+		background-color: #426895;
+		border:1px solid #426895;
 		border-radius: 10px;
 	}
 	
@@ -177,16 +177,65 @@
 	
 	.measText {
 		width:30%;
-		height:400px;
+		padding:0;
+		height:300px;
 		overflow-y:scroll;
 		overflow-x:hidden;
-		margin:0;
-		padding:0;
+		margin:0 5%;
 		display:inline-block;
-		border-right:1px solid white;
+		border-top:3px solid white;
+		border-bottom:3px solid white;
+		
 	}
 	
+	.measTable {
+		border-collapse: collapse;
+		margin:0;
+		border:1px solid white;
+	}
+	
+	.measTable th {
+		height:40px;
+		background-color:white;
+		color:#426895;
+	}
+	
+	.measTable td {
+			height:50px;
+			width:33%;
+			text-align:center;
+			border:1px solid white;
+		}
+	
+/* 
+	.a td {
+
+	}
+ */
+	
+/* 
+	.measText::-webkit-scrollbar {
+		display:none;
+	}
+ */
+	
+
+
+	.even {
+		background-color:white;
+		color: #426895;
+	}
+	
+	/* 
+.odd {
+		background-color: #F9431E;
+		color:white;
+	}
+ */
+		
+	
 	.measGraph {
+		width:59%;
 		display:inline-block;
 	}
 	
@@ -195,12 +244,18 @@
 	}
 	
 	.measLabel {
+			height:40px;
+		line-height: 40px;
 		font-weight:bold;
 		font-size:15px;
 		text-align:center;
+		margin:0;
 	}
 	
 	.measValue {
+		height:40px;
+		line-height: 40px;
+		margin:0;
 		font-size:17px;
 		text-align: center;
 	}
@@ -221,8 +276,8 @@
 		margin:40px auto;
 		padding:20px;
 		color:white;
-		background-color: #0F183D;
-		border:1px solid #0F183D;
+		background-color: #426895;
+		border:1px solid #426895;
 		border-radius: 10px;
 	}
 	

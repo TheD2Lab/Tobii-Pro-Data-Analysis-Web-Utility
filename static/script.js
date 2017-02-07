@@ -174,7 +174,7 @@ var boxW = d3.select('.measBox').node().getBoundingClientRect().width;
 var bodyW = d3.select('.measText').node().getBoundingClientRect().width;
 
 var height = d3.select('.measText').node().getBoundingClientRect().height;
-var width = boxW - bodyW - 20;
+var width = d3.select('.measGraph').node().getBoundingClientRect().width	 - 20;
 
 
 var data = d3.range(1000).map(d3.randomBates(10));
@@ -215,7 +215,7 @@ bar.append('rect')
 	.attr('x', 1)
 	.attr('width', x(bins[0].x1) - x(bins[0].x0) - 10)
 	.attr('height', function(d) { return graphHeight - y(d.length); })
-	.style('fill', 'white');
+	.style('fill', '#FECA3D');
 	
 	
 // bar.append('text')
