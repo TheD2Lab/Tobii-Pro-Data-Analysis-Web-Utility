@@ -35,7 +35,7 @@ public class SaccadeAnalyzer extends Analyzer {
 	/*
 	 * Public Class Constants.
 	 */
-	public static final String SACCADE = "Saccade";
+	public static final String NAME = "Saccade";
 	
 	
 	/*
@@ -43,15 +43,19 @@ public class SaccadeAnalyzer extends Analyzer {
 	 */
 	
 	public SaccadeAnalyzer(TobiiExport export) {
-		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, SACCADE)
-				.removingDuplicates(TobiiExport.SACCADE_INDEX);
 		
-		TobiiExport fixationSamples = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationAnalyzer.FIXATION)
+		super(parseExport(export), NAME);
+		
+		TobiiExport fixationSamples = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationAnalyzer.NAME)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
 		
 		fixationPoints = FixationAnalyzer.buildPointList(fixationSamples);
 	}
 	
+	private static TobiiExport parseExport(TobiiExport export) {
+		return export.filtered(TobiiExport.GAZE_EVENT_TYPE, NAME)
+				.removingDuplicates(TobiiExport.SACCADE_INDEX);
+	}
 	
 	/*
 	 * Statistics Methods.
@@ -66,12 +70,13 @@ public class SaccadeAnalyzer extends Analyzer {
 		addDurationStats(saccMap);
 		addLengthStats(saccMap);
 		
-		map.put(SACCADE, saccMap);
+		map.put(NAME, saccMap);
 		
 	}
 	
 	public void addDurationStats(Map<String, Object> map) {
 		addStats(map, TobiiExport.GAZE_EVENT_DURATION);
+		putAllSamples(map, TobiiExport.GAZE_EVENT_DURATION);
 	}
 
 	

@@ -3,6 +3,8 @@ import java.util.function.Predicate;
 
 public class PupilAnalyzer extends Analyzer {
 	
+	public static final String NAME = "Pupil";
+	
 	public static final String[] METRICS = {
 		TobiiExport.PUPIL_LEFT,
 		TobiiExport.PUPIL_RIGHT
@@ -10,7 +12,7 @@ public class PupilAnalyzer extends Analyzer {
 	
 	
 	public PupilAnalyzer(TobiiExport export) {
-		this.export = export;
+		super(export, NAME);
 		this.metrics = METRICS;
 		this.isValid = IS_VALID;
 	}

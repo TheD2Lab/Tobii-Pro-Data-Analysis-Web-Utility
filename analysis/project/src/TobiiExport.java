@@ -28,20 +28,6 @@ public class TobiiExport {
 		return validity;
 	}
 
-	
-	public String getDuration() {
-		
-		int[] times = Arrays.stream(getColumn(EYE_TRACKER_TIMESTAMP))
-				.mapToInt(Integer::parseInt)
-				.toArray();
-		
-		int duration = times[times.length - 1] - times[0];
-		
-		return String.format("%d min, %d sec", 
-				TimeUnit.MICROSECONDS.toMinutes(duration),
-				TimeUnit.MICROSECONDS.toSeconds(duration));
-	}
-	
 	public void setValidity(Double v) {
 		validity = v;
 	}

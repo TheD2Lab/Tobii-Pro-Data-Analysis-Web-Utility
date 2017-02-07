@@ -39,7 +39,7 @@ public class FixationAnalyzer extends Analyzer {
 	 */
 	
 	
-	public static final String FIXATION = "Fixation";
+	public static final String NAME = "Fixation";
 	
 	
 	/*
@@ -48,10 +48,14 @@ public class FixationAnalyzer extends Analyzer {
 	
 	
 	public FixationAnalyzer(TobiiExport export) {
-		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FIXATION)
-				.removingDuplicates(TobiiExport.FIXATION_INDEX);
+		super(parseExport(export), NAME);
 		 
 		points = buildPointList(export);
+	}
+	
+	private static TobiiExport parseExport(TobiiExport export) {
+		return export.filtered(TobiiExport.GAZE_EVENT_TYPE, NAME)
+				.removingDuplicates(TobiiExport.FIXATION_INDEX);
 	}
 	
 	
@@ -64,11 +68,13 @@ public class FixationAnalyzer extends Analyzer {
 		addDurationStats(fixMap);
 		addConvexHullStats(fixMap);
 		
-		map.put(FIXATION, fixMap);
+		map.put(NAME, fixMap);
 	}
 	
 	public void addDurationStats(Map<String, Object> map) {
-		addStats(map, TobiiExport.GAZE_EVENT_DURATION);
+		String durationMetric = TobiiExport.GAZE_EVENT_DURATION;
+		addStats(map, durationMetric);
+		putAllSamples(map, durationMetric);
 	}
 	
 	public List<Point> getPoints() {

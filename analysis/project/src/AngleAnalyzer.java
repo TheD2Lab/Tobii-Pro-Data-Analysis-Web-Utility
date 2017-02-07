@@ -26,6 +26,8 @@
 
 public class AngleAnalyzer extends Analyzer{
 	
+	public static final String NAME = "Angle";
+	
 	public static final String[] METRICS = {
 			TobiiExport.ABSOLUTE_SACCADIC_DIRECTION,
 			TobiiExport.RELATIVE_SACCADIC_DIRECTION
@@ -33,9 +35,13 @@ public class AngleAnalyzer extends Analyzer{
 	
 	public AngleAnalyzer(TobiiExport export) {
 		
-		this.export = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationAnalyzer.FIXATION)
-				.removingDuplicates(TobiiExport.FIXATION_INDEX);
+		super(parseExport(export), NAME);
 		
 		this.metrics = METRICS;
+	}
+	
+	private static TobiiExport parseExport(TobiiExport export) {
+		return export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationAnalyzer.NAME)
+				.removingDuplicates(TobiiExport.FIXATION_INDEX);
 	}
 }

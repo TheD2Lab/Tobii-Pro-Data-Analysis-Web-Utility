@@ -69,9 +69,8 @@ public class Main {
 		
 		Map<String, Object> map = new HashMap<>();
 		
-		// add experiment metadata
-		map.put("Validity", export.getValidity());
-		map.put("Duration", export.getDuration());
+		MetaAnalyzer metaLyz = new MetaAnalyzer(export);
+		metaLyz.addMetadata(map);
 		
 		PupilAnalyzer pupLyz = new PupilAnalyzer(export);
 		pupLyz.addAllStats(map);

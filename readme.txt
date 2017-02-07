@@ -52,16 +52,23 @@ C. Measures of Cognitive Workload
 
 D. Raw data 
 
-	- right pupil dilation (mm)
-	- left pupil dilation (mm)
-	- fixation duration (ms)
-	- saccade duration (ms)
-	- saccade length (px)
- 	- absolute angle (degrees)
- 	- relative angle (degrees)
- 	
-	- saccade count
-	- fixation count
+	1. Metric Statistics
 	
+		- right pupil dilation (mm)
+		- left pupil dilation (mm)
+		- fixation duration (ms)
+		- saccade duration (ms)
+		- saccade length (px)
+		- absolute angle (degrees)
+		- relative angle (degrees)
+
+	2. Counts 	
+		- saccade count (int)
+		- fixation count (int)
+	
+	3. Dataset Statistics
+		- validity (%)
+		- duration (s)
+		
 
 
