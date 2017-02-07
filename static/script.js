@@ -45,30 +45,99 @@ function parseResponse(res) {
 
 	appendMeasuresOfSearch(res);
 	
-	appendMeasuresOfProcessing(res);
-	
-	appendMeasuresOfCognition(res);
-	
-	appendRawMeasures(res);
+// 	appendMeasuresOfProcessing(res);
+// 	
+// 	appendMeasuresOfCognition(res);
+// 	
+// 	appendRawMeasures(res);
 	
 }
+
+const FIXATION = "Fixation";
+const SACCADE = "Saccade";
+const HULL = "ConvexHull"
+const STATS = "DescriptiveStats";
+const SUM = "sum";
+const AREA = "Area";
+const MEAN = "mean";
+const COUNT = "Count";
+const SACCADE_LENGTH = 'SaccadeLength';
 
 function appendMeasuresOfSearch(res) {
 
 	var fixCount = res[FIXATION][COUNT];
 	var sacCount = res[SACCADE][COUNT];
-	var avgSacLength = res[SACCADE][STATS][MEAN];
-	var scanLength = res[SACCADE][STATS][SUM];
+	var avgSacLength = res[SACCADE][SACCADE_LENGTH][STATS][MEAN];
+	var scanLength = res[SACCADE][SACCADE_LENGTH][STATS][SUM];
 	var hullArea = res[FIXATION][HULL][AREA];
 	
-	var searchBox = d3.select('#searchMeasureBox');
-	searchBox.select('#fixCount').html(fixCount);
-	serachBox.select('#sacCount').html(sacCount);
-	searchBox.select('#avgSacLength').html(avgSacLength);
-	searchBox.select('#scanLength').html(scanLength);
-	searchBox.select('#hullArea').html(hullArea);	
+	
+	
+	var tableData = [
+		{ 'Measure' : 'Fixation Count', 'Value' : fixCount, 'Plot' : null },
+		{ 'Measure' : 'Saccade Count', 'Value' : sacCount, 'Plot' : null },
+		{ 'Measure' : 'Average Saccade Length', 'Value' : avgSacLength, 'Plot' : function() { f('avgSacLength') } },
+		{ 'Measure' : 'Scanpath Length', 'Value' : scanLength, 'Plot' : f('scanLength') },
+		{ 'Measure' : 'Convex Hull Area', 'Value' : hullArea, 'Plot' : f('hullArea') }
+	];
+	
+	appendMeasureTable(d3.select('#searchBox .measText'), tableData);
+	
 }
 
+function f(a) {
+	console.log(a);
+}
+
+function appendMeasureTable(elem, data) {
+
+	var headings = ['Measure', 'Value', 'Plot'];
+	
+	var table = elem.append('table')
+		.attr('class', 'measTable');
+	
+	table.append('thead')
+		.append('tr')
+		.selectAll('th')
+		.data(headings)
+		.enter()
+		.append('th')
+		.html(function(d) { return d; })
+		.style('text-align', 'center')
+		.style('background-color', 'white')
+		.style('height', '50px')
+		.style('color', '#426895');
+		
+	table.append('tbody')
+		.selectAll('tr')
+		.data(data)
+		.enter()
+		.append('tr')
+		.selectAll('td')
+		.data(function(d) {
+			var props = [];
+			for (var i = 0; i < headings.length; i++) {
+				props[i] = d[headings[i]];
+			}
+			console.log(props);
+			return props;
+		})
+		.enter()
+		.append('td')
+		.html(function(d, i) { return i < 2 ? d : ""; })
+		.style('height', '50px')
+		.style('width', function(d, i) { return i != headings.length - 1 ? '40%' : '20%'; })
+		.style('text-align', 'center')
+		.style('border', '1px solid white')
+		.filter(function(d, i) { return i == headings.length - 1 && d !== null; })
+		.append('input')
+		.attr('type', 'checkbox')
+		.on('click', function() {
+			(d3.select(this.parentNode).datum())();
+		});
+		
+
+}
 function appendRawMeasures(response) {
 
 	// Filter response data to construct tables.

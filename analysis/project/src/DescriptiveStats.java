@@ -55,6 +55,7 @@ public class DescriptiveStats {
 		
 		Map<String, Object> statMap = new HashMap<>();
 		
+		statMap.put(MEN, getMedian(samples));
 		statMap.put(MED, getMedian(samples));
 		statMap.put(MOD, getMode(samples));
 		statMap.put(VAR, getVariance(samples));
