@@ -32,8 +32,8 @@ Outputs (validated results):
 A. Measures of Search:
 	
 	- fixation count (int)
-	- saccade count  (int)
-	- saccade length  (px)
+	- saccade count (int)
+	- average saccade length (px)
 	- scanpath length (px)
 	- convex hull (px^2)
 	

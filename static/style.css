@@ -64,9 +64,13 @@
 		color: #0F183D;
 	}
 	
+	h2 {
+		text-align: center;
+	}
+	
 	#formContainer {
 		background-color: #0F183D;
-		width:75%;
+		width:80%;
 		max-width:720px;
 		min-width:480px;
 		display:block;
@@ -74,6 +78,8 @@
 		border:1px solid #0F183D;
 		border-radius:10px;
 	}
+	
+
 	
 	#uploadForm {
 		color:white;
@@ -138,6 +144,77 @@
 		width:38%;
 		display:inline-block;
 	}
+	
+	
+	
+	
+		#resultContainer {
+		width:80%;
+		margin:auto;
+
+		min-width:480px;
+	}
+	
+	
+	.measBox {
+		width: 100%;
+		margin:40px auto;
+		color:white;
+		background-color: #0F183D;
+		border:1px solid #0F183D;
+		border-radius: 10px;
+	}
+	
+	.measTitle {
+		height:40px;
+		margin:0;
+		padding:0;
+	}
+	
+	.measBody {
+
+	}
+	
+	.measText {
+		width:30%;
+		height:400px;
+		overflow-y:scroll;
+		overflow-x:hidden;
+		margin:0;
+		padding:0;
+		display:inline-block;
+		border-right:1px solid white;
+	}
+	
+	.measGraph {
+		display:inline-block;
+	}
+	
+	#searchGraph {
+	
+	}
+	
+	.measLabel {
+		font-weight:bold;
+		font-size:15px;
+		text-align:center;
+	}
+	
+	.measValue {
+		font-size:17px;
+		text-align: center;
+	}
+	
+	.measUnits {
+		font-size:15px;
+		padding-left:10px;
+	}
+	
+	.axis path, .axis line {
+		stroke: white;
+	}
+	
+	
 	
 	.tableBounds {
 		width: 75%;
