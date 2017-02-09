@@ -183,8 +183,9 @@
 		overflow-x:hidden;
 		margin:0 5%;
 		display:inline-block;
-		border-top:3px solid white;
-		border-bottom:3px solid white;
+		border-top:2px solid white;
+		border-bottom:2px solid white;
+		border-left: 2px solid white;
 		
 	}
 	
@@ -207,31 +208,7 @@
 		border: 1px solid white;
 	}
 	
-/* 
-	.a td {
 
-	}
- */
-	
-/* 
-	.measText::-webkit-scrollbar {
-		display:none;
-	}
- */
-	
-
-
-	.even {
-		background-color:white;
-		color: #426895;
-	}
-	
-	/* 
-.odd {
-		background-color: #F9431E;
-		color:white;
-	}
- */
 		
 	
 	.measGraph {
@@ -240,29 +217,7 @@
 	}
 	
 	#searchGraph {
-	
-	}
-	
-	.measLabel {
-			height:40px;
-		line-height: 40px;
-		font-weight:bold;
-		font-size:15px;
-		text-align:center;
-		margin:0;
-	}
-	
-	.measValue {
-		height:40px;
-		line-height: 40px;
-		margin:0;
-		font-size:17px;
-		text-align: center;
-	}
-	
-	.measUnits {
-		font-size:15px;
-		padding-left:10px;
+		display:none;
 	}
 	
 	.axis path, .axis line {
