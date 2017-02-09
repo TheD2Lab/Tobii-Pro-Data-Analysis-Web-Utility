@@ -64,6 +64,7 @@ const AREA = "Area";
 const MEAN = "mean";
 const COUNT = "Count";
 const SACCADE_LENGTH = 'SaccadeLength';
+const POINTS = "Points";
 
 function appendMeasuresOfSearch(res) {
 
@@ -72,7 +73,8 @@ function appendMeasuresOfSearch(res) {
 	var avgSacLength = res[SACCADE][SACCADE_LENGTH][STATS][MEAN];
 	var scanLength = res[SACCADE][SACCADE_LENGTH][STATS][SUM];
 	var hullArea = res[FIXATION][HULL][AREA];
-	var hullPoints = res[FIXATION][HULL]["Points"];
+	var hullPoints = res[FIXATION][HULL][POINTS];
+	var fixationPoints = res[FIXATION][POINTS];
 	
 	var tableData = [
 		{ 'Measure' : 'Fixation Count', 'Value' : fixCount, 'Plot' : null },
@@ -84,7 +86,7 @@ function appendMeasuresOfSearch(res) {
 	
 	appendMeasureTable('search', d3.select('#searchBox .measText'), tableData);
 	
-	appendPlot(d3.select('#hullGraph'), hullPoints);
+	appendPlot(d3.select('#hullGraph'), fixationPoints, hullPoints);
 }
 
 function f(a) {
@@ -339,8 +341,11 @@ function appendPlot(svg, points, hull) {
 	var h = dims.height;
 	var w = dims.width;
 	
-	svg.attr('height', h);
-	svg.attr('width', w);
+	var xAxisPadding = 30;
+	var yAxisPadding = 40;
+	
+	svg.attr('height', h)
+		.attr('width', w);
 	
 	var xdomain = d3.extent(points, function(p) {
 		return p.x;
@@ -352,30 +357,80 @@ function appendPlot(svg, points, hull) {
 	
 	var x = d3.scaleLinear()
 		.domain(xdomain)
-		.range([20, w - 20]);
+		.range([yAxisPadding + 15, w - 15]);
 		
 	var y = d3.scaleLinear()
 		.domain(ydomain)
-		.range([20, h - 20]);
+		.range([h - xAxisPadding - 15, 15]);
 		
 	var line = d3.line()
 		.x(function(d) { return x(d.x); })
 		.y(function(d) { return y(d.y); });
 		
+
+	// all
 	svg.append('path')
 		.attr('d', function(d)  { return line(points); })
 		.style('stroke', 'white')
 		.style('stroke-width', '1')
 		.style('fill', 'none');
 		
-	svg.selectAll('circle')
+	svg.selectAll('.fix')
 		.data(points)
 		.enter()
 			.append('circle')
+			.attr('class', 'fix')
 			.attr('cx', function(d) { return x(d.x); })
 			.attr('cy', function(d) { return y(d.y); })
-			.attr('r', 7)
-			.attr('fill', '#FB441E');
+			.attr('r', 3)
+			.attr('fill', 'white')
+			.attr('opacity', 0.3);
+	
+	// hull		
+	svg.append('path')
+		.attr('d', function(d)  { return line(hull); })
+		.style('stroke', '#FECA3D')
+		.style('stroke-width', '1')
+		.style('fill', 'none');
+		
+	svg.selectAll('.hull')
+		.data(hull)
+		.enter()
+			.append('circle')
+			.attr('class', 'hull')
+			.attr('cx', function(d) { return x(d.x); })
+			.attr('cy', function(d) { return y(d.y); })
+			.attr('r', 4)
+			.attr('opacity', 0.7)
+			.attr('fill', '#FB441E' );
+			
+	
+	var axisX = svg.append('g')
+		.attr('class', 'axis axis--x')
+		.attr('transform', 'translate(' + 0 + ',' + (h - xAxisPadding) + ')')
+		.attr('stroke', 'white')
+		.call(d3.axisBottom(x).tickValues(xdomain));
 
-
+	var offset = axisX.node().getBBox().height;
+	var xOffset = yAxisPadding + axisX.node().getBBox().width/2;
+	
+	axisX.append('text')
+		.attr('transform', 'translate(' + xOffset + ',' + offset + ')')
+		.style('text-anchor', 'middle')
+		.text('x-pixels');
+		
+	var axisY = svg.append('g')
+		.attr('class', 'axis axis--y')
+		.attr('transform', 'translate(' + (yAxisPadding) + ',' + 0 + ')')
+		.attr('stroke', 'white')
+		.call(d3.axisLeft(y).tickValues(ydomain));
+		
+	var hfsPlus = axisY.node().getBBox().height / 2;
+	
+	axisY.append('text')
+		.attr('transform', 'rotate(-90)')
+		.attr('y', -yAxisPadding / 2)
+		.attr('x', -hfsPlus)
+		.attr('text-anchor', 'middle')
+		.text('y-pixels');
 }
