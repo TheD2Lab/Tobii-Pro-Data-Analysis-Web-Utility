@@ -2,6 +2,8 @@
 
 const DESCRIPTIVE_STATS = 'DescriptiveStats';
 
+var decimalFormat = d3.format('.2f');
+
 $('#uploadForm').submit(function(e) {
 
 	e.preventDefault();
@@ -81,7 +83,7 @@ function appendMeasuresOfSearch(res) {
 		{ 'Measure' : 'Convex Hull Area', 'Value' : hullArea, 'Plot' : f('hullArea') }
 	];
 	
-	appendMeasureTable(d3.select('#searchBox .measText'), tableData);
+	appendMeasureTable('search', d3.select('#searchBox .measText'), tableData);
 	
 }
 
@@ -89,7 +91,7 @@ function f(a) {
 	console.log(a);
 }
 
-function appendMeasureTable(elem, data) {
+function appendMeasureTable(name, elem, data) {
 
 	var headings = ['Measure', 'Value', 'Plot'];
 	
@@ -101,43 +103,59 @@ function appendMeasureTable(elem, data) {
 		.selectAll('th')
 		.data(headings)
 		.enter()
-		.append('th')
-		.html(function(d) { return d; })
-		.style('text-align', 'center')
-		.style('background-color', 'white')
-		.style('height', '50px')
-		.style('color', '#426895');
+			.append('th')
+			.attr('class', 'measHead')
+			.html(function(d) { return d; })
 		
-	table.append('tbody')
+	var cells = table.append('tbody')
 		.selectAll('tr')
 		.data(data)
-		.enter()
-		.append('tr')
-		.selectAll('td')
-		.data(function(d) {
-			var props = [];
-			for (var i = 0; i < headings.length; i++) {
-				props[i] = d[headings[i]];
-			}
-			console.log(props);
-			return props;
-		})
-		.enter()
-		.append('td')
-		.html(function(d, i) { return i < 2 ? d : ""; })
-		.style('height', '50px')
-		.style('width', function(d, i) { return i != headings.length - 1 ? '40%' : '20%'; })
-		.style('text-align', 'center')
-		.style('border', '1px solid white')
-		.filter(function(d, i) { return i == headings.length - 1 && d !== null; })
-		.append('input')
-		.attr('type', 'checkbox')
-		.on('click', function() {
-			(d3.select(this.parentNode).datum())();
-		});
-		
-
+			.enter()
+			.append('tr')
+			.selectAll('td')
+			.data(function(d) {
+				var props = [];
+				for (var i = 0; i < headings.length; i++) {
+					props[i] = d[headings[i]];
+				}
+				return props;
+			})
+			.enter()
+				.append('td')
+				.attr('class', 'measCell')
+				.style('width', function(d, i) { 
+					return i != headings.length - 1 ? '37.5%' : '25%'; 
+				})
+				.html(function(d, i) { 
+						switch(i) {
+							case 0: 
+								return d;
+							case 1: 
+								return decimalFormat(d);
+							case 2: 
+								return "";
+						}
+				});
+	
+	// Plot cells without graph.
+	cells.filter(function(d, i) { 
+				return i == headings.length - 1 && d === null; 
+			})
+			.html('X');
+				
+	// Plot cells with graph.		
+	cells.filter(function(d, i) { 
+				return i == headings.length - 1 && d !== null; 
+			})
+			.append('input')
+			.attr('type', 'radio')
+			.attr('name', name + 'Plot')
+			.on('click', function() {
+				(d3.select(this.parentNode).datum())();
+			});
 }
+
+
 function appendRawMeasures(response) {
 
 	// Filter response data to construct tables.

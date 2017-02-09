@@ -194,6 +194,19 @@
 		border:1px solid white;
 	}
 	
+	.measHead {	
+		text-align: center;
+		background-color: white;
+		height: 50px;
+		color: #426895;
+	}
+	
+	.measCell {	
+		height: 50px;
+		text-align: center;
+		border: 1px solid white;
+	}
+	
 /* 
 	.a td {
 
