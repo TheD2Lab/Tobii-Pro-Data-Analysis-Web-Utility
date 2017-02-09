@@ -285,7 +285,7 @@ var x = d3.scaleLinear()
 
 var bins = d3.histogram()
 	.domain(x.domain())
-	.thresholds(x.ticks(20))
+	.thresholds(x.ticks(16))
 	(data);
 
 var y = d3.scaleLinear()
@@ -300,19 +300,22 @@ var bar = g.selectAll('.bar')
 		
 bar.append('rect')
 	.attr('x', 1)
-	.attr('width', x(bins[0].x1) - x(bins[0].x0) - 10)
+	.attr('width', x(bins[0].x1) - x(bins[0].x0) - 1)
 	.attr('height', function(d) { return graphHeight - y(d.length); })
 	.style('fill', '#FECA3D');
 	
 	
-// bar.append('text')
-// 	.attr('dy', '0.75em')
-// 	.attr('y', 6)
-// 	.attr('x', (x(bins[0].x1) - x(bins[0].x0)) / 2)
-// 	.attr('text-anchor', 'middle')
-// 	.text(function(d) { return d3.format(',.0f')(d.length); })
-// 	.attr('stroke', 'white')
-// 	.attr('fill', 'white');
+bar.append('text')
+	.attr('dy', '0.75em')
+	.attr('y', 6)
+	.attr('x', (x(bins[0].x1) - x(bins[0].x0)) / 2)
+	.attr('text-anchor', 'middle')
+	.text(function(d) { 
+		return d.length > 20 ? d3.format(',.0f')(d.length) : ""; 
+	})
+	.attr('stroke', 'white')
+	.attr('fill', 'white')
+	.style('font-size', '10px');
 	
 svg.append('g')
 	.attr('class', 'axis axis--x')
