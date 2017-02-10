@@ -282,7 +282,7 @@ function appendHistogram(svg, data) {
 
 	var axisHeight = 20;
 
-	var graphPadding = 20;
+	var graphPadding = 30;
 	var boxW = d3.select('.measBox').node().getBoundingClientRect().width;
 	var bodyW = d3.select('.measText').node().getBoundingClientRect().width;
 
@@ -298,13 +298,8 @@ function appendHistogram(svg, data) {
 	var graphHeight = height - axisHeight;
 	var graphWidth = width - (graphPadding * 2);
 
-	var g = svg.append('g')
-		.attr('width', graphWidth)
-		.attr('height', graphHeight)
-		.attr('transform', 'translate(' + graphPadding + ',0)');
-
 	var x = d3.scaleLinear()
-		.domain(d3.extent(data))
+		.domain([0, 2000])
 		.rangeRound([0, graphWidth]);
 
 	var bins = d3.histogram()
@@ -312,12 +307,26 @@ function appendHistogram(svg, data) {
 		.thresholds(x.ticks(20))
 		(data);
 
-	console.log(bins);
-	
 	var y = d3.scaleLinear()
 		.domain([0, d3.max(bins, function(d) { return d.length })])
 		.range([graphHeight, 0]);
 	
+	var yaxis = d3.axisLeft(y)
+		.tickSizeInner(-graphWidth)
+		.tickSizeOuter(3)
+		.tickPadding(graphPadding/2);
+			
+	svg.append('g')
+		.attr('class', 'axis axis--y')
+		.attr('transform', 'translate(' + graphPadding + ',0)')
+		.attr('stroke', 'white')
+		.call(yaxis);
+		
+	var g = svg.append('g')
+		.attr('width', graphWidth)
+		.attr('height', graphHeight)
+		.attr('transform', 'translate(' + graphPadding + ',0)');
+		
 	var bar = g.selectAll('.bar')
 		.data(bins)
 		.enter().append('g')
@@ -326,28 +335,30 @@ function appendHistogram(svg, data) {
 		
 	bar.append('rect')
 		.attr('x', 1)
-		.attr('width', x(bins[0].x1) - x(bins[0].x0) - 2)
+		.attr('width', x(bins[0].x1) - x(bins[0].x0) - 4)
 		.attr('height', function(d) { return graphHeight - y(d.length); })
 		.style('fill', yellow);
 	
 	bar.append('text')
 		.attr('dy', '0.75em')
-		.attr('y', 6)
+		.attr('y', 4)
 		.attr('x', (x(bins[0].x1) - x(bins[0].x0)) / 2)
 		.attr('text-anchor', 'middle')
 		.text(function(d) { 
-			return d.length > 20 ? d3.format(',.0f')(d.length) : ""; 
+			return d.length > 0 ? d3.format(',.0f')(d.length) : ""; 
 		})
 		.attr('stroke', 'white')
 		.attr('fill', 'white')
 		.style('font-size', '10px');
-	
-	svg.append('g')
+		
+		var xaxis = d3.axisBottom(x)
+			.tickPadding(6);
+			
+		svg.append('g')
 		.attr('class', 'axis axis--x')
 		.attr('transform', 'translate(' + graphPadding + ',' + graphHeight + ')')
 		.attr('stroke', 'white')
-		.call(d3.axisBottom(x));
-	
+		.call(xaxis);
 }
 
 
