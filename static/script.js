@@ -84,20 +84,31 @@ function appendMeasuresOfSearch(res) {
 	var tableData = [
 		{ 'Measure' : 'Fixation Count', 'Value' : fixCount, 'Plot' : null },
 		{ 'Measure' : 'Saccade Count', 'Value' : sacCount, 'Plot' : null },
-		{ 'Measure' : 'Average Saccade Length', 'Value' : avgSacLength, 'Plot' : function() { f('avgSacLength') } },
-		{ 'Measure' : 'Scanpath Length', 'Value' : scanLength, 'Plot' : f('scanLength') },
-		{ 'Measure' : 'Convex Hull Area', 'Value' : hullArea, 'Plot' : f('hullArea') }
+		{ 'Measure' : 'Average Saccade Length', 'Value' : avgSacLength, 'Plot' : function() { showSearchGraph('') } },
+		{ 'Measure' : 'Scanpath Length', 'Value' : scanLength, 'Plot' : function() { showSearchGraph('hullGraph') } },
+		{ 'Measure' : 'Convex Hull Area', 'Value' : hullArea, 'Plot' : function() { showSearchGraph('hullGraph') } }
 	];
 	
 	appendMeasureTable('search', d3.select('#searchBox .measText'), tableData);
 	
 	appendPlot(d3.select('#hullGraph'), fixationPoints, hullPoints);
 	
+	appendHistogram(d3.select('#searchGraph'));
+	
 	showPlotLegend()
 }
 
-function f(a) {
-	console.log(a);
+function showSearchGraph(g) {
+	if (g == 'hullGraph') {
+		$('#hullGraphLegend').show();
+		$('#hullGraph').show();
+		$('#searchGraph').hide();
+	}
+	else {
+		$('#hullGraphLegend').hide();
+		$('#hullGraph').hide();
+		$('#searchGraph').show();
+	}
 }
 
 function appendMeasureTable(name, elem, data) {
@@ -265,7 +276,7 @@ function getGraphDimensions() {
 	return { height: height, width: width}
 }
 
-function appendHistogram(svg) {
+function appendHistogram(sv, data) {
 
 	var axisHeight = 20;
 
@@ -276,8 +287,6 @@ function appendHistogram(svg) {
 	var dims = getGraphDimensions();
 	var height = dims.height;
 	var width = dims.width;
-
-	var data = d3.range(1000).map(d3.randomBates(10));
 
 	var formatCount = d3.format('.0f');
 	
@@ -336,7 +345,6 @@ function appendHistogram(svg) {
 	
 }
 
-// appendPlot(d3.select('#hullGraph'));
 
 function appendPlot(svg, points, hull) {
 

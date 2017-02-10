@@ -82,6 +82,21 @@ public class SaccadeAnalyzer extends Analyzer {
 	
 	public void addLengthStats(Map<String, Object> map) {
 		addStats(map, "SaccadeLength", getSaccadeLengths(fixationPoints));
+		putAllLengthSamples(map, getSaccadeLengths(fixationPoints));
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	private void putAllLengthSamples(Map<String, Object> map, double[] lengths) {
+		
+		Map<String, Object> sampleMap = new HashMap<>();
+		
+		for (int i = 0; i < lengths.length; i++) {
+			sampleMap.put(Integer.toString(i), Double.toString(lengths[i]));
+		}
+		
+		Map<String, Object> metricMap = (Map<String, Object>) map.get("SaccadeLength");
+		metricMap.put("Samples", sampleMap);
 	}
 	
 	

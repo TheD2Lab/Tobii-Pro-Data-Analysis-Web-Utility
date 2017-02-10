@@ -67,7 +67,7 @@ public class FixationAnalyzer extends Analyzer {
 		addCountStats(fixMap);
 		addDurationStats(fixMap);
 		addConvexHullStats(fixMap);
-		fixMap.put("Points", transformPoints(points));
+		fixMap.put("Points", transformPoints(points));	
 		
 		map.put(NAME, fixMap);
 	}
