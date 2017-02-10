@@ -279,25 +279,21 @@ function getGraphDimensions() {
 }
 
 const GRAPH_TITLE_FONT_SIZE = 16;
+const GRAPH_LABEL_FONT_SIZE = 12;
 
 function appendHistogram(svg, data) {
 
-	/*
-	 * local variables
-	 */
-	 
-	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 20, right: 20 };
+	// sizing
+		 
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 50, right: 20 };
 	var dimensions = getGraphDimensions();
 	var height = dimensions.height;
 	var width = dimensions.width;
 	var graphHeight = height - margin.top - margin.bottom;
 	var graphWidth = width - margin.left - margin.right;
-	var graphCenter = margin.left + (0.5 * graphWidth)
 	
-	/*
-	 * scales and generators
-	 */
-	 
+	// scales and generators
+	
 	var x = d3.scaleLinear()
 		.domain([0, 2000])
 		.rangeRound([0, graphWidth]);
@@ -322,20 +318,14 @@ function appendHistogram(svg, data) {
 		
 	var barWidth =  x(bins[0].x1) - x(bins[0].x0);
 	
-	/*	
-	 * appends
-	 */
-	 
+	// appends 
+	
 	svg.attr('width', width).attr('height', height);
 
-	appendTitle(svg, graphCenter, "Saccade Length Distribution")
-			
-	svg.append('g')
-		.attr('class', 'axis axis--y')
-		.attr('transform', translate(margin.left, margin.top))
-		.attr('stroke', 'white')
-		.call(yaxis);
-		
+	appendTitle(svg, margin, dimensions, "Saccade Length Distribution")
+	appendYAxis(svg, yaxis, margin, dimensions, 'Count');
+	appendXAxis(svg, xaxis, margin, dimensions, 'Length (px)');
+	
 	var g = svg.append('g')
 		.attr('width', graphWidth)
 		.attr('height', graphHeight)
@@ -353,20 +343,6 @@ function appendHistogram(svg, data) {
 		.attr('width', barWidth - 4)
 		.attr('height', function(d) { return graphHeight - y(d.length); })
 		.style('fill', YELLOW);
-	
-	bars.append('text')
-		.attr('dy', '0.75em')
-		.attr('y', 4)
-		.attr('x', 0.5 * barWidth)
-		.attr('text-anchor', 'middle')
-		.attr('stroke', 'white')
-		.attr('fill', 'white')
-		.style('font-size', '10px')
-		.text(function(d) { 
-			return d.length > 0 ? d.length : ""; 
-		})
-		
-		appendXAxis(svg, xaxis, margin, dimensions, 'Length (px)');
 }
 
 
@@ -377,20 +353,38 @@ function appendXAxis(svg, axis, margin, dimensions, label) {
 		.attr('transform', translate(margin.left, dimensions.height - margin.bottom))
 		.attr('stroke', 'white')
 		.call(axis);
-		
-	var labelFontSize = 12;
 	
-	var labelX = margin.left + (0.5 * dimensions.width);
-	var labelY = dimensions.height - labelFontSize;
+	var labelX = margin.left + (0.5 * (dimensions.width - margin.left - margin.right));
+	var labelY = dimensions.height - GRAPH_LABEL_FONT_SIZE;
 	
 	svg.append('text')
 		.attr('transform', translate(labelX, labelY))
 		.style('text-anchor', 'middle')
-		.style('font-size', labelFontSize + 'px')
+		.style('font-size', GRAPH_LABEL_FONT_SIZE + 'px')
 		.style('fill', 'white')
 		.text(label);
 }
 
+
+function appendYAxis(svg, axis, margin, dimensions, label) {
+
+	svg.append('g')
+		.attr('class', 'axis axis--y')
+		.attr('transform', translate(margin.left, margin.top))
+		.attr('stroke', 'white')
+		.call(axis);
+		
+	var labelX = margin.top + (0.5 * (dimensions.height - margin.top - margin.bottom));
+	
+	svg.append('text')
+		.attr('transform', 'rotate(-90)')
+		.attr('y', GRAPH_LABEL_FONT_SIZE)
+		.attr('x', -labelX)
+		.attr('text-anchor', 'middle')
+		.style('font-size', GRAPH_LABEL_FONT_SIZE + 'px')
+		.style('fill', 'white')
+		.text(label);
+}
 
 function appendPlot(svg, points, hull) {
 
@@ -602,9 +596,12 @@ function translate(x, y) {
 }
 
 
-function appendTitle(svg, center, text) {
+function appendTitle(svg, margin, dimensions, text) {
+
+	var centerX = margin.left + (0.5 * (dimensions.width - margin.left - margin.right));
+	
 	svg.append('text')
-		.attr('transform', translate(center, GRAPH_TITLE_FONT_SIZE))
+		.attr('transform', translate(centerX, GRAPH_TITLE_FONT_SIZE))
 		.attr('font-size', GRAPH_TITLE_FONT_SIZE + 'px')
 		.attr('fill', 'white')
 		.attr('text-anchor', 'middle')
