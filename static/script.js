@@ -1,5 +1,8 @@
 'use strict'
 
+const yellow = '#FECA3D';
+const red = '#FB441E';
+
 const DESCRIPTIVE_STATS = 'DescriptiveStats';
 
 var decimalFormat = d3.format('.2f');
@@ -43,6 +46,8 @@ function showResults(response) {
 		}, 500);
 }
 
+
+		
 function parseResponse(res) {
 
 	appendMeasuresOfSearch(res);
@@ -87,6 +92,8 @@ function appendMeasuresOfSearch(res) {
 	appendMeasureTable('search', d3.select('#searchBox .measText'), tableData);
 	
 	appendPlot(d3.select('#hullGraph'), fixationPoints, hullPoints);
+	
+	showPlotLegend()
 }
 
 function f(a) {
@@ -176,9 +183,6 @@ function appendRawMeasures(response) {
 		tableData[category] = categoryStats;
 	}
 
-	console.log(tableData);
-	
-	
  	var tables = d3.select('#resultContainer')
  		.selectAll('.tableBounds')
  		.data(Object.keys(tableData))
@@ -310,7 +314,7 @@ function appendHistogram(svg) {
 		.attr('x', 1)
 		.attr('width', x(bins[0].x1) - x(bins[0].x0) - 1)
 		.attr('height', function(d) { return graphHeight - y(d.length); })
-		.style('fill', '#FECA3D');
+		.style('fill', yellow);
 	
 	bar.append('text')
 		.attr('dy', '0.75em')
@@ -355,17 +359,17 @@ function appendPlot(svg, points, hull) {
 		return p.y;
 	});
 	
-	var x = d3.scaleLinear()
+	var xline = d3.scaleLinear()
 		.domain(xdomain)
 		.range([yAxisPadding + 15, w - 15]);
 		
-	var y = d3.scaleLinear()
+	var yline = d3.scaleLinear()
 		.domain(ydomain)
 		.range([h - xAxisPadding - 15, 15]);
 		
 	var line = d3.line()
-		.x(function(d) { return x(d.x); })
-		.y(function(d) { return y(d.y); });
+		.x(function(d) { return xline(d.x); })
+		.y(function(d) { return yline(d.y); });
 		
 
 	// all
@@ -380,8 +384,8 @@ function appendPlot(svg, points, hull) {
 		.enter()
 			.append('circle')
 			.attr('class', 'fix')
-			.attr('cx', function(d) { return x(d.x); })
-			.attr('cy', function(d) { return y(d.y); })
+			.attr('cx', function(d) { return xline(d.x); })
+			.attr('cy', function(d) { return yline(d.y); })
 			.attr('r', 3)
 			.attr('fill', 'white')
 			.attr('opacity', 0.3);
@@ -389,8 +393,8 @@ function appendPlot(svg, points, hull) {
 	// hull		
 	svg.append('path')
 		.attr('d', function(d)  { return line(hull); })
-		.style('stroke', '#FECA3D')
-		.style('stroke-width', '1')
+		.style('stroke', yellow)
+		.style('stroke-width', '2')
 		.style('fill', 'none');
 		
 	svg.selectAll('.hull')
@@ -398,18 +402,18 @@ function appendPlot(svg, points, hull) {
 		.enter()
 			.append('circle')
 			.attr('class', 'hull')
-			.attr('cx', function(d) { return x(d.x); })
-			.attr('cy', function(d) { return y(d.y); })
-			.attr('r', 4)
+			.attr('cx', function(d) { return xline(d.x); })
+			.attr('cy', function(d) { return yline(d.y); })
+			.attr('r', 5)
 			.attr('opacity', 0.7)
-			.attr('fill', '#FB441E' );
+			.attr('fill', red );
 			
 	
 	var axisX = svg.append('g')
 		.attr('class', 'axis axis--x')
 		.attr('transform', 'translate(' + 0 + ',' + (h - xAxisPadding) + ')')
 		.attr('stroke', 'white')
-		.call(d3.axisBottom(x).tickValues(xdomain));
+		.call(d3.axisBottom(xline).tickValues(xdomain));
 
 	var offset = axisX.node().getBBox().height;
 	var xOffset = yAxisPadding + axisX.node().getBBox().width/2;
@@ -423,7 +427,7 @@ function appendPlot(svg, points, hull) {
 		.attr('class', 'axis axis--y')
 		.attr('transform', 'translate(' + (yAxisPadding) + ',' + 0 + ')')
 		.attr('stroke', 'white')
-		.call(d3.axisLeft(y).tickValues(ydomain));
+		.call(d3.axisLeft(yline).tickValues(ydomain));
 		
 	var hfsPlus = axisY.node().getBBox().height / 2;
 	
@@ -433,4 +437,95 @@ function appendPlot(svg, points, hull) {
 		.attr('x', -hfsPlus)
 		.attr('text-anchor', 'middle')
 		.text('y-pixels');
+}
+
+function showPlotLegend() {
+
+	var p = d3.select(".measGraphFooter");
+	
+	var width = p.node().getBoundingClientRect().width;
+	var height = p.node().getBoundingClientRect().height;
+	
+	console.log(height);
+	
+	var svg = d3.select('#hullGraphLegend')
+		.attr('width', width)
+		.attr('height', height);
+		
+	var stdFix = svg.append('g')
+		.attr('transform', 'translate(' + (width * 0.20) + ',' + (height * 0.25) + ')');
+		
+	var radius = 10
+	stdFix.append('circle')
+		.attr('fill', 'white')
+		.attr('cy', -(radius/2))
+		.attr('r', radius);
+		
+	var stdFixText = stdFix.append('text')
+		.attr('text-anchor', 'middle')
+		.style('font-size', '12px')
+		.attr('fill', 'white')
+		.text('Fixation');
+	
+	stdFixText.attr('dx', stdFixText.node().getBBox().width/2 + (radius * 2));
+		
+	var hullFix = svg.append('g')
+		.attr('transform', 'translate(' + (width * 0.60) + ',' + (height * 0.25) + ')');
+		
+	var radius = 10
+	hullFix.append('circle')
+		.attr('fill', red)
+		.attr('cy', -(radius/2))
+		.attr('r', radius);
+		
+	var hullFixText = hullFix.append('text')
+		.attr('text-anchor', 'middle')
+		.style('font-size', '12px')
+		.attr('fill', 'white')
+		.text('Convex Hull Fixation');
+	
+	hullFixText.attr('dx', hullFixText.node().getBBox().width/2 + (radius * 2));
+
+
+
+	var scanpathData = [ 
+		{ x: width * 0.15, y:  height * 0.75 },
+		{ x: width * 0.25, y: height * 0.75 }
+	];
+	
+	var line = d3.line()
+		.x(function(d) { return d.x; })
+		.y(function(d) { return d.y; });
+	
+	svg.append('path')
+		.attr('d', function(d)  { return line(scanpathData); })
+		.style('stroke', 'white')
+		.style('stroke-width', '3')
+		.style('fill', 'none');
+		
+	svg.append('text')
+		.attr('transform', 'translate(' + (width * 0.28) + ',' + (height * 0.75) + ')')
+		.attr('dy', 3)
+		.style('font-size', '12px')
+		.attr('fill', 'white')
+		.text('Scanpath');	
+		
+		
+	var scanpathData2 = [ 
+		{ x: width * 0.55, y:  height * 0.75 },
+		{ x: width * 0.65, y: height * 0.75 }
+	];
+	
+	svg.append('path')
+		.attr('d', function(d)  { return line(scanpathData2); })
+		.style('stroke', yellow)
+		.style('stroke-width', '3')
+		.style('fill', 'none');
+		
+	svg.append('text')
+		.attr('transform', 'translate(' + (width * 0.68) + ',' + (height * 0.75) + ')')
+		.attr('dy', 3)
+		.style('font-size', '12px')
+		.attr('fill', 'white')
+		.text('Convex Hull Boundary');	
 }

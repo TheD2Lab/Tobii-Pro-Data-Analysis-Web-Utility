@@ -158,17 +158,29 @@
 	
 	.measBox {
 		width: 100%;
-		margin:40px auto;
+		margin:20px auto;
 		color:white;
 		background-color: #426895;
 		border:1px solid #426895;
 		border-radius: 10px;
 	}
 	
-	.measTitle {
-		height:40px;
-		margin:0;
+	.measHeader, .measFooter {
+		height:60px;
+		margin:20px auto;
 		padding:0;
+	}
+	
+	.measTextFooter {
+		height:100%;
+		width: 40%;
+		display:inline-block;
+	}
+	
+	.measGraphFooter {
+		height:100%;
+		width:59%;
+		display:inline-block;
 	}
 	
 	.measBody {
@@ -178,7 +190,7 @@
 	.measText {
 		width:30%;
 		padding:0;
-		height:300px;
+		height:350px;
 		overflow-y:scroll;
 		overflow-x:hidden;
 		margin:0 5%;
@@ -203,7 +215,7 @@
 	}
 	
 	.measCell {	
-		height: 50px;
+		height: 80px;
 		text-align: center;
 		border: 1px solid white;
 	}
