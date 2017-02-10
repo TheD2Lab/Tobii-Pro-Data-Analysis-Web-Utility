@@ -70,6 +70,7 @@ const MEAN = "mean";
 const COUNT = "Count";
 const SACCADE_LENGTH = 'SaccadeLength';
 const POINTS = "Points";
+const SAMPLES = 'Samples';
 
 function appendMeasuresOfSearch(res) {
 
@@ -80,6 +81,7 @@ function appendMeasuresOfSearch(res) {
 	var hullArea = res[FIXATION][HULL][AREA];
 	var hullPoints = res[FIXATION][HULL][POINTS];
 	var fixationPoints = res[FIXATION][POINTS];
+	var saccadeLengths = res[SACCADE][SACCADE_LENGTH][SAMPLES];
 	
 	var tableData = [
 		{ 'Measure' : 'Fixation Count', 'Value' : fixCount, 'Plot' : null },
@@ -93,7 +95,7 @@ function appendMeasuresOfSearch(res) {
 	
 	appendPlot(d3.select('#hullGraph'), fixationPoints, hullPoints);
 	
-	appendHistogram(d3.select('#searchGraph'));
+	appendHistogram(d3.select('#searchGraph'), Object.values(saccadeLengths).map(function(d) { return parseFloat(d); }));
 	
 	showPlotLegend()
 }
@@ -276,7 +278,7 @@ function getGraphDimensions() {
 	return { height: height, width: width}
 }
 
-function appendHistogram(sv, data) {
+function appendHistogram(svg, data) {
 
 	var axisHeight = 20;
 
@@ -302,13 +304,16 @@ function appendHistogram(sv, data) {
 		.attr('transform', 'translate(' + graphPadding + ',0)');
 
 	var x = d3.scaleLinear()
+		.domain(d3.extent(data))
 		.rangeRound([0, graphWidth]);
 
 	var bins = d3.histogram()
 		.domain(x.domain())
-		.thresholds(x.ticks(16))
+		.thresholds(x.ticks(20))
 		(data);
 
+	console.log(bins);
+	
 	var y = d3.scaleLinear()
 		.domain([0, d3.max(bins, function(d) { return d.length })])
 		.range([graphHeight, 0]);
@@ -321,7 +326,7 @@ function appendHistogram(sv, data) {
 		
 	bar.append('rect')
 		.attr('x', 1)
-		.attr('width', x(bins[0].x1) - x(bins[0].x0) - 1)
+		.attr('width', x(bins[0].x1) - x(bins[0].x0) - 2)
 		.attr('height', function(d) { return graphHeight - y(d.length); })
 		.style('fill', yellow);
 	
