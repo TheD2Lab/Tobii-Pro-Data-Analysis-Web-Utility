@@ -1,7 +1,7 @@
 'use strict'
 
-const yellow = '#FECA3D';
-const red = '#FB441E';
+const YELLOW = '#FECA3D';
+const RED = '#FB441E';
 
 const DESCRIPTIVE_STATS = 'DescriptiveStats';
 
@@ -278,87 +278,117 @@ function getGraphDimensions() {
 	return { height: height, width: width}
 }
 
+const GRAPH_TITLE_FONT_SIZE = 16;
+
 function appendHistogram(svg, data) {
 
-	var axisHeight = 20;
-
-	var graphPadding = 30;
-	var boxW = d3.select('.measBox').node().getBoundingClientRect().width;
-	var bodyW = d3.select('.measText').node().getBoundingClientRect().width;
-
-	var dims = getGraphDimensions();
-	var height = dims.height;
-	var width = dims.width;
-
-	var formatCount = d3.format('.0f');
+	/*
+	 * local variables
+	 */
+	 
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 20, right: 20 };
+	var dimensions = getGraphDimensions();
+	var height = dimensions.height;
+	var width = dimensions.width;
+	var graphHeight = height - margin.top - margin.bottom;
+	var graphWidth = width - margin.left - margin.right;
+	var graphCenter = margin.left + (0.5 * graphWidth)
 	
-		svg.attr('width', width)
-		.attr('height', height);
-
-	var graphHeight = height - axisHeight;
-	var graphWidth = width - (graphPadding * 2);
-
+	/*
+	 * scales and generators
+	 */
+	 
 	var x = d3.scaleLinear()
 		.domain([0, 2000])
 		.rangeRound([0, graphWidth]);
 
-	var bins = d3.histogram()
+	var bin = d3.histogram()
 		.domain(x.domain())
-		.thresholds(x.ticks(20))
-		(data);
+		.thresholds(x.ticks(20));
+		
+	var bins = bin(data);
 
 	var y = d3.scaleLinear()
 		.domain([0, d3.max(bins, function(d) { return d.length })])
 		.range([graphHeight, 0]);
-	
+		
+	var xaxis = d3.axisBottom(x)
+			.tickPadding(6);
+			
 	var yaxis = d3.axisLeft(y)
 		.tickSizeInner(-graphWidth)
 		.tickSizeOuter(3)
-		.tickPadding(graphPadding/2);
+		.tickPadding(8);
+		
+	var barWidth =  x(bins[0].x1) - x(bins[0].x0);
+	
+	/*	
+	 * appends
+	 */
+	 
+	svg.attr('width', width).attr('height', height);
+
+	appendTitle(svg, graphCenter, "Saccade Length Distribution")
 			
 	svg.append('g')
 		.attr('class', 'axis axis--y')
-		.attr('transform', 'translate(' + graphPadding + ',0)')
+		.attr('transform', translate(margin.left, margin.top))
 		.attr('stroke', 'white')
 		.call(yaxis);
 		
 	var g = svg.append('g')
 		.attr('width', graphWidth)
 		.attr('height', graphHeight)
-		.attr('transform', 'translate(' + graphPadding + ',0)');
+		.attr('transform', translate(margin.left, margin.top));
 		
-	var bar = g.selectAll('.bar')
+	var bars = g.selectAll('.bar')
 		.data(bins)
-		.enter().append('g')
+		.enter()
+			.append('g')
 			.attr('class', 'bar')
-			.attr('transform', function(d) { return 'translate(' + x(d.x0) + ',' + y(d.length) + ')'; });
+			.attr('transform', function(d) { return translate(x(d.x0) ,y(d.length)); });
 		
-	bar.append('rect')
+	bars.append('rect')
 		.attr('x', 1)
-		.attr('width', x(bins[0].x1) - x(bins[0].x0) - 4)
+		.attr('width', barWidth - 4)
 		.attr('height', function(d) { return graphHeight - y(d.length); })
-		.style('fill', yellow);
+		.style('fill', YELLOW);
 	
-	bar.append('text')
+	bars.append('text')
 		.attr('dy', '0.75em')
 		.attr('y', 4)
-		.attr('x', (x(bins[0].x1) - x(bins[0].x0)) / 2)
+		.attr('x', 0.5 * barWidth)
 		.attr('text-anchor', 'middle')
-		.text(function(d) { 
-			return d.length > 0 ? d3.format(',.0f')(d.length) : ""; 
-		})
 		.attr('stroke', 'white')
 		.attr('fill', 'white')
-		.style('font-size', '10px');
+		.style('font-size', '10px')
+		.text(function(d) { 
+			return d.length > 0 ? d.length : ""; 
+		})
 		
-		var xaxis = d3.axisBottom(x)
-			.tickPadding(6);
-			
-		svg.append('g')
+		appendXAxis(svg, xaxis, margin, dimensions, 'Length (px)');
+}
+
+
+function appendXAxis(svg, axis, margin, dimensions, label) {
+
+	svg.append('g')
 		.attr('class', 'axis axis--x')
-		.attr('transform', 'translate(' + graphPadding + ',' + graphHeight + ')')
+		.attr('transform', translate(margin.left, dimensions.height - margin.bottom))
 		.attr('stroke', 'white')
-		.call(xaxis);
+		.call(axis);
+		
+	var labelFontSize = 12;
+	
+	var labelX = margin.left + (0.5 * dimensions.width);
+	var labelY = dimensions.height - labelFontSize;
+	
+	svg.append('text')
+		.attr('transform', translate(labelX, labelY))
+		.style('text-anchor', 'middle')
+		.style('font-size', labelFontSize + 'px')
+		.style('fill', 'white')
+		.text(label);
 }
 
 
@@ -429,7 +459,7 @@ function appendPlot(svg, points, hull) {
 	// hull		
 	svg.append('path')
 		.attr('d', function(d)  { return line(hull); })
-		.style('stroke', yellow)
+		.style('stroke', YELLOW)
 		.style('stroke-width', '2')
 		.style('fill', 'none');
 		
@@ -442,7 +472,7 @@ function appendPlot(svg, points, hull) {
 			.attr('cy', function(d) { return yline(d.y); })
 			.attr('r', 5)
 			.attr('opacity', 0.7)
-			.attr('fill', red );
+			.attr('fill', RED );
 			
 	
 	var axisX = svg.append('g')
@@ -510,7 +540,7 @@ function showPlotLegend() {
 		
 	var radius = 10
 	hullFix.append('circle')
-		.attr('fill', red)
+		.attr('fill', RED)
 		.attr('cy', -(radius/2))
 		.attr('r', radius);
 		
@@ -554,7 +584,7 @@ function showPlotLegend() {
 	
 	svg.append('path')
 		.attr('d', function(d)  { return line(scanpathData2); })
-		.style('stroke', yellow)
+		.style('stroke', YELLOW)
 		.style('stroke-width', '3')
 		.style('fill', 'none');
 		
@@ -565,3 +595,19 @@ function showPlotLegend() {
 		.attr('fill', 'white')
 		.text('Convex Hull Boundary');	
 }
+
+
+function translate(x, y) {
+	return 'translate(' + x + ',' + y + ')';
+}
+
+
+function appendTitle(svg, center, text) {
+	svg.append('text')
+		.attr('transform', translate(center, GRAPH_TITLE_FONT_SIZE))
+		.attr('font-size', GRAPH_TITLE_FONT_SIZE + 'px')
+		.attr('fill', 'white')
+		.attr('text-anchor', 'middle')
+		.text(text);
+}
+
