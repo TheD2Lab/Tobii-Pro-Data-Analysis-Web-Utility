@@ -351,6 +351,18 @@ function appendPlot(svg, points, hull) {
 	svg.attr('height', h)
 		.attr('width', w);
 	
+	var title = svg.append('text')
+		.attr('width', w)
+		.attr('font-size', '16px')
+		.attr('fill', 'white')
+		.attr('text-anchor', 'middle')
+		.text('Scanpath and Convex Hull Plots');
+
+	var titleBox = title.node().getBBox();
+	
+	var xRange = [yAxisPadding + 15, w - 15];
+	var xRangeMag = xRange[1] - xRange[0]
+	title.attr('transform', 'translate(' + ((xRangeMag)/2 + yAxisPadding + 15) + ',' + titleBox.height + ')');
 	var xdomain = d3.extent(points, function(p) {
 		return p.x;
 	});
@@ -361,11 +373,11 @@ function appendPlot(svg, points, hull) {
 	
 	var xline = d3.scaleLinear()
 		.domain(xdomain)
-		.range([yAxisPadding + 15, w - 15]);
+		.range(xRange);
 		
 	var yline = d3.scaleLinear()
 		.domain(ydomain)
-		.range([h - xAxisPadding - 15, 15]);
+		.range([h - xAxisPadding - 15,title.node().getBBox().height + 20]);
 		
 	var line = d3.line()
 		.x(function(d) { return xline(d.x); })
