@@ -12,7 +12,12 @@ public class MetaAnalyzer extends Analyzer {
 		super(export, NAME);
 	}
 	
-	public void addMetadata(Map<String, Object> map) {
+	@Override
+	public void run() {
+		putMetadata(data);
+	}
+	
+	public void putMetadata(Map<String, Object> map) {
 		
 		Map<String, Object> metaMap = new HashMap<>();
 		

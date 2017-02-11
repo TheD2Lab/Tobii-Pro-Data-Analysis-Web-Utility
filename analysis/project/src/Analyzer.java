@@ -1,15 +1,31 @@
 
 import java.util.Arrays;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Predicate;
 
-public class Analyzer {
+import measure.TimeUtilities;
+
+
+public class Analyzer implements Runnable {
 
 	public Analyzer(TobiiExport export, String name) {
 		this.export = export;
 		this.name = name;
+		data = new HashMap<String, Object>();
 	}
+	
+	
+	public String getName() {
+		return name;
+	}
+	
+	
+	public Map<String, Object> getData() {
+		return data;
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public void putAllSamples(Map<String, Object> map, String column) {
@@ -32,20 +48,18 @@ public class Analyzer {
 		metricMap.put("Samples", sampleMap);
 	}
 	
-	public void addAllStats(Map<String, Object> map) {
+	
+	public void analyze() {
 		
 		if (metrics == null) return;
 		
-		Map<String, Object> statMap = new HashMap<>();
-		
 		for (String metric : metrics) {
-			addStats(statMap, metric, isValid);
-			putAllSamples(statMap, metric);
+			addStats(data, metric, isValid);
+			putAllSamples(data, metric);
 		}
-		
-		map.put(name, statMap);
 	}
 
+	
 	public void addCountStats(Map<String, Object> map) {
 		map.put("Count", export.getSampleCount());
 	}
@@ -66,6 +80,7 @@ public class Analyzer {
 		addStats(map, column, samples);
 	}
 	
+	
 	public void addStats(Map<String, Object> map, String column, double[] samples) {
 	
 		Map<String, Object> statMap = new HashMap<>();
@@ -75,8 +90,16 @@ public class Analyzer {
 		map.put(column, statMap);
 	}
 	
+	
+	@Override
+	public void run() {
+		analyze();
+	}
+	
 	protected String name;
 	protected TobiiExport export;
 	protected String[] metrics;
 	protected Predicate<String> isValid = (s -> !s.isEmpty());
+	protected Map<String, Object> data;
+
 }

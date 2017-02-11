@@ -27,7 +27,10 @@ import java.io.File;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import file.JsonUtilities;
 import measure.TimeUtilities;
@@ -51,38 +54,49 @@ public class Main {
 	
 	public static void main(String args[]) throws IOException{
 		
-		long start = TimeUtilities.getCurrentTime();
-		
 		File f = new File(args[INPUT_PATH_INDEX]);
 		TobiiExport export = new TobiiExport(f);
 		
+		long start = TimeUtilities.getCurrentTime();
 		Map<String, Object> analysisMap = analyze(export);
-		
-		JsonUtilities.write(analysisMap, args[OUTPUT_PATH_INDEX]);
-		
 		long stop = TimeUtilities.getCurrentTime();
 		System.out.printf("Analysis runtime duration: %s\n", TimeUtilities.parseDuration(stop - start));
+		
+		JsonUtilities.write(analysisMap, args[OUTPUT_PATH_INDEX]);
 	}
 	
 	
 	public static Map<String, Object> analyze(TobiiExport export) {
 		
+		List<Analyzer> analyzers = new LinkedList<Analyzer>();
+		analyzers.add(new MetaAnalyzer(export));
+		analyzers.add(new PupilAnalyzer(export));
+		analyzers.add(new FixationAnalyzer(export));
+		analyzers.add(new SaccadeAnalyzer(export));
+		analyzers.add(new AngleAnalyzer(export));
+		
+		List<Thread> threads = new LinkedList<Thread>();
+		
+		for (Analyzer a : analyzers) {
+			Thread t = new Thread(a);
+			threads.add(t);
+			t.start();
+		}
+		
+		for (Thread t : threads) {
+			try {
+				t.join();
+			} 
+			catch (InterruptedException ex) {
+				ex.printStackTrace();
+			}
+		}
+		
 		Map<String, Object> map = new HashMap<>();
 		
-		MetaAnalyzer metaLyz = new MetaAnalyzer(export);
-		metaLyz.addMetadata(map);
-		
-		PupilAnalyzer pupLyz = new PupilAnalyzer(export);
-		pupLyz.addAllStats(map);
-		
-		FixationAnalyzer fixLyz = new FixationAnalyzer(export);
-		fixLyz.addAllStats(map);
-		
-		SaccadeAnalyzer saccLyz = new SaccadeAnalyzer(export);
-		saccLyz.addAllStats(map);
-		
-		AngleAnalyzer angLyz = new AngleAnalyzer(export);
-		angLyz.addAllStats(map);
+		for (Analyzer a: analyzers) {
+			map.put(a.getName(), a.getData());
+		}
 		
 		return map;
 	}

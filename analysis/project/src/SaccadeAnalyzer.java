@@ -63,15 +63,13 @@ public class SaccadeAnalyzer extends Analyzer {
 	
 	
 	@Override
-	public void addAllStats(Map<String, Object> map) {
-		Map<String, Object> saccMap = new HashMap<>();
+	public void analyze() {
 		
-		addCountStats(saccMap);
-		addDurationStats(saccMap);
-		addLengthStats(saccMap);
+		addCountStats(data);
 		
-		map.put(NAME, saccMap);
+		addDurationStats(data);
 		
+		addLengthStats(data);
 	}
 	
 	public void addDurationStats(Map<String, Object> map) {

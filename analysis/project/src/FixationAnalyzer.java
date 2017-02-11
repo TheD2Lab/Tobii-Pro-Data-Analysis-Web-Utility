@@ -60,16 +60,11 @@ public class FixationAnalyzer extends Analyzer {
 	
 	
 	@Override
-	public void addAllStats(Map<String, Object> map) {
-		
-		Map<String, Object> fixMap = new HashMap<>();
-		
-		addCountStats(fixMap);
-		addDurationStats(fixMap);
-		addConvexHullStats(fixMap);
-		fixMap.put("Points", transformPoints(points));	
-		
-		map.put(NAME, fixMap);
+	public void analyze() {
+		addCountStats(data);
+		addDurationStats(data);
+		addConvexHullStats(data);
+		data.put("Points", transformPoints(points));	
 	}
 	
 	public void addDurationStats(Map<String, Object> map) {
