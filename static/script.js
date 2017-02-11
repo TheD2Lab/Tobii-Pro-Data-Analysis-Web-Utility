@@ -1,9 +1,38 @@
 'use strict'
 
+// colors
 const YELLOW = '#FECA3D';
 const RED = '#FB441E';
 
-const DESCRIPTIVE_STATS = 'DescriptiveStats';
+// response keys
+const FIXATION = "Fixation";
+const SACCADE = "Saccade";
+const DURATION = "GazeEventDuration";
+const HULL = "ConvexHull"
+const SUM = "sum";
+const AREA = "Area";
+const MEAN = "mean";
+const COUNT = "Count";
+const SACCADE_LENGTH = 'SaccadeLength';
+const POINTS = "Points";
+const SAMPLES = 'Samples';
+const STATS = 'DescriptiveStats';
+
+// raw tabel entries
+const TABLE_KEYS = [
+	'metric', 
+	'mean', 
+	'median', 
+	'mode', 
+	'standard deviation', 
+	'variance', 
+	'sum', 
+	'min',
+	'max'
+];
+
+const GRAPH_TITLE_FONT_SIZE = 16;
+const GRAPH_LABEL_FONT_SIZE = 12;
 
 var decimalFormat = d3.format('.2f');
 
@@ -23,17 +52,27 @@ $('#uploadForm').submit(function(e) {
 	})
 })
 
-const TABLE_KEYS = [
-	'metric', 
-	'mean', 
-	'median', 
-	'mode', 
-	'standard deviation', 
-	'variance', 
-	'sum', 
-	'min',
-	'max'
-];
+
+$("#validitySlider").slider({
+	min: 0,
+	max: 4,
+	step: 1
+});
+
+
+$("#timeSlider").slider({
+	min: 0,
+	max: 4,
+	step: 1
+});
+
+
+$("#eventSlider").slider({
+	min: 0,
+	max: 4,
+	step: 1
+});
+
 
 function showResults(response) {
 
@@ -41,18 +80,17 @@ function showResults(response) {
 	
 	parseResponse(response);
 	
-		$('html, body').animate( {
+	$('html, body').animate( {
 			scrollTop: $('#resultContainer').offset().top
 		}, 500);
 }
-
-
 		
+
 function parseResponse(res) {
 
 	appendMeasuresOfSearch(res);
 	
-// 	appendMeasuresOfProcessing(res);
+	appendMeasuresOfProcessing(res);
 // 	
 // 	appendMeasuresOfCognition(res);
 // 	
@@ -60,17 +98,6 @@ function parseResponse(res) {
 	
 }
 
-const FIXATION = "Fixation";
-const SACCADE = "Saccade";
-const HULL = "ConvexHull"
-const STATS = "DescriptiveStats";
-const SUM = "sum";
-const AREA = "Area";
-const MEAN = "mean";
-const COUNT = "Count";
-const SACCADE_LENGTH = 'SaccadeLength';
-const POINTS = "Points";
-const SAMPLES = 'Samples';
 
 function appendMeasuresOfSearch(res) {
 
@@ -84,33 +111,80 @@ function appendMeasuresOfSearch(res) {
 	var saccadeLengths = res[SACCADE][SACCADE_LENGTH][SAMPLES];
 	
 	var tableData = [
-		{ 'Measure' : 'Fixation Count', 'Value' : fixCount, 'Plot' : null },
-		{ 'Measure' : 'Saccade Count', 'Value' : sacCount, 'Plot' : null },
-		{ 'Measure' : 'Average Saccade Length', 'Value' : avgSacLength, 'Plot' : function() { showSearchGraph('') } },
-		{ 'Measure' : 'Scanpath Length', 'Value' : scanLength, 'Plot' : function() { showSearchGraph('hullGraph') } },
-		{ 'Measure' : 'Convex Hull Area', 'Value' : hullArea, 'Plot' : function() { showSearchGraph('hullGraph') } }
+		{ 'Measure' : 'Fixation Count', 
+			'Value' : fixCount, 
+			'Plot' : null 
+		},
+		{ 'Measure' : 'Saccade Count', 
+			'Value' : sacCount, 
+			'Plot' : null 
+		},
+		{ 
+			'Measure' : 'Average Saccade Length', 
+			'Value' : avgSacLength, 
+			'Plot' : function() { showHistogram('avgSacLengthGraph', 'searchGraph', saccadeLengths) } 
+		},
+		{ 
+			'Measure' : 'Scanpath Length', 
+			'Value' : scanLength, 
+			'Plot' : function() { showCoordinatePlot('hullGraph', 'searchGraph', fixationPoints, hullPoints) } 
+		},
+		{ 
+			'Measure' : 'Convex Hull Area', 
+			'Value' : hullArea, 
+			'Plot' : function() { showCoordinatePlot('hullGraph', 'searchGraph', fixationPoints, hullPoints) } 
+		}
 	];
 	
 	appendMeasureTable('search', d3.select('#searchBox .measText'), tableData);
-	
-	appendPlot(d3.select('#hullGraph'), fixationPoints, hullPoints);
-	
-	appendHistogram(d3.select('#searchGraph'), Object.values(saccadeLengths).map(function(d) { return parseFloat(d); }));
-	
-	showPlotLegend()
 }
 
-function showSearchGraph(g) {
-	if (g == 'hullGraph') {
-		$('#hullGraphLegend').show();
-		$('#hullGraph').show();
-		$('#searchGraph').hide();
-	}
-	else {
-		$('#hullGraphLegend').hide();
-		$('#hullGraph').hide();
-		$('#searchGraph').show();
-	}
+
+function appendMeasuresOfProcessing(res) {
+
+	var avgFixDur = res[FIXATION][DURATION][STATS][MEAN];
+	var fixDurSamples = res[FIXATION][DURATION][SAMPLES];
+	var avgSacDur = res[SACCADE][DURATION][STATS][MEAN];
+	var sacDurSamples = res[SACCADE][DURATION][SAMPLES];
+	var fixToSacDurRatio = avgFixDur / avgSacDur;
+	
+	var tableData = [
+		{ 
+			'Measure': 'Average Fixation Duration', 
+			'Value': avgFixDur, 
+			'Plot': function() { showHistogram('avgFixDurGraph', 'procGraph', fixDurSamples) }
+		},
+		{
+			'Measure': 'Average Saccade Duration',
+			'Value': avgSacDur,
+			'Plot': function() { showHistogram('avgSacDurGraph', 'procGraph', sacDurSamples) }
+		},
+		{
+			'Measure': 'Fixation to Saccade Duration Ratio',
+			'Value': fixToSacDurRatio,
+			'Plot': null
+		}
+	]
+	
+	appendMeasureTable('processing', d3.select('#procBox .measText'), tableData);
+}
+
+
+function showHistogram(id, group, data) {
+
+	$('.' + group).hide();
+	$('#' + id).show();
+
+	data = Object.values(data).map(function(d) { return parseFloat(d); });
+	appendHistogram(d3.select('#' + id), data);
+}
+
+function showCoordinatePlot(id, group, points1, points2) {
+
+	$('.' + group).hide();
+	$('#' + id).show();
+
+	appendCoordinatePlot(d3.select('#' + id), points1, points2);
 }
 
 function appendMeasureTable(name, elem, data) {
@@ -176,6 +250,7 @@ function appendMeasureTable(name, elem, data) {
 				(d3.select(this.parentNode).datum())();
 			});
 }
+
 
 function appendRawMeasures(response) {
 
@@ -245,31 +320,16 @@ function appendRawMeasures(response) {
 		
 }
 
+
 function getCellAlignment(i) {
 	return i == 0 ? 'center' : 'right';
 }
+
 
 function getCellBorderLeft(i) {
 	return i == 0 ? 'none' : '1px solid white';
 }
 
-$("#validitySlider").slider({
-	min: 0,
-	max: 4,
-	step: 1
-});
-
-$("#timeSlider").slider({
-	min: 0,
-	max: 4,
-	step: 1
-});
-
-$("#eventSlider").slider({
-	min: 0,
-	max: 4,
-	step: 1
-});
 
 function getGraphDimensions() {
 	var height = d3.select('.measText').node().getBoundingClientRect().height;
@@ -278,14 +338,12 @@ function getGraphDimensions() {
 	return { height: height, width: width}
 }
 
-const GRAPH_TITLE_FONT_SIZE = 16;
-const GRAPH_LABEL_FONT_SIZE = 12;
 
 function appendHistogram(svg, data) {
 
 	// sizing
 		 
-	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 50, right: 20 };
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 40, right: 20 };
 	var dimensions = getGraphDimensions();
 	var height = dimensions.height;
 	var width = dimensions.width;
@@ -346,71 +404,19 @@ function appendHistogram(svg, data) {
 }
 
 
-function appendXAxis(svg, axis, margin, dimensions, label) {
+function appendCoordinatePlot(svg, points, hull) {
 
-	svg.append('g')
-		.attr('class', 'axis axis--x')
-		.attr('transform', translate(margin.left, dimensions.height - margin.bottom))
-		.attr('stroke', 'white')
-		.call(axis);
+	// sizing
 	
-	var labelX = margin.left + (0.5 * (dimensions.width - margin.left - margin.right));
-	var labelY = dimensions.height - GRAPH_LABEL_FONT_SIZE;
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 10, bottom: 30, left: 40, right: 20 };
+	var dimensions = getGraphDimensions();
+	var height = dimensions.height;
+	var width = dimensions.width;
+	var graphHeight = height - margin.top - margin.bottom;
+	var graphWidth = width - margin.left - margin.right;
 	
-	svg.append('text')
-		.attr('transform', translate(labelX, labelY))
-		.style('text-anchor', 'middle')
-		.style('font-size', GRAPH_LABEL_FONT_SIZE + 'px')
-		.style('fill', 'white')
-		.text(label);
-}
+	// scales and generators
 
-
-function appendYAxis(svg, axis, margin, dimensions, label) {
-
-	svg.append('g')
-		.attr('class', 'axis axis--y')
-		.attr('transform', translate(margin.left, margin.top))
-		.attr('stroke', 'white')
-		.call(axis);
-		
-	var labelX = margin.top + (0.5 * (dimensions.height - margin.top - margin.bottom));
-	
-	svg.append('text')
-		.attr('transform', 'rotate(-90)')
-		.attr('y', GRAPH_LABEL_FONT_SIZE)
-		.attr('x', -labelX)
-		.attr('text-anchor', 'middle')
-		.style('font-size', GRAPH_LABEL_FONT_SIZE + 'px')
-		.style('fill', 'white')
-		.text(label);
-}
-
-function appendPlot(svg, points, hull) {
-
-	var dims = getGraphDimensions();
-	
-	var h = dims.height;
-	var w = dims.width;
-	
-	var xAxisPadding = 30;
-	var yAxisPadding = 40;
-	
-	svg.attr('height', h)
-		.attr('width', w);
-	
-	var title = svg.append('text')
-		.attr('width', w)
-		.attr('font-size', '16px')
-		.attr('fill', 'white')
-		.attr('text-anchor', 'middle')
-		.text('Scanpath and Convex Hull Plots');
-
-	var titleBox = title.node().getBBox();
-	
-	var xRange = [yAxisPadding + 15, w - 15];
-	var xRangeMag = xRange[1] - xRange[0]
-	title.attr('transform', 'translate(' + ((xRangeMag)/2 + yAxisPadding + 15) + ',' + titleBox.height + ')');
 	var xdomain = d3.extent(points, function(p) {
 		return p.x;
 	});
@@ -421,25 +427,41 @@ function appendPlot(svg, points, hull) {
 	
 	var xline = d3.scaleLinear()
 		.domain(xdomain)
-		.range(xRange);
+		.range([0, graphWidth]);
 		
 	var yline = d3.scaleLinear()
 		.domain(ydomain)
-		.range([h - xAxisPadding - 15,title.node().getBBox().height + 20]);
+		.range([graphHeight, 0]);
 		
 	var line = d3.line()
 		.x(function(d) { return xline(d.x); })
 		.y(function(d) { return yline(d.y); });
 		
+	var xaxis = d3.axisBottom(xline).tickValues(xdomain)
+	var yaxis = d3.axisLeft(yline).tickValues(ydomain);
+	
+	// appends
+	
+	appendTitle(svg, margin, dimensions, 'Scanpath and Convex Hull Plot')	
+	appendXAxis(svg, xaxis, margin, dimensions, 'X (px)');
+	appendYAxis(svg, yaxis, margin, dimensions, 'Y (px)');
 
-	// all
-	svg.append('path')
+	svg
+		.attr('height', height)
+		.attr('width', width);
+		
+	var g = svg.append('g')
+		.attr('width', graphWidth)
+		.attr('height', graphHeight)
+		.attr('transform', translate(margin.left, margin.top));
+
+	g.append('path')
 		.attr('d', function(d)  { return line(points); })
 		.style('stroke', 'white')
 		.style('stroke-width', '1')
 		.style('fill', 'none');
 		
-	svg.selectAll('.fix')
+	g.selectAll('.fix')
 		.data(points)
 		.enter()
 			.append('circle')
@@ -450,14 +472,13 @@ function appendPlot(svg, points, hull) {
 			.attr('fill', 'white')
 			.attr('opacity', 0.3);
 	
-	// hull		
-	svg.append('path')
+	g.append('path')
 		.attr('d', function(d)  { return line(hull); })
 		.style('stroke', YELLOW)
 		.style('stroke-width', '2')
 		.style('fill', 'none');
 		
-	svg.selectAll('.hull')
+	g.selectAll('.hull')
 		.data(hull)
 		.enter()
 			.append('circle')
@@ -467,37 +488,8 @@ function appendPlot(svg, points, hull) {
 			.attr('r', 5)
 			.attr('opacity', 0.7)
 			.attr('fill', RED );
-			
-	
-	var axisX = svg.append('g')
-		.attr('class', 'axis axis--x')
-		.attr('transform', 'translate(' + 0 + ',' + (h - xAxisPadding) + ')')
-		.attr('stroke', 'white')
-		.call(d3.axisBottom(xline).tickValues(xdomain));
-
-	var offset = axisX.node().getBBox().height;
-	var xOffset = yAxisPadding + axisX.node().getBBox().width/2;
-	
-	axisX.append('text')
-		.attr('transform', 'translate(' + xOffset + ',' + offset + ')')
-		.style('text-anchor', 'middle')
-		.text('x-pixels');
-		
-	var axisY = svg.append('g')
-		.attr('class', 'axis axis--y')
-		.attr('transform', 'translate(' + (yAxisPadding) + ',' + 0 + ')')
-		.attr('stroke', 'white')
-		.call(d3.axisLeft(yline).tickValues(ydomain));
-		
-	var hfsPlus = axisY.node().getBBox().height / 2;
-	
-	axisY.append('text')
-		.attr('transform', 'rotate(-90)')
-		.attr('y', -yAxisPadding / 2)
-		.attr('x', -hfsPlus)
-		.attr('text-anchor', 'middle')
-		.text('y-pixels');
 }
+
 
 function showPlotLegend() {
 
@@ -591,11 +583,6 @@ function showPlotLegend() {
 }
 
 
-function translate(x, y) {
-	return 'translate(' + x + ',' + y + ')';
-}
-
-
 function appendTitle(svg, margin, dimensions, text) {
 
 	var centerX = margin.left + (0.5 * (dimensions.width - margin.left - margin.right));
@@ -607,4 +594,51 @@ function appendTitle(svg, margin, dimensions, text) {
 		.attr('text-anchor', 'middle')
 		.text(text);
 }
+
+
+function appendXAxis(svg, axis, margin, dimensions, label) {
+
+	svg.append('g')
+		.attr('class', 'axis axis--x')
+		.attr('transform', translate(margin.left, dimensions.height - margin.bottom))
+		.attr('stroke', 'white')
+		.call(axis);
+	
+	var labelX = margin.left + (0.5 * (dimensions.width - margin.left - margin.right));
+	var labelY = dimensions.height - GRAPH_LABEL_FONT_SIZE;
+	
+	svg.append('text')
+		.attr('transform', translate(labelX, labelY))
+		.style('text-anchor', 'middle')
+		.style('font-size', GRAPH_LABEL_FONT_SIZE + 'px')
+		.style('fill', 'white')
+		.text(label);
+}
+
+
+function appendYAxis(svg, axis, margin, dimensions, label) {
+
+	svg.append('g')
+		.attr('class', 'axis axis--y')
+		.attr('transform', translate(margin.left, margin.top))
+		.attr('stroke', 'white')
+		.call(axis);
+		
+	var labelX = margin.top + (0.5 * (dimensions.height - margin.top - margin.bottom));
+	
+	svg.append('text')
+		.attr('transform', 'rotate(-90)')
+		.attr('y', GRAPH_LABEL_FONT_SIZE)
+		.attr('x', -labelX)
+		.attr('text-anchor', 'middle')
+		.style('font-size', GRAPH_LABEL_FONT_SIZE + 'px')
+		.style('fill', 'white')
+		.text(label);
+}
+
+
+function translate(x, y) {
+	return 'translate(' + x + ',' + y + ')';
+}
+
 
