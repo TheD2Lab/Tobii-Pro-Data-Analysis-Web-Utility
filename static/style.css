@@ -201,6 +201,17 @@
 		
 	}
 	
+	.halfTable {
+		width: 40%;
+		margin: 4.5%;
+		display: inline-block;
+	}
+	
+	.fullTable {
+		width: 90%;
+		margin: 5% auto;
+	}
+	
 	.measTable {
 		border-collapse: collapse;
 		margin:0;
@@ -225,8 +236,15 @@
 		border: 1px solid white;
 	}
 	
-
-		
+	
+	.rawTable {
+		border-collapse: collapse;
+	}
+	
+	.rawTable td {
+		border: 1px solid white;
+	}
+	
 	
 	.measGraph {
 		width:59%;

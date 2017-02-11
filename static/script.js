@@ -17,10 +17,17 @@ const SACCADE_LENGTH = 'SaccadeLength';
 const POINTS = "Points";
 const SAMPLES = 'Samples';
 const STATS = 'DescriptiveStats';
+const PUPIL = "Pupil";
+const PUPIL_LEFT = "PupilLeft";
+const PUPIL_RIGHT = "PupilRight";
+const ABS_ANGLE = "AbsoluteSaccadicDirection";
+const REL_ANGLE = "RelativeSaccadicDirection";
+const ANGLE = "Angle"
+const META = 'Meta';
 
 // raw tabel entries
-const TABLE_KEYS = [
-	'metric', 
+const ALL_STATS = [
+	'name', 
 	'mean', 
 	'median', 
 	'mode', 
@@ -93,8 +100,8 @@ function parseResponse(res) {
 	appendMeasuresOfProcessing(res);
 	
 	appendMeasuresOfCognition(res);
-// 	
-// 	appendRawMeasures(res);
+	
+	appendRawMeasures(res);
 	
 }
 
@@ -169,12 +176,6 @@ function appendMeasuresOfProcessing(res) {
 	appendMeasureTable('processing', d3.select('#procBox .measText'), tableData);
 }
 
-const PUPIL = "Pupil";
-const PUPIL_LEFT = "PupilLeft";
-const PUPIL_RIGHT = "PupilRight";
-const ABS_ANGLE = "AbsoluteSaccadicDirection";
-const REL_ANGLE = "RelativeSaccadicDirection";
-const ANGLE = "Angle"
 
 function appendMeasuresOfCognition(res) {
 	
@@ -215,7 +216,157 @@ function appendMeasuresOfCognition(res) {
 	
 	appendMeasureTable('cognition', d3.select('#cogBox .measText'), tableData);
 }
+
+
+function appendRawMeasures(res) {
+
+	appendMetadata(getMetdata(res));
 	
+	appendCounts(getCounts(res));
+	
+	appendStats(getStats(res));
+}
+
+
+function appendMetadata(metadata) {
+
+	var headings = ['Measure', 'Value'];
+	
+	var table = d3.select('#metadata')
+		.append('table')
+		.attr('class', 'metadataTable rawTable');
+		
+	table.append('caption')
+		.html('Metadata');
+		
+	appendTableHead(table, headings); 
+	
+	var cells = table.append('tbody')
+		.selectAll('tr')
+		.data(Object.entries(metadata))
+			.enter()
+			.append('tr')
+			.selectAll('td')
+			.data(function(d) { return d; })
+			.enter()
+				.append('td')
+				.html(function(d, i) { return d; });
+}
+
+
+function appendStats(stats) {
+
+	var headings = ALL_STATS;
+	
+	var table = d3.select('#stats')
+		.append('table')
+		.attr('class', 'statTable rawTable');
+		
+	table.append('caption')
+		.html('All Measure Statistics');
+		
+	appendTableHead(table, headings); 
+	
+	console.log(stats);
+	
+	var cells = table.append('tbody')
+		.selectAll('tr')
+		.data(stats)
+			.enter()
+			.append('tr')
+			.selectAll('td')
+			.data(function(d, i) { 
+				var stats = d[STATS];
+				var data = [];
+				data[0] = { 'name': d['name'] };
+				for (var i = 1; i < ALL_STATS.length; i++) {
+					var s = ALL_STATS[i];
+					data.push({ [s] : stats[ALL_STATS[i]] });
+				}
+				return data;
+			})
+			.enter()
+				.append('td')
+				.html(function(d, i) { 
+					return formatCell(d[ALL_STATS[i]]); 
+				});
+}
+
+
+function formatCell(value) {
+	return isNaN(value) ? value :  d3.format(',.2f')(value);
+}
+
+function appendCounts(counts) {
+
+	var headings = ['Measure', 'Value'];
+	
+	var table = d3.select('#counts')
+		.append('table')
+		.attr('class', 'countTable rawTable');
+		
+	table.append('caption')
+		.html('Select Measure Counts');
+		
+	appendTableHead(table, headings); 
+	
+	var cells = table.append('tbody')
+		.selectAll('tr')
+		.data(Object.entries(counts))
+			.enter()
+			.append('tr')
+			.selectAll('td')
+			.data(function(d) { return d; })
+			.enter()
+				.append('td')
+				.html(function(d, i) { return d; });
+}
+
+
+function appendTableHead(table, headings) {
+
+	table.append('thead')
+		.append('tr')
+		.selectAll('th')
+		.data(headings)
+		.enter()
+			.append('th')
+			.attr('class', 'measHead')
+			.html(function(d) { return d; })
+}
+
+
+function getMetdata(res) {
+	return res[META];
+}
+
+
+function getCounts(res) {
+	var counts = {};
+	counts[SACCADE] = res[SACCADE][COUNT];
+	counts[FIXATION] = res[FIXATION][COUNT];
+	return counts;
+}
+
+
+function getStats(res) {
+
+	var stats = [];
+	
+	for (var k1 in res) {
+		var obj = res[k1];
+		for (var k2 in obj) {
+			var subObj = obj[k2];
+			if (subObj.hasOwnProperty(STATS)) {
+				subObj['name'] = k2;
+				stats.push(subObj);
+			}
+		}
+	}
+	
+	return stats;
+}
+
 
 function showHistogram(id, group, data) {
 
@@ -243,14 +394,7 @@ function appendMeasureTable(name, elem, data) {
 	var table = elem.append('table')
 		.attr('class', 'measTable');
 	
-	table.append('thead')
-		.append('tr')
-		.selectAll('th')
-		.data(headings)
-		.enter()
-			.append('th')
-			.attr('class', 'measHead')
-			.html(function(d) { return d; })
+	appendTableHead(table, headings);
 		
 	var cells = table.append('tbody')
 		.selectAll('tr')
@@ -298,75 +442,6 @@ function appendMeasureTable(name, elem, data) {
 			.on('click', function() {
 				(d3.select(this.parentNode).datum())();
 			});
-}
-
-
-function appendRawMeasures(response) {
-
-	// Filter response data to construct tables.
-	var tableData = {};
-	
-	for (var category in response) {
-		var metrics = response[category];
-		var categoryStats = [];
-		for (var metric in metrics) {
-			var measures = metrics[metric];
-			if (measures.hasOwnProperty(DESCRIPTIVE_STATS)) {
-				var stats = measures[DESCRIPTIVE_STATS];
-				stats['metric'] = metric;
-				categoryStats.push(stats);
-			}
-		}
-		tableData[category] = categoryStats;
-	}
-
- 	var tables = d3.select('#resultContainer')
- 		.selectAll('.tableBounds')
- 		.data(Object.keys(tableData))
- 		.enter()
- 		.append('div')
- 		.attr('class', 'tableBounds')
- 		.append('table');
- 		
-	tables
-		.append('caption')
-		.text(function(d) { return d; });
-	
-	tables
-		.append('thead')
-		.append('tr')
-		.selectAll('th')
-		.data(TABLE_KEYS)
-		.enter()
-		.append('th')
-		.style('text-align', 'center')
-		.style('border-left', function(d, i) { return getCellBorderLeft(i); })
-		.html(function (d) { return d; });
-	
-	tables
-		.append('tbody')
-		.selectAll('tr')
-		.data(function(d) { return tableData[d]; })
-		.enter()
-		.append('tr')
-		.style('border-top', '1px solid white')
-		.selectAll('td')
-		.data(function(d) { 
-			var data = [];
-			for (var i = 0; i < TABLE_KEYS.length; i++) {
-				data[i] = d[TABLE_KEYS[i]];
-			}
-			return data;
-		})
-		.enter()
-		.append('td')
-		.style('border-left', function(d, i) { return i == 0 ? 'none' : '1px solid white' })
-		.style('text-align', function(d, i) { return getCellAlignment(i); })
-		.style('font-style', function(d, i) { return i == 0 ? 'italic' : 'normal'; })
-		.html(function (d, i) { 
-			return i == 0 ? d : d3.format('.2f')(d);
-		});
-		
 }
 
 
