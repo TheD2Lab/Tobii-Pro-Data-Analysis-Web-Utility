@@ -199,7 +199,7 @@ function appendMeasuresOfCognition(res) {
 		{ 
 			'Measure': 'Average Pupil Right', 
 			'Value': avgPupilR, 
-			'Plot': function() { showHistogram('avgPupilLGraph', 'cogGraph', pupilRSamples) }
+			'Plot': function() { showHistogram('avgPupilRGraph', 'cogGraph', pupilRSamples) }
 		},
 		{ 
 			'Measure': 'Sum of Absolute Angles', 
@@ -392,7 +392,7 @@ function appendHistogram(svg, data) {
 
 	// sizing
 		 
-	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 40, right: 20 };
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 50, right: 20 };
 	var dimensions = getGraphDimensions();
 	var height = dimensions.height;
 	var width = dimensions.width;
@@ -401,13 +401,15 @@ function appendHistogram(svg, data) {
 	
 	// scales and generators
 	
+	var extent = d3.extent(data);
+	
 	var x = d3.scaleLinear()
-		.domain([0, 2000])
+		.domain(extent)
 		.rangeRound([0, graphWidth]);
 
 	var bin = d3.histogram()
 		.domain(x.domain())
-		.thresholds(x.ticks(20));
+		.thresholds(thresholdGenerator(data));
 		
 	var bins = bin(data);
 
@@ -415,7 +417,10 @@ function appendHistogram(svg, data) {
 		.domain([0, d3.max(bins, function(d) { return d.length })])
 		.range([graphHeight, 0]);
 		
+	var tickFormatter = extent[1] > 9 ? d3.format(',.0f') : d3.format('.1f');
 	var xaxis = d3.axisBottom(x)
+			.tickValues(thresholdGenerator(data))
+			.tickFormat(tickFormatter)
 			.tickPadding(6);
 			
 	var yaxis = d3.axisLeft(y)
@@ -691,3 +696,19 @@ function translate(x, y) {
 }
 
 
+function thresholdGenerator(data) {
+
+	var numBins = 10.0
+
+	var extent = d3.extent(data);
+	var min = parseFloat(extent[0]);
+	var max = parseFloat(extent[1]);
+	
+	var bins = [];
+	var binSize = (max - min) / numBins;
+	for (var i = min; i <= (max + binSize); i += binSize) {
+		bins.push(i);
+	}
+
+	return bins;
+}
