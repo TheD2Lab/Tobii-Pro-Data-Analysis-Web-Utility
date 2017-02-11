@@ -208,6 +208,10 @@
 		border:1px solid white;
 	}
 	
+	.searchGraph, .procGraph, .cogGraph {
+		display: none;
+	}
+	
 	.measHead {	
 		text-align: center;
 		background-color: white;

@@ -22,7 +22,7 @@
 			<div id="formContainer">
 				<form id="uploadForm">
 						<div id="sec1" class="formSec">
-							<p class="secTitle">1. Select the Tobii output file you would like to process.</p>
+							<p class="secTitle">1. Select the Tobii output file you would like to cogess.</p>
 								<input type="file" id="file" name="file" />
 						</div> <!-- end section 1 -->
 						<div id="sec2" class="formSec">
@@ -146,6 +146,26 @@
 						<div class='measGraph'>
 							<svg id="avgFixDurGraph" class='procGraph'></svg>
 							<svg id="avgSacDurGraph" class='procGraph'></svg>
+						</div>
+						<div class='measFooter'>
+							<div class='measTextFooter'></div>
+							<div class='measGraphFooter'>
+							</div>
+					</div>
+					</div>
+				</div>
+				<div id="cogBox" class="measBox">
+					<div class='measHeader'>
+						<h2>Measures of Cognitive Workload</h2>
+					</div>
+					<div class='measBody'>
+						<div class='measText'>
+						</div>
+						<div class='measGraph'>
+							<svg id="avgPupilLGraph" class='cogGraph'></svg>
+							<svg id="avgPupilRGraph" class='cogGraph'></svg>
+							<svg id="absAngleSumGraph" class='cogGraph'></svg>
+							<svg id="relAngleSumGraph" class='cogGraph'></svg>
 						</div>
 						<div class='measFooter'>
 							<div class='measTextFooter'></div>

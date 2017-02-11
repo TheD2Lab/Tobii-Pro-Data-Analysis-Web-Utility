@@ -91,8 +91,8 @@ function parseResponse(res) {
 	appendMeasuresOfSearch(res);
 	
 	appendMeasuresOfProcessing(res);
-// 	
-// 	appendMeasuresOfCognition(res);
+	
+	appendMeasuresOfCognition(res);
 // 	
 // 	appendRawMeasures(res);
 	
@@ -169,6 +169,53 @@ function appendMeasuresOfProcessing(res) {
 	appendMeasureTable('processing', d3.select('#procBox .measText'), tableData);
 }
 
+const PUPIL = "Pupil";
+const PUPIL_LEFT = "PupilLeft";
+const PUPIL_RIGHT = "PupilRight";
+const ABS_ANGLE = "AbsoluteSaccadicDirection";
+const REL_ANGLE = "RelativeSaccadicDirection";
+const ANGLE = "Angle"
+
+function appendMeasuresOfCognition(res) {
+	
+	var avgPupilL = res[PUPIL][PUPIL_LEFT][STATS][MEAN];
+	var pupilLSamples = res[PUPIL][PUPIL_LEFT][SAMPLES];
+	
+	var avgPupilR = res[PUPIL][PUPIL_RIGHT][STATS][MEAN];
+	var pupilRSamples = res[PUPIL][PUPIL_RIGHT][SAMPLES];
+	
+	var absAngleSum = res[ANGLE][ABS_ANGLE][STATS][SUM];
+	var absAngleSamples = res[ANGLE][ABS_ANGLE][SAMPLES];
+	
+	var relAngleSum = res[ANGLE][REL_ANGLE][STATS][SUM];
+	var relAngleSamples = res[ANGLE][REL_ANGLE][SAMPLES];
+	
+	var tableData = [
+		{ 
+			'Measure': 'Average Pupil Left', 
+			'Value': avgPupilL, 
+			'Plot': function() { showHistogram('avgPupilLGraph', 'cogGraph', pupilLSamples) }
+		},
+		{ 
+			'Measure': 'Average Pupil Right', 
+			'Value': avgPupilR, 
+			'Plot': function() { showHistogram('avgPupilLGraph', 'cogGraph', pupilRSamples) }
+		},
+		{ 
+			'Measure': 'Sum of Absolute Angles', 
+			'Value': absAngleSum, 
+			'Plot': function() { showHistogram('absAngleSumGraph', 'cogGraph', absAngleSamples) }
+		},
+		{ 
+			'Measure': 'Sum of Relative Angles', 
+			'Value': relAngleSum, 
+			'Plot': function() { showHistogram('relAngleSumGraph', 'cogGraph', relAngleSamples) }
+		}
+	];
+	
+	appendMeasureTable('cognition', d3.select('#cogBox .measText'), tableData);
+}
+	
 
 function showHistogram(id, group, data) {
 
@@ -179,6 +226,7 @@ function showHistogram(id, group, data) {
 	appendHistogram(d3.select('#' + id), data);
 }
 
+
 function showCoordinatePlot(id, group, points1, points2) {
 
 	$('.' + group).hide();
@@ -186,6 +234,7 @@ function showCoordinatePlot(id, group, points1, points2) {
 
 	appendCoordinatePlot(d3.select('#' + id), points1, points2);
 }
+
 
 function appendMeasureTable(name, elem, data) {
 
