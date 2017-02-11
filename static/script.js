@@ -35,7 +35,8 @@ const ALL_STATS = [
 	'variance', 
 	'sum', 
 	'min',
-	'max'
+	'max',
+	'plot'
 ];
 
 const GRAPH_TITLE_FONT_SIZE = 16;
@@ -279,23 +280,108 @@ function appendStats(stats) {
 				var stats = d[STATS];
 				var data = [];
 				data[0] = { 'name': d['name'] };
-				for (var i = 1; i < ALL_STATS.length; i++) {
+				for (var i = 1; i < ALL_STATS.length - 1; i++) {
 					var s = ALL_STATS[i];
 					data.push({ [s] : stats[ALL_STATS[i]] });
 				}
+				data.push({ 'Plot' : function() { appendLine(d['name'], d['Samples']); } });
 				return data;
 			})
 			.enter()
 				.append('td')
 				.html(function(d, i) { 
-					return formatCell(d[ALL_STATS[i]]); 
+					var key = Object.keys(d)[0];
+					if (key == 'Plot') {
+						return '';
+					}
+					else {
+						return formatCell(d[key]); 
+					}
 				});
+				
+		cells.filter(function(d, i) { 
+				return i == ALL_STATS.length - 1;
+			})
+			.append('input')
+			.attr('type', 'radio')
+			.attr('name', 'rawStats')
+			.on('click', function() {
+				var f = d3.select(this.parentNode).datum()['Plot'];
+				f();
+			});
 }
 
+function appendLine(metric, data) {
+
+	var parent = d3.select('#rawBox');
+	
+	parent.selectAll('svg').remove();
+	
+	var svg = parent.append('svg')
+		.attr('id', 'rawLine');
+		
+	// sizing
+		 
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 50, right: 20 };
+	var dimensions = { width: parent.node().getBoundingClientRect().width, height: 400 };
+	var height = dimensions.height;
+	var width = dimensions.width;
+	var graphHeight = height - margin.top - margin.bottom;
+	var graphWidth = width - margin.left - margin.right;
+	
+	// scales and generators
+	var times = Object.keys(data).map(function(t) { return parseInt(t); });
+	var timeExtent = d3.extent(times);
+	var minTime = timeExtent[0];
+	var adjustedTimes = times.map(function(t) { return t - minTime; });
+	
+	var x = d3.scaleLinear()
+		.domain(d3.extent(adjustedTimes))
+		.rangeRound([0, graphWidth]);
+
+	var values = Object.values(data).map(function(t) { return parseFloat(t); })
+	var valueExtent = d3.extent(values);
+	
+	var y = d3.scaleLinear()
+		.domain(valueExtent)
+		.range([graphHeight, 0]);
+		
+	var xaxis = d3.axisBottom(x)
+			.tickPadding(6);
+			
+	var yaxis = d3.axisLeft(y)
+		.tickSizeInner(-graphWidth)
+		.tickSizeOuter(3)
+		.tickPadding(8);
+		
+	// appends 
+	
+	svg.attr('width', width).attr('height', height);
+
+	appendTitle(svg, margin, dimensions, metric + " Values")
+	appendYAxis(svg, yaxis, margin, dimensions, 'Value');
+	appendXAxis(svg, xaxis, margin, dimensions, 'Time (ms)');
+	
+	var g = svg.append('g')
+		.attr('width', graphWidth)
+		.attr('height', graphHeight)
+		.attr('transform', translate(margin.left, margin.top));
+		
+	var line = d3.line()
+		.x(function(d) { return x(parseInt(d[0]) - minTime); })
+		.y(function(d) { return y(parseFloat(d[1])); });
+		
+	g.append('path')
+		.attr('d', function(d)  { return line(data); })
+		.style('stroke', YELLOW)
+		.style('stroke-width', '2')
+		.style('fill', 'none');
+}
 
 function formatCell(value) {
 	return isNaN(value) ? value :  d3.format(',.2f')(value);
 }
+
 
 function appendCounts(counts) {
 
