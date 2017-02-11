@@ -20,7 +20,12 @@ public class Analyzer {
 		Map<String, Object> sampleMap = new HashMap<>();
 		
 		for (int i = 0; i < timestamps.length; i++) {
-			sampleMap.put(timestamps[i], samples[i]);
+			if (samples[i].equals("")) { 
+				// Do not add empty recordings.
+			}
+			else {
+				sampleMap.put(timestamps[i], samples[i]);
+			}
 		}
 		
 		Map<String, Object> metricMap = (Map<String, Object>) map.get(column);

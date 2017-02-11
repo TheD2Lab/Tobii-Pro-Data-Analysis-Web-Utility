@@ -27,10 +27,10 @@ public class TobiiExport {
 	public Double getValidity() {
 		return validity;
 	}
-
 	public void setValidity(Double v) {
 		validity = v;
 	}
+	
 	
 	// Constructor
 	public TobiiExport(File f) {

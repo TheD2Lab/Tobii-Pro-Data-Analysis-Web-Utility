@@ -343,7 +343,7 @@ function appendLine(metric, data) {
 	var valueExtent = d3.extent(values);
 	
 	var y = d3.scaleLinear()
-		.domain(valueExtent)
+		.domain([0, valueExtent[1]])
 		.range([graphHeight, 0]);
 		
 	var xaxis = d3.axisBottom(x)
@@ -368,11 +368,20 @@ function appendLine(metric, data) {
 		.attr('transform', translate(margin.left, margin.top));
 		
 	var line = d3.line()
-		.x(function(d) { return x(parseInt(d[0]) - minTime); })
-		.y(function(d) { return y(parseFloat(d[1])); });
+		.x(function(d) { return x(d[0] - minTime); })
+		.y(function(d) { return y(d[1]); })
+		.curve(d3.curveCatmullRom);
 		
+	var points = Object.entries(data).map(function(d) {
+		return [ parseInt(d[0]), parseFloat(d[1]) ];
+	}).sort(function(a,b) {
+		return a[0] - b[0];
+	});
+	
+	console.log(points);
+	
 	g.append('path')
-		.attr('d', function(d)  { return line(data); })
+		.attr('d', function(d)  { return line(points); })
 		.style('stroke', YELLOW)
 		.style('stroke-width', '2')
 		.style('fill', 'none');
