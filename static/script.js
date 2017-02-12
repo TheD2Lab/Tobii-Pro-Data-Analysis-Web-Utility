@@ -277,7 +277,9 @@ function appendMetadata(metadata) {
 
 
 function getMetadata(res) {
-	return res[META];
+	var meta = res[META];
+	meta['Validity'] = decimalFormat(meta['Validity']) + '%';
+	return meta;
 }
 
 
