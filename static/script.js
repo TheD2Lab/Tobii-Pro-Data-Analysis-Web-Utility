@@ -25,6 +25,7 @@ const ABS_ANGLE = "AbsoluteSaccadicDirection";
 const REL_ANGLE = "RelativeSaccadicDirection";
 const ANGLE = "Angle"
 const META = 'Meta';
+const UNITS = 'units';
 
 // raw tabel entries
 const ALL_STATS = [
@@ -124,26 +125,33 @@ function appendMeasuresOfSearch(res) {
 	var saccadeLengths = res[SACCADE][SACCADE_LENGTH][SAMPLES];
 	
 	var tableData = [
-		{ 'Measure' : 'Fixation Count', 
+		{ 
+			'Measure' : 'Fixation Count', 
+			'Units' : '#',
 			'Value' : fixCount, 
 			'Plot' : null 
 		},
-		{ 'Measure' : 'Saccade Count', 
+		{ 
+			'Measure' : 'Saccade Count', 
+			'Units' : '#',
 			'Value' : sacCount, 
 			'Plot' : null 
 		},
 		{ 
 			'Measure' : 'Average Saccade Length', 
+			'Units' : res[SACCADE][SACCADE_LENGTH][UNITS],
 			'Value' : avgSacLength, 
 			'Plot' : function() { showHistogram('avgSacLengthGraph', 'searchGraph', saccadeLengths) } 
 		},
 		{ 
 			'Measure' : 'Scanpath Length', 
+			'Units' : res[SACCADE][SACCADE_LENGTH][UNITS],
 			'Value' : scanLength, 
 			'Plot' : function() { showCoordinatePlot('hullGraph', 'searchGraph', fixationPoints, hullPoints) } 
 		},
 		{ 
 			'Measure' : 'Convex Hull Area', 
+			'Units' : 'px<sup>2</sup>',
 			'Value' : hullArea, 
 			'Plot' : function() { showCoordinatePlot('hullGraph', 'searchGraph', fixationPoints, hullPoints) } 
 		}
@@ -164,16 +172,19 @@ function appendMeasuresOfProcessing(res) {
 	var tableData = [
 		{ 
 			'Measure': 'Average Fixation Duration', 
+			'Units' : res[FIXATION][FIXATION + DURATION][UNITS],
 			'Value': avgFixDur, 
 			'Plot': function() { showHistogram('avgFixDurGraph', 'procGraph', fixDurSamples) }
 		},
 		{
 			'Measure': 'Average Saccade Duration',
+			'Units' : res[SACCADE][SACCADE + DURATION][UNITS],
 			'Value': avgSacDur,
 			'Plot': function() { showHistogram('avgSacDurGraph', 'procGraph', sacDurSamples) }
 		},
 		{
 			'Measure': 'Fixation to Saccade Duration Ratio',
+			'Units' : '#',
 			'Value': fixToSacDurRatio,
 			'Plot': null
 		}
@@ -200,21 +211,25 @@ function appendMeasuresOfCognition(res) {
 	var tableData = [
 		{ 
 			'Measure': 'Average Pupil Left', 
+			'Units' : res[PUPIL][PUPIL_LEFT][UNITS],
 			'Value': avgPupilL, 
 			'Plot': function() { showHistogram('avgPupilLGraph', 'cogGraph', pupilLSamples) }
 		},
 		{ 
 			'Measure': 'Average Pupil Right', 
+			'Units' : res[PUPIL][PUPIL_RIGHT][UNITS],
 			'Value': avgPupilR, 
 			'Plot': function() { showHistogram('avgPupilRGraph', 'cogGraph', pupilRSamples) }
 		},
 		{ 
 			'Measure': 'Sum of Absolute Angles', 
+			'Units' : res[ANGLE][ABS_ANGLE][UNITS],		
 			'Value': absAngleSum, 
 			'Plot': function() { showHistogram('absAngleSumGraph', 'cogGraph', absAngleSamples) }
 		},
 		{ 
 			'Measure': 'Sum of Relative Angles', 
+			'Units' : res[ANGLE][REL_ANGLE][UNITS],			
 			'Value': relAngleSum, 
 			'Plot': function() { showHistogram('relAngleSumGraph', 'cogGraph', relAngleSamples) }
 		}
@@ -395,7 +410,7 @@ function appendTableHead(table, headings) {
 
 function appendMeasureTable(name, elem, data) {
 
-	var headings = ['Measure', 'Value', 'Plot'];
+	var headings = Object.keys(data[0]);
 	
 	var table = elem.append('table')
 		.attr('class', 'measTable');
@@ -425,9 +440,11 @@ function appendMeasureTable(name, elem, data) {
 						switch(i) {
 							case 0: 
 								return d;
-							case 1: 
-								return decimalFormat(d);
+							case 1:
+								return formatUnits(d);
 							case 2: 
+								return decimalFormat(d);
+							case 3: 
 								return "";
 						}
 				});
