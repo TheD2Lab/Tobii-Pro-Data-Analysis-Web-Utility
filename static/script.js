@@ -621,6 +621,24 @@ function appendCoordinatePlot(svg, points, hull) {
 		.attr('height', graphHeight)
 		.attr('transform', translate(margin.left, margin.top));
 
+	// draw hull
+	g.append('path')
+		.attr('d', function(d)  { return line(hull); })
+		.style('stroke', YELLOW)
+		.style('stroke-width', '2')
+		.style('fill', RED);
+		
+	g.selectAll('.hull')
+		.data(hull)
+		.enter()
+			.append('circle')
+			.attr('class', 'hull')
+			.attr('cx', function(d) { return xline(d.x); })
+			.attr('cy', function(d) { return yline(d.y); })
+			.attr('r', 5)
+			.attr('fill', YELLOW );
+			
+	// draw fixations
 	g.append('path')
 		.attr('d', function(d)  { return line(points); })
 		.style('stroke', 'white')
@@ -636,24 +654,7 @@ function appendCoordinatePlot(svg, points, hull) {
 			.attr('cy', function(d) { return yline(d.y); })
 			.attr('r', 3)
 			.attr('fill', 'white')
-			.attr('opacity', 0.3);
-	
-	g.append('path')
-		.attr('d', function(d)  { return line(hull); })
-		.style('stroke', YELLOW)
-		.style('stroke-width', '2')
-		.style('fill', 'none');
-		
-	g.selectAll('.hull')
-		.data(hull)
-		.enter()
-			.append('circle')
-			.attr('class', 'hull')
-			.attr('cx', function(d) { return xline(d.x); })
-			.attr('cy', function(d) { return yline(d.y); })
-			.attr('r', 5)
-			.attr('opacity', 0.7)
-			.attr('fill', RED );
+			.attr('opacity', 0.5);
 }
 
 
