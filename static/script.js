@@ -323,9 +323,9 @@ function appendLine(metric, data) {
 		.attr('id', 'rawLine');
 		
 	// sizing
-		 
-	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 50, right: 20 };
-	var dimensions = { width: parent.node().getBoundingClientRect().width, height: 400 };
+	var svgPadding = 40;
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 12, bottom: 50, left: 50, right: 20 };
+	var dimensions = { width: parent.node().getBoundingClientRect().width - (2 * svgPadding), height: 400 };
 	var height = dimensions.height;
 	var width = dimensions.width;
 	var graphHeight = height - margin.top - margin.bottom;
@@ -349,6 +349,7 @@ function appendLine(metric, data) {
 		.range([graphHeight, 0]);
 		
 	var xaxis = d3.axisBottom(x)
+			.tickValues(formattedTickValues(adjustedTimes))
 			.tickPadding(6);
 			
 	var yaxis = d3.axisLeft(y)
@@ -358,7 +359,10 @@ function appendLine(metric, data) {
 		
 	// appends 
 	
-	svg.attr('width', width).attr('height', height);
+	svg
+		.attr('width', width)
+		.attr('height', height)
+		.style('margin-left', svgPadding);
 
 	appendTitle(svg, margin, dimensions, metric + " Values")
 	appendYAxis(svg, yaxis, margin, dimensions, 'Value');
@@ -563,7 +567,7 @@ function appendHistogram(svg, data) {
 
 	// sizing
 		 
-	var margin = { top: GRAPH_TITLE_FONT_SIZE + 2, bottom: 50, left: 50, right: 20 };
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 12, bottom: 50, left: 50, right: 20 };
 	var dimensions = getGraphDimensions();
 	var height = dimensions.height;
 	var width = dimensions.width;
@@ -580,7 +584,7 @@ function appendHistogram(svg, data) {
 
 	var bin = d3.histogram()
 		.domain(x.domain())
-		.thresholds(thresholdGenerator(data));
+		.thresholds(formattedTickValues(data));
 		
 	var bins = bin(data);
 
@@ -590,7 +594,7 @@ function appendHistogram(svg, data) {
 		
 	var tickFormatter = extent[1] > 9 ? d3.format(',.0f') : d3.format('.1f');
 	var xaxis = d3.axisBottom(x)
-			.tickValues(thresholdGenerator(data))
+			.tickValues(formattedTickValues(data))
 			.tickFormat(tickFormatter)
 			.tickPadding(6);
 			
@@ -633,7 +637,7 @@ function appendCoordinatePlot(svg, points, hull) {
 
 	// sizing
 	
-	var margin = { top: GRAPH_TITLE_FONT_SIZE + 10, bottom: 30, left: 40, right: 20 };
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 12, bottom: 30, left: 40, right: 20 };
 	var dimensions = getGraphDimensions();
 	var height = dimensions.height;
 	var width = dimensions.width;
@@ -867,7 +871,7 @@ function translate(x, y) {
 }
 
 
-function thresholdGenerator(data) {
+function formattedTickValues(data) {
 
 	var numBins = 10.0
 
