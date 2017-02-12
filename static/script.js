@@ -5,6 +5,7 @@ const YELLOW = '#FECA3D';
 const RED = '#FB441E';
 
 // response keys
+const VARIANCE = 'variance';
 const FIXATION = "Fixation";
 const SACCADE = "Saccade";
 const DURATION = "Duration";
@@ -337,7 +338,8 @@ function appendStats(stats) {
 						return '';
 					}
 					else {
-						return formatCell(d[key]); 
+						var units = formatUnits(d3.select(this.parentNode).datum()['units'], key);
+						return formatCell(d[key], units); 
 					}
 				});
 				
@@ -825,12 +827,12 @@ function formattedTickValues(extent, tickCount = 10.0) {
 }
 
 
-function formatCell(value) {
+function formatCell(value, units = '') {
 	if (isNaN(value)) {
 		return value.replace(/[A-Z]/g, ' $&').trim();
 	}
 	else {
-		 return d3.format(',.2f')(value);
+		 return d3.format(',.2f')(value) + ' ' + units;
 	}
 }
 
@@ -900,3 +902,20 @@ function getGraphDimensions() {
 function click(elem) {
 	elem.dispatchEvent(new MouseEvent('click'));
 }
+
+
+function formatUnits(units, metric) {
+	switch(units) {
+		case 'degrees':
+			return '&#176;'
+		default:
+			switch(metric) {
+				case VARIANCE:
+					return units + '<sup>2</sup>';
+				default:
+					return units;
+			}		
+	}
+}
+				
+	
