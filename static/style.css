@@ -207,6 +207,10 @@
 		display: inline-block;
 	}
 	
+	.halfTable td {
+		width: 50%;
+	}
+	
 	.fullTable {
 		width: 90%;
 		margin: 5% auto;

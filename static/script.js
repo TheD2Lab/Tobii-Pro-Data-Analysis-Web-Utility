@@ -7,7 +7,7 @@ const RED = '#FB441E';
 // response keys
 const FIXATION = "Fixation";
 const SACCADE = "Saccade";
-const DURATION = "GazeEventDuration";
+const DURATION = "Duration";
 const HULL = "ConvexHull"
 const SUM = "sum";
 const AREA = "Area";
@@ -150,10 +150,10 @@ function appendMeasuresOfSearch(res) {
 
 function appendMeasuresOfProcessing(res) {
 
-	var avgFixDur = res[FIXATION][DURATION][STATS][MEAN];
-	var fixDurSamples = res[FIXATION][DURATION][SAMPLES];
-	var avgSacDur = res[SACCADE][DURATION][STATS][MEAN];
-	var sacDurSamples = res[SACCADE][DURATION][SAMPLES];
+	var avgFixDur = res[FIXATION][FIXATION + DURATION][STATS][MEAN];
+	var fixDurSamples = res[FIXATION][FIXATION + DURATION][SAMPLES];
+	var avgSacDur = res[SACCADE][SACCADE + DURATION][STATS][MEAN];
+	var sacDurSamples = res[SACCADE][SACCADE + DURATION][SAMPLES];
 	var fixToSacDurRatio = avgFixDur / avgSacDur;
 	
 	var tableData = [
@@ -221,7 +221,7 @@ function appendMeasuresOfCognition(res) {
 
 function appendRawMeasures(res) {
 
-	appendMetadata(getMetdata(res));
+	appendMetadata(getMetadata(res));
 	
 	appendCounts(getCounts(res));
 	
@@ -251,7 +251,7 @@ function appendMetadata(metadata) {
 			.data(function(d) { return d; })
 			.enter()
 				.append('td')
-				.html(function(d, i) { return d; });
+				.html(function(d, i) { return formatCell(d); });
 }
 
 
@@ -302,6 +302,7 @@ function appendStats(stats) {
 		cells.filter(function(d, i) { 
 				return i == ALL_STATS.length - 1;
 			})
+			.style('text-align', 'center')
 			.append('input')
 			.attr('type', 'radio')
 			.attr('name', 'rawStats')
@@ -310,6 +311,7 @@ function appendStats(stats) {
 				f();
 			});
 }
+
 
 function appendLine(metric, data) {
 
@@ -333,7 +335,7 @@ function appendLine(metric, data) {
 	var times = Object.keys(data).map(function(t) { return parseInt(t); });
 	var timeExtent = d3.extent(times);
 	var minTime = timeExtent[0];
-	var adjustedTimes = times.map(function(t) { return t - minTime; });
+	var adjustedTimes = times.map(function(t) { return (t - minTime) / 1000000; });
 	
 	var x = d3.scaleLinear()
 		.domain(d3.extent(adjustedTimes))
@@ -360,7 +362,7 @@ function appendLine(metric, data) {
 
 	appendTitle(svg, margin, dimensions, metric + " Values")
 	appendYAxis(svg, yaxis, margin, dimensions, 'Value');
-	appendXAxis(svg, xaxis, margin, dimensions, 'Time (ms)');
+	appendXAxis(svg, xaxis, margin, dimensions, 'Time (s)');
 	
 	var g = svg.append('g')
 		.attr('width', graphWidth)
@@ -368,7 +370,7 @@ function appendLine(metric, data) {
 		.attr('transform', translate(margin.left, margin.top));
 		
 	var line = d3.line()
-		.x(function(d) { return x(d[0] - minTime); })
+		.x(function(d) { return x((d[0] - minTime)/1000000); })
 		.y(function(d) { return y(d[1]); })
 		.curve(d3.curveCatmullRom);
 		
@@ -378,14 +380,13 @@ function appendLine(metric, data) {
 		return a[0] - b[0];
 	});
 	
-	console.log(points);
-	
 	g.append('path')
 		.attr('d', function(d)  { return line(points); })
 		.style('stroke', YELLOW)
 		.style('stroke-width', '2')
 		.style('fill', 'none');
 }
+
 
 function formatCell(value) {
 	return isNaN(value) ? value :  d3.format(',.2f')(value);
@@ -431,7 +432,7 @@ function appendTableHead(table, headings) {
 }
 
 
-function getMetdata(res) {
+function getMetadata(res) {
 	return res[META];
 }
 

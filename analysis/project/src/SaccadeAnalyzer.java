@@ -25,6 +25,7 @@
  */
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class SaccadeAnalyzer extends Analyzer {
 		TobiiExport fixationSamples = export.filtered(TobiiExport.GAZE_EVENT_TYPE, FixationAnalyzer.NAME)
 				.removingDuplicates(TobiiExport.FIXATION_INDEX);
 		
-		fixationPoints = FixationAnalyzer.buildPointList(fixationSamples);
+		fixationPointSamples = FixationAnalyzer.buildPointList(fixationSamples);
 	}
 	
 	private static TobiiExport parseExport(TobiiExport export) {
@@ -73,24 +74,35 @@ public class SaccadeAnalyzer extends Analyzer {
 	}
 	
 	public void addDurationStats(Map<String, Object> map) {
-		addStats(map, TobiiExport.GAZE_EVENT_DURATION);
-		putAllSamples(map, TobiiExport.GAZE_EVENT_DURATION);
+		String durationMetric =  "SaccadeDuration";
+		addStats(map, TobiiExport.GAZE_EVENT_DURATION, durationMetric);
+		putAllSamples(map, TobiiExport.GAZE_EVENT_DURATION, durationMetric);
 	}
 
 	
 	public void addLengthStats(Map<String, Object> map) {
-		addStats(map, "SaccadeLength", getSaccadeLengths(fixationPoints));
-		putAllLengthSamples(map, getSaccadeLengths(fixationPoints));
+		
+		List<Sample<Double>> lengthSamples = getLengthSamples(fixationPointSamples);
+		
+		double[] lengths = extractSampleValues(lengthSamples)
+				.stream()
+				.mapToDouble(Double::doubleValue)
+				.toArray();
+		
+		addStats(map, "SaccadeLength", lengths);
+		
+		putAllLengthSamples(map, lengthSamples);
 	}
 	
 	
 	@SuppressWarnings("unchecked")
-	private void putAllLengthSamples(Map<String, Object> map, double[] lengths) {
+	private void putAllLengthSamples(Map<String, Object> map, List<Sample<Double>> samples) {
 		
 		Map<String, Object> sampleMap = new HashMap<>();
 		
-		for (int i = 0; i < lengths.length; i++) {
-			sampleMap.put(Integer.toString(i), Double.toString(lengths[i]));
+		for (int i = 0; i < samples.size(); i++) {
+			Sample<Double> s = samples.get(i);
+			sampleMap.put(Long.toString(s.getTime()), Double.toString(s.getValue()));
 		}
 		
 		Map<String, Object> metricMap = (Map<String, Object>) map.get("SaccadeLength");
@@ -98,24 +110,24 @@ public class SaccadeAnalyzer extends Analyzer {
 	}
 	
 	
-	private static double[] getSaccadeLengths(List<Point> fixationPoints) {
+	private static List<Sample<Double>> getLengthSamples(List<Sample<Point>> pointSamples) {
 		
-		int fixationCount = fixationPoints.size();
+		List<Sample<Double>> samples = new ArrayList<Sample<Double>>();
 		
-		double[] lengths = new double[fixationCount];
+		int fixationCount = pointSamples.size();
 		
-		Point earlierFixation = fixationPoints.get(0);
+		Sample<Point> earlierFixation = pointSamples.get(0);
 		for (int i = 1; i < fixationCount; i++) {
 			
-			Point laterFixation = fixationPoints.get(i);
+			Sample<Point> laterFixation = pointSamples.get(i);
 			
-			double length = laterFixation.distance(earlierFixation); 
-			lengths[i - 1] = length;
+			double length = laterFixation.getValue().distance(earlierFixation.getValue()); 
+			samples.add(new Sample<Double>(earlierFixation.getTime(), length));
 			
 			earlierFixation = laterFixation;
 		}
 		
-		return lengths;
+		return samples;
 	}
 	
 	
@@ -123,5 +135,5 @@ public class SaccadeAnalyzer extends Analyzer {
 	 * Private Member Variables.
 	 */
 	
-	private List<Point> fixationPoints;
+	private List<Sample<Point>> fixationPointSamples;
 }

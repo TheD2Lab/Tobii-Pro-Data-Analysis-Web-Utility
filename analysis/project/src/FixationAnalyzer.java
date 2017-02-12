@@ -27,9 +27,11 @@
 import java.awt.Point;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class FixationAnalyzer extends Analyzer {
@@ -48,9 +50,11 @@ public class FixationAnalyzer extends Analyzer {
 	
 	
 	public FixationAnalyzer(TobiiExport export) {
+		
 		super(parseExport(export), NAME);
 		 
-		points = buildPointList(export);
+		points = extractSampleValues(buildPointList(export));
+				
 	}
 	
 	private static TobiiExport parseExport(TobiiExport export) {
@@ -68,9 +72,9 @@ public class FixationAnalyzer extends Analyzer {
 	}
 	
 	public void addDurationStats(Map<String, Object> map) {
-		String durationMetric = TobiiExport.GAZE_EVENT_DURATION;
-		addStats(map, durationMetric);
-		putAllSamples(map, durationMetric);
+		String durationMetric = "FixationDuration";
+		addStats(map, TobiiExport.GAZE_EVENT_DURATION, durationMetric);
+		putAllSamples(map, TobiiExport.GAZE_EVENT_DURATION, durationMetric);
 	}
 	
 	public List<Point> getPoints() {
@@ -112,25 +116,27 @@ public class FixationAnalyzer extends Analyzer {
 	}
 	
 	
-	public static ArrayList<Point> buildPointList(TobiiExport export) {
+	public static List<Sample<Point>> buildPointList(TobiiExport export) {
 		
-		ArrayList<Point> points = new ArrayList<Point>();
+		List<Sample<Point>> samples = new ArrayList<Sample<Point>>();
 		
+		int tCol = export.getColumnIndex(TobiiExport.EYE_TRACKER_TIMESTAMP);
 		int xCol = export.getColumnIndex(TobiiExport.GAZE_POINT_X);
 		int yCol = export.getColumnIndex(TobiiExport.GAZE_POINT_Y);
 		
 		for (int i = 1; i < export.getSampleCount(); i++) {
-			points.add(makePoint(export.getRow(i), xCol, yCol));
+			samples.add(makePointSample(export.getRow(i), tCol, xCol, yCol));
 		}
 		
-		return points;
+		return samples;
 	}
 	
 	
-	private static Point makePoint(String[] record, int xCol, int yCol) {
+	private static Sample<Point> makePointSample(String[] record, int tCol, int xCol, int yCol) {
+		long t = Long.parseLong(record[tCol]);
 		int x = Integer.parseInt(record[xCol]);
 		int y = Integer.parseInt(record[yCol]);
-		return new Point(x, y);
+		return new Sample<Point>(t, new Point(x, y));
 	}
 
 	
@@ -138,6 +144,6 @@ public class FixationAnalyzer extends Analyzer {
 	 * Private Member Variables.
 	 */
 	
-	private ArrayList<Point> points;
+	private List<Point> points;
 	
 }

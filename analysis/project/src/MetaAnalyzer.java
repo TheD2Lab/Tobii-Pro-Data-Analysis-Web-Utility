@@ -1,5 +1,4 @@
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import measure.TimeUtilities;
@@ -18,13 +17,8 @@ public class MetaAnalyzer extends Analyzer {
 	}
 	
 	public void putMetadata(Map<String, Object> map) {
-		
-		Map<String, Object> metaMap = new HashMap<>();
-		
-		metaMap.put("Validity", export.getValidity());
-		metaMap.put("Duration", getRecordingDuration(export));
-		
-		map.put(NAME, metaMap);
+		data.put("Validity", export.getValidity());
+		data.put("Duration", getRecordingDuration(export));
 	}
 	
 	public static String getRecordingDuration(TobiiExport export) {
