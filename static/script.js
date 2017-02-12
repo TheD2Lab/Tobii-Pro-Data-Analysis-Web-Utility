@@ -341,7 +341,7 @@ function appendStats(stats) {
 					}
 				});
 				
-		cells.filter(function(d, i) { 
+	var radios = cells.filter(function(d, i) { 
 				return i == ALL_STATS.length - 1;
 			})
 			.style('text-align', 'center')
@@ -352,6 +352,8 @@ function appendStats(stats) {
 				var f = d3.select(this.parentNode).datum()['Plot'];
 				f();
 			});
+			
+	click(radios.nodes()[0]);
 }
 
 
@@ -434,7 +436,7 @@ function appendMeasureTable(name, elem, data) {
 			.html('X');
 				
 	// Plot cells with graph.		
-	cells.filter(function(d, i) { 
+	var radios = cells.filter(function(d, i) { 
 				return i == headings.length - 1 && d !== null; 
 			})
 			.append('input')
@@ -443,6 +445,8 @@ function appendMeasureTable(name, elem, data) {
 			.on('click', function() {
 				(d3.select(this.parentNode).datum())();
 			});
+			
+		click(radios.nodes()[0])
 }
 
 
@@ -890,4 +894,9 @@ function getGraphDimensions() {
 	var width = d3.select('.measGraph').node().getBoundingClientRect().width - 20;
 	
 	return { height: height, width: width}
+}
+
+
+function click(elem) {
+	elem.dispatchEvent(new MouseEvent('click'));
 }
