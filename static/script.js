@@ -485,6 +485,8 @@ function showHistogram(id, group, data) {
 
 function appendHistogram(svg, data) {
 
+	svg.selectAll('*').remove();
+		
 	// sizing
 		 
 	var margin = { top: GRAPH_TITLE_FONT_SIZE + 12, bottom: 50, left: 50, right: 20 };
@@ -568,6 +570,8 @@ function showCoordinatePlot(id, group, points1, points2) {
 
 function appendCoordinatePlot(svg, points, hull) {
 
+	svg.selectAll('*').remove();
+	
 	// sizing
 	
 	var margin = { top: GRAPH_TITLE_FONT_SIZE + 12, bottom: 30, left: 40, right: 20 };
