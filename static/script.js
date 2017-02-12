@@ -29,6 +29,7 @@ const META = 'Meta';
 // raw tabel entries
 const ALL_STATS = [
 	'name', 
+	'units',
 	'mean', 
 	'median', 
 	'mode', 
@@ -322,12 +323,13 @@ function appendStats(stats) {
 				var stats = d[STATS];
 				var data = [];
 				data[0] = { 'name': d['name'] };
-				for (var i = 1; i < ALL_STATS.length - 1; i++) {
+				data[1] = { 'units' : formatUnits(d['units']) };
+				for (var i = 2; i < ALL_STATS.length - 1; i++) {
 					var s = ALL_STATS[i];
 					data.push({ [s] : stats[ALL_STATS[i]] });
 				}
 				var n = formatCell(d['name']);
-				data.push({ 'Plot' : function() { appendLine(n, n + ' (' + d['units'] + ')', d['Samples']); } });
+				data.push({ 'Plot' : function() { appendLine(n, n + '( ' + d['units'] + ')', d['Samples']); } });
 				return data;
 			})
 			.enter()
@@ -338,9 +340,7 @@ function appendStats(stats) {
 						return '';
 					}
 					else {
-						var units = formatUnits(d3.select(this.parentNode).datum()['units'], key);
-						var value = i == 0 ? d[key] + ' (' + units + ')' : d[key];
-						return formatCell(value); 
+						return formatCell(d[key]); 
 					}
 				});
 				
