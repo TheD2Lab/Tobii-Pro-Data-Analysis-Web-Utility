@@ -12,10 +12,15 @@ public class PupilAnalyzer extends Analyzer {
 		TobiiExport.PUPIL_RIGHT
 	};
 	
+	public static final String[] UNITS = {
+		"mm",
+		"mm"
+	};
 	
 	public PupilAnalyzer(TobiiExport export) {
 		super(export, NAME);
 		this.metrics = METRICS;
+		this.units = UNITS;
 		this.isValid = IS_VALID;
 	}
 	

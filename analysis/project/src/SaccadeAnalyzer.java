@@ -77,6 +77,8 @@ public class SaccadeAnalyzer extends Analyzer {
 		String durationMetric =  "SaccadeDuration";
 		addStats(map, TobiiExport.GAZE_EVENT_DURATION, durationMetric);
 		putAllSamples(map, TobiiExport.GAZE_EVENT_DURATION, durationMetric);
+		Map<String, Object> sacMap = (Map<String, Object>)map.get(durationMetric);
+		sacMap.put("units", "ms");
 	}
 
 	
@@ -91,6 +93,8 @@ public class SaccadeAnalyzer extends Analyzer {
 		
 		addStats(map, "SaccadeLength", lengths);
 		
+		Map<String, Object> sacLengthMap = (Map<String, Object>)map.get("SaccadeLength");
+		sacLengthMap.put("units", "px");
 		putAllLengthSamples(map, lengthSamples);
 	}
 	

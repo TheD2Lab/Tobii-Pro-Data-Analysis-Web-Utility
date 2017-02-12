@@ -311,8 +311,6 @@ function appendStats(stats) {
 		
 	appendTableHead(table, headings); 
 	
-	console.log(stats);
-	
 	var cells = table.append('tbody')
 		.selectAll('tr')
 		.data(stats)
@@ -327,7 +325,8 @@ function appendStats(stats) {
 					var s = ALL_STATS[i];
 					data.push({ [s] : stats[ALL_STATS[i]] });
 				}
-				data.push({ 'Plot' : function() { appendLine(d['name'], d['Samples']); } });
+				var n = formatCell(d['name']);
+				data.push({ 'Plot' : function() { appendLine(n, n + ' (' + d['units'] + ')', d['Samples']); } });
 				return data;
 			})
 			.enter()
@@ -721,7 +720,7 @@ function showPlotLegend() {
 
 
 // line graph
-function appendLine(metric, data) {
+function appendLine(metric, yAxisTitle, data) {
 
 	var parent = d3.select('#rawBox');
 	
@@ -773,7 +772,7 @@ function appendLine(metric, data) {
 		.style('margin-left', svgPadding);
 
 	appendTitle(svg, margin, dimensions, metric + " Values")
-	appendYAxis(svg, yaxis, margin, dimensions, 'Value');
+	appendYAxis(svg, yaxis, margin, dimensions, yAxisTitle);
 	appendXAxis(svg, xaxis, margin, dimensions, 'Time (s)');
 	
 	var g = svg.append('g')
@@ -823,7 +822,12 @@ function formattedTickValues(extent, tickCount = 10.0) {
 
 
 function formatCell(value) {
-	return isNaN(value) ? value :  d3.format(',.2f')(value);
+	if (isNaN(value)) {
+		return value.replace(/[A-Z]/g, ' $&').trim();
+	}
+	else {
+		 return d3.format(',.2f')(value);
+	}
 }
 
 

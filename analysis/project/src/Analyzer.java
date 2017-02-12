@@ -54,13 +54,18 @@ public class Analyzer implements Runnable {
 	}
 	
 	
+	@SuppressWarnings("unchecked")
 	public void analyze() {
 		
 		if (metrics == null) return;
 		
-		for (String metric : metrics) {
+		for (int i = 0; i < metrics.length; i++) {
+			String metric = metrics[i];
+			String unit = units[i];
 			addStats(data, metric, metric, isValid);
 			putAllSamples(data, metric);
+			Map<String, Object> sampleMap = (Map<String, Object>)data.get(metric);
+			sampleMap.put("units", unit);
 		}
 	}
 
@@ -109,6 +114,7 @@ public class Analyzer implements Runnable {
 	protected String name;
 	protected TobiiExport export;
 	protected String[] metrics;
+	protected String[] units;
 	protected Predicate<String> isValid = (s -> !s.isEmpty());
 	protected Map<String, Object> data;
 

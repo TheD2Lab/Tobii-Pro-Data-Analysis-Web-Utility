@@ -71,10 +71,13 @@ public class FixationAnalyzer extends Analyzer {
 		data.put("Points", transformPoints(points));	
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void addDurationStats(Map<String, Object> map) {
 		String durationMetric = "FixationDuration";
 		addStats(map, TobiiExport.GAZE_EVENT_DURATION, durationMetric);
 		putAllSamples(map, TobiiExport.GAZE_EVENT_DURATION, durationMetric);
+		Map<String, Object> fixMap = (Map<String, Object>)map.get(durationMetric);
+		fixMap.put("units", "ms");
 	}
 	
 	public List<Point> getPoints() {

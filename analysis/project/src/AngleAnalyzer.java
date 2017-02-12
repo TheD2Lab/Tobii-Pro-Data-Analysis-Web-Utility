@@ -29,8 +29,13 @@ public class AngleAnalyzer extends Analyzer{
 	public static final String NAME = "Angle";
 	
 	public static final String[] METRICS = {
-			TobiiExport.ABSOLUTE_SACCADIC_DIRECTION,
-			TobiiExport.RELATIVE_SACCADIC_DIRECTION
+		TobiiExport.ABSOLUTE_SACCADIC_DIRECTION,
+		TobiiExport.RELATIVE_SACCADIC_DIRECTION
+	};
+	
+	public static final String[] UNITS = {
+		"degrees",
+		"degrees"
 	};
 	
 	public AngleAnalyzer(TobiiExport export) {
@@ -38,6 +43,7 @@ public class AngleAnalyzer extends Analyzer{
 		super(parseExport(export), NAME);
 		
 		this.metrics = METRICS;
+		this.units = UNITS;
 	}
 	
 	private static TobiiExport parseExport(TobiiExport export) {
