@@ -339,7 +339,8 @@ function appendStats(stats) {
 					}
 					else {
 						var units = formatUnits(d3.select(this.parentNode).datum()['units'], key);
-						return formatCell(d[key], units); 
+						var value = i == 0 ? d[key] + ' (' + units + ')' : d[key];
+						return formatCell(value); 
 					}
 				});
 				
@@ -832,7 +833,7 @@ function formatCell(value, units = '') {
 		return value.replace(/[A-Z]/g, ' $&').trim();
 	}
 	else {
-		 return d3.format(',.2f')(value) + ' ' + units;
+		 return d3.format(',.2f')(value);
 	}
 }
 
