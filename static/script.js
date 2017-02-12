@@ -44,6 +44,8 @@ const GRAPH_LABEL_FONT_SIZE = 12;
 
 var decimalFormat = d3.format('.2f');
 
+
+// event handlers
 $('#uploadForm').submit(function(e) {
 
 	e.preventDefault();
@@ -82,6 +84,7 @@ $("#eventSlider").slider({
 });
 
 
+// response parsing
 function showResults(response) {
 
 	console.log(response);
@@ -229,6 +232,7 @@ function appendRawMeasures(res) {
 }
 
 
+// result box building
 function appendMetadata(metadata) {
 
 	var headings = ['Measure', 'Value'];
@@ -252,6 +256,45 @@ function appendMetadata(metadata) {
 			.enter()
 				.append('td')
 				.html(function(d, i) { return formatCell(d); });
+}
+
+
+function getMetadata(res) {
+	return res[META];
+}
+
+
+function appendCounts(counts) {
+
+	var headings = ['Measure', 'Value'];
+	
+	var table = d3.select('#counts')
+		.append('table')
+		.attr('class', 'countTable rawTable');
+		
+	table.append('caption')
+		.html('Select Measure Counts');
+		
+	appendTableHead(table, headings); 
+	
+	var cells = table.append('tbody')
+		.selectAll('tr')
+		.data(Object.entries(counts))
+			.enter()
+			.append('tr')
+			.selectAll('td')
+			.data(function(d) { return d; })
+			.enter()
+				.append('td')
+				.html(function(d, i) { return d; });
+}
+
+
+function getCounts(res) {
+	var counts = {};
+	counts[SACCADE] = res[SACCADE][COUNT];
+	counts[FIXATION] = res[FIXATION][COUNT];
+	return counts;
 }
 
 
@@ -313,142 +356,6 @@ function appendStats(stats) {
 }
 
 
-function appendLine(metric, data) {
-
-	var parent = d3.select('#rawBox');
-	
-	parent.selectAll('svg').remove();
-	
-	var svg = parent.append('svg')
-		.attr('id', 'rawLine');
-		
-	// sizing
-	var svgPadding = 40;
-	var margin = { top: GRAPH_TITLE_FONT_SIZE + 12, bottom: 50, left: 50, right: 20 };
-	var dimensions = { width: parent.node().getBoundingClientRect().width - (2 * svgPadding), height: 400 };
-	var height = dimensions.height;
-	var width = dimensions.width;
-	var graphHeight = height - margin.top - margin.bottom;
-	var graphWidth = width - margin.left - margin.right;
-	
-	// scales and generators
-	var times = Object.keys(data).map(function(t) { return parseInt(t); });
-	var timeExtent = d3.extent(times);
-	var minTime = timeExtent[0];
-	var adjustedTimes = times.map(function(t) { return (t - minTime) / 1000000; });
-	
-	var x = d3.scaleLinear()
-		.domain(d3.extent(adjustedTimes))
-		.rangeRound([0, graphWidth]);
-
-	var values = Object.values(data).map(function(t) { return parseFloat(t); })
-	var valueExtent = d3.extent(values);
-	
-	var y = d3.scaleLinear()
-		.domain([0, valueExtent[1]])
-		.range([graphHeight, 0]);
-		
-	var xaxis = d3.axisBottom(x)
-			.tickValues(formattedTickValues(adjustedTimes))
-			.tickPadding(6);
-			
-	var yaxis = d3.axisLeft(y)
-		.tickSizeInner(-graphWidth)
-		.tickSizeOuter(3)
-		.tickPadding(8);
-		
-	// appends 
-	
-	svg
-		.attr('width', width)
-		.attr('height', height)
-		.style('margin-left', svgPadding);
-
-	appendTitle(svg, margin, dimensions, metric + " Values")
-	appendYAxis(svg, yaxis, margin, dimensions, 'Value');
-	appendXAxis(svg, xaxis, margin, dimensions, 'Time (s)');
-	
-	var g = svg.append('g')
-		.attr('width', graphWidth)
-		.attr('height', graphHeight)
-		.attr('transform', translate(margin.left, margin.top));
-		
-	var line = d3.line()
-		.x(function(d) { return x((d[0] - minTime)/1000000); })
-		.y(function(d) { return y(d[1]); })
-		.curve(d3.curveCatmullRom);
-		
-	var points = Object.entries(data).map(function(d) {
-		return [ parseInt(d[0]), parseFloat(d[1]) ];
-	}).sort(function(a,b) {
-		return a[0] - b[0];
-	});
-	
-	g.append('path')
-		.attr('d', function(d)  { return line(points); })
-		.style('stroke', YELLOW)
-		.style('stroke-width', '2')
-		.style('fill', 'none');
-}
-
-
-function formatCell(value) {
-	return isNaN(value) ? value :  d3.format(',.2f')(value);
-}
-
-
-function appendCounts(counts) {
-
-	var headings = ['Measure', 'Value'];
-	
-	var table = d3.select('#counts')
-		.append('table')
-		.attr('class', 'countTable rawTable');
-		
-	table.append('caption')
-		.html('Select Measure Counts');
-		
-	appendTableHead(table, headings); 
-	
-	var cells = table.append('tbody')
-		.selectAll('tr')
-		.data(Object.entries(counts))
-			.enter()
-			.append('tr')
-			.selectAll('td')
-			.data(function(d) { return d; })
-			.enter()
-				.append('td')
-				.html(function(d, i) { return d; });
-}
-
-
-function appendTableHead(table, headings) {
-
-	table.append('thead')
-		.append('tr')
-		.selectAll('th')
-		.data(headings)
-		.enter()
-			.append('th')
-			.attr('class', 'measHead')
-			.html(function(d) { return d; })
-}
-
-
-function getMetadata(res) {
-	return res[META];
-}
-
-
-function getCounts(res) {
-	var counts = {};
-	counts[SACCADE] = res[SACCADE][COUNT];
-	counts[FIXATION] = res[FIXATION][COUNT];
-	return counts;
-}
-
-
 function getStats(res) {
 
 	var stats = [];
@@ -468,22 +375,17 @@ function getStats(res) {
 }
 
 
-function showHistogram(id, group, data) {
+// table building
+function appendTableHead(table, headings) {
 
-	$('.' + group).hide();
-	$('#' + id).show();
-
-	data = Object.values(data).map(function(d) { return parseFloat(d); });
-	appendHistogram(d3.select('#' + id), data);
-}
-
-
-function showCoordinatePlot(id, group, points1, points2) {
-
-	$('.' + group).hide();
-	$('#' + id).show();
-
-	appendCoordinatePlot(d3.select('#' + id), points1, points2);
+	table.append('thead')
+		.append('tr')
+		.selectAll('th')
+		.data(headings)
+		.enter()
+			.append('th')
+			.attr('class', 'measHead')
+			.html(function(d) { return d; })
 }
 
 
@@ -545,21 +447,14 @@ function appendMeasureTable(name, elem, data) {
 }
 
 
-function getCellAlignment(i) {
-	return i == 0 ? 'center' : 'right';
-}
+// histogram graph
+function showHistogram(id, group, data) {
 
+	$('.' + group).hide();
+	$('#' + id).show();
 
-function getCellBorderLeft(i) {
-	return i == 0 ? 'none' : '1px solid white';
-}
-
-
-function getGraphDimensions() {
-	var height = d3.select('.measText').node().getBoundingClientRect().height;
-	var width = d3.select('.measGraph').node().getBoundingClientRect().width - 20;
-	
-	return { height: height, width: width}
+	data = Object.values(data).map(function(d) { return parseFloat(d); });
+	appendHistogram(d3.select('#' + id), data);
 }
 
 
@@ -576,29 +471,32 @@ function appendHistogram(svg, data) {
 	
 	// scales and generators
 	
-	var extent = d3.extent(data);
+	var extentX = d3.extent(data);
 	
 	var x = d3.scaleLinear()
-		.domain(extent)
+		.domain(extentX)
 		.rangeRound([0, graphWidth]);
 
 	var bin = d3.histogram()
 		.domain(x.domain())
-		.thresholds(formattedTickValues(data));
+		.thresholds(formattedTickValues(extentX));
 		
 	var bins = bin(data);
 
-	var y = d3.scaleLinear()
-		.domain([0, d3.max(bins, function(d) { return d.length })])
+	var extentY = [0, d3.max(bins, function(d) { return d.length })];
+	
+	var y = d3.scaleLinear(extentY)
+		.domain(extentY)
 		.range([graphHeight, 0]);
 		
-	var tickFormatter = extent[1] > 9 ? d3.format(',.0f') : d3.format('.1f');
+	var tickFormatter = extentX[1] > 9 ? d3.format(',.0f') : d3.format('.1f');
 	var xaxis = d3.axisBottom(x)
-			.tickValues(formattedTickValues(data))
+			.tickValues(formattedTickValues(extentX))
 			.tickFormat(tickFormatter)
 			.tickPadding(6);
 			
 	var yaxis = d3.axisLeft(y)
+		.tickValues(formattedTickValues(extentY))
 		.tickSizeInner(-graphWidth)
 		.tickSizeOuter(3)
 		.tickPadding(8);
@@ -630,6 +528,16 @@ function appendHistogram(svg, data) {
 		.attr('width', barWidth - 4)
 		.attr('height', function(d) { return graphHeight - y(d.length); })
 		.style('fill', YELLOW);
+}
+
+
+// coordinate plot graph
+function showCoordinatePlot(id, group, points1, points2) {
+
+	$('.' + group).hide();
+	$('#' + id).show();
+
+	appendCoordinatePlot(d3.select('#' + id), points1, points2);
 }
 
 
@@ -812,6 +720,113 @@ function showPlotLegend() {
 }
 
 
+// line graph
+function appendLine(metric, data) {
+
+	var parent = d3.select('#rawBox');
+	
+	parent.selectAll('svg').remove();
+	
+	var svg = parent.append('svg')
+		.attr('id', 'rawLine');
+		
+	// sizing
+	var svgPadding = 40;
+	var margin = { top: GRAPH_TITLE_FONT_SIZE + 12, bottom: 50, left: 50, right: 20 };
+	var dimensions = { width: parent.node().getBoundingClientRect().width - (2 * svgPadding), height: 400 };
+	var height = dimensions.height;
+	var width = dimensions.width;
+	var graphHeight = height - margin.top - margin.bottom;
+	var graphWidth = width - margin.left - margin.right;
+	
+	// scales and generators
+	var times = Object.keys(data).map(function(t) { return parseInt(t); });
+	var timeExtent = d3.extent(times);
+	var minTime = timeExtent[0];
+	var adjustedTimes = times.map(function(t) { return (t - minTime) / 1000000; });
+	
+	var x = d3.scaleLinear()
+		.domain(d3.extent(adjustedTimes))
+		.rangeRound([0, graphWidth]);
+
+	var values = Object.values(data).map(function(t) { return parseFloat(t); })
+	var valueExtent = d3.extent(values);
+	
+	var y = d3.scaleLinear()
+		.domain([0, valueExtent[1]])
+		.range([graphHeight, 0]);
+		
+	var xaxis = d3.axisBottom(x)
+			.tickValues(formattedTickValues(d3.extent(adjustedTimes)))
+			.tickPadding(6);
+			
+	var yaxis = d3.axisLeft(y)
+		.tickSizeInner(-graphWidth)
+		.tickSizeOuter(3)
+		.tickPadding(8);
+		
+	// appends 
+	
+	svg
+		.attr('width', width)
+		.attr('height', height)
+		.style('margin-left', svgPadding);
+
+	appendTitle(svg, margin, dimensions, metric + " Values")
+	appendYAxis(svg, yaxis, margin, dimensions, 'Value');
+	appendXAxis(svg, xaxis, margin, dimensions, 'Time (s)');
+	
+	var g = svg.append('g')
+		.attr('width', graphWidth)
+		.attr('height', graphHeight)
+		.attr('transform', translate(margin.left, margin.top));
+		
+	var line = d3.line()
+		.x(function(d) { return x((d[0] - minTime)/1000000); })
+		.y(function(d) { return y(d[1]); })
+		.curve(d3.curveCatmullRom);
+		
+	var points = Object.entries(data).map(function(d) {
+		return [ parseInt(d[0]), parseFloat(d[1]) ];
+	}).sort(function(a,b) {
+		return a[0] - b[0];
+	});
+	
+	g.append('path')
+		.attr('d', function(d)  { return line(points); })
+		.style('stroke', YELLOW)
+		.style('stroke-width', '2')
+		.style('fill', 'none');
+}
+
+
+// utility
+function translate(x, y) {
+	return 'translate(' + x + ',' + y + ')';
+}
+
+
+function formattedTickValues(extent, tickCount = 10.0) {
+
+	var min = parseFloat(extent[0]);
+	var max = parseFloat(extent[1]);
+	
+	var ticks = [];
+	
+	var tickSize = (max - min) / parseFloat(tickCount);
+	for (var i = min; i <= max; i += tickSize) {
+		ticks.push(i);
+	}
+
+	return ticks;
+}
+
+
+function formatCell(value) {
+	return isNaN(value) ? value :  d3.format(',.2f')(value);
+}
+
+
 function appendTitle(svg, margin, dimensions, text) {
 
 	var centerX = margin.left + (0.5 * (dimensions.width - margin.left - margin.right));
@@ -866,24 +881,9 @@ function appendYAxis(svg, axis, margin, dimensions, label) {
 }
 
 
-function translate(x, y) {
-	return 'translate(' + x + ',' + y + ')';
-}
-
-
-function formattedTickValues(data) {
-
-	var numBins = 10.0
-
-	var extent = d3.extent(data);
-	var min = parseFloat(extent[0]);
-	var max = parseFloat(extent[1]);
+function getGraphDimensions() {
+	var height = d3.select('.measText').node().getBoundingClientRect().height;
+	var width = d3.select('.measGraph').node().getBoundingClientRect().width - 20;
 	
-	var bins = [];
-	var binSize = (max - min) / numBins;
-	for (var i = min; i <= (max + binSize); i += binSize) {
-		bins.push(i);
-	}
-
-	return bins;
+	return { height: height, width: width}
 }
