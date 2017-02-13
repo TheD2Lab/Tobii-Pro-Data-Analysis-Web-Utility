@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="../style.css">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<body>
+	<div id="content">
+		<div id="header">
+			<p id="title">Tobii Pro Studio Export Data Analysis</p>
+			<div id="navBar">
+				<p class="navItem"><a href='index.html'>Analysis</a></p>
+				<p class="navItem navLoc">Manual</p>
+			</div>	
+		</div>
+		<div id="body">
+			<div id="eyeDfnCont" class='container'>
+				<h1>Common Eye Tracking Measure Definitions</h1>
+					<div id='iDfnBox' class="box dfnBox">
+					<div class='measHeader'>
+						Base Measures
+					</div>
+					<div class='measBody'>
+						<table class="dfnTable">
+							<thead>
+								<tr>
+									<th>Metric</th>
+									<th>Definition</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class='dfnKey'>Fixation</td>
+									<td class='dfnValue'>Moment in time when the eye is relatively stationary.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Saccade</td>
+									<td class='dfnValue'>Moments occurring between fixations, where the eye travels from one fixation to the next.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Scanpath</td>
+									<td class='dfnValue'>A complete Saccade-Fixate-Saccade sequence.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Convex Hull Area</td>
+									<td class='dfnValue'>The minimum spanning polygon for a set of points in a Cartesian coordinate system.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Pupil</td>
+									<td class='dfnValue'>The hole located in the center of the iris of the eye.</td>
+								</tr>								
+								<tr>
+									<td class='dfnKey'>Relative Angle</td>
+									<td class='dfnValue'>The amount of rotation, in degrees between a Saccade and the horizontal axis.</td>
+								</tr>																
+								<tr>
+									<td class='dfnKey'>Absolute Angle</td>
+									<td class='dfnValue'>The amount of rotation, in degrees, from from the previous Saccade to the next Saccade.</td>
+								</tr>																
+							</tbody>
+						</table>
+					</div>
+					<div class='measFooter'>
+					</div>
+					</div>									
+				</div>
+			<div id="outDfnCont" class='container'>
+				<h1>Export Analysis Output Definitions</h1>
+					<div id='sDfnBox' class="box dfnBox">
+					<div class='measHeader'>
+						Measures of Search
+					</div>
+					<div class='measBody'>
+						<table class="dfnTable">
+							<thead>
+								<tr>
+									<th>Metric</th>
+									<th>Definition</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class='dfnKey'>Fixation Count</td>
+									<td class='dfnValue'>The number of discrete fixations captured during the experiment.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Saccade Count</td>
+									<td class='dfnValue'>The number of discrete fixations captured during the experiment.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Average Saccade Length</td>
+									<td class='dfnValue'>A central measure of pixel distance between fixations calculated from the Scanpath Length and divided by the Saccade Count.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Scanpath Length</td>
+									<td class='dfnValue'>The sum of all Saccade Lengths denoting the total distance travelled by the participant's gaze over the course of the experiment.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Convex Hull Area</td>
+									<td class='dfnValue'>The size, in pixels, of the region encapsulated by the user's Fixations in the Scanpath.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class='measFooter'>
+					</div>
+					</div>
+					<div id='pDfnBox' class="box dfnBox">
+					<div class='measHeader'>
+						Measures of Processing
+					</div>
+					<div class='measBody'>
+						<table class="dfnTable">
+							<thead>
+								<tr>
+									<th>Metric</th>
+									<th>Definition</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class='dfnKey'>Average Fixation Duration</td>
+									<td class='dfnValue'>A central measure of the time a participant's gaze has remained on a single point.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Average Saccade Duration</td>
+									<td class='dfnValue'>A central measure of the time a participant's gaze traveled between two Fixation points.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Saccade-to-Fixation Ratio</td>
+									<td class='dfnValue'>The factor relating the total amount of time a participant spent in a Fixation gaze against a Saccade Gaze.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class='measFooter'>
+					</div>
+					</div>
+					<div id='cDfnBox' class="box dfnBox">
+					<div class='measHeader'>
+						Measures of Cognitive Workload
+					</div>
+					<div class='measBody'>
+						<table class="dfnTable">
+							<thead>
+								<tr>
+									<th>Metric</th>
+									<th>Definition</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class='dfnKey'>Average Left Pupil Dilation</td>
+									<td class='dfnValue'>A central measure, in millimeters, of the diameter of a participant's left pupil over the course of an experiment.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Average Right Pupil Dilation</td>
+									<td class='dfnValue'>A central measure, in millimeters, of the diameter of a participant's right pupil over the course of an experiment.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Sum of Absolute Saccadic Angles</td>
+									<td class='dfnValue'>The total combined measure of the offset, in degrees, between the horizontal axis and the current fixation location where the previous fixation location is set as the origin.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Sum of Relative Saccadic Angles</td>
+									<td class='dfnValue'>The total combined difference between in degrees traveled between the current and previous saccade where the current saccade is between the current and previous fixation.</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<div class='measFooter'>
+					</div>
+					</div>					
+					<div id='rDfnBox' class="box dfnBox">
+					<div class='measHeader'>
+						Other Export Measures
+					</div>
+					<div class='measBody'>
+						<table class="dfnTable">
+							<caption>Metadata</caption>
+							<thead>
+								<tr>
+									<th>Metric</th>
+									<th>Definition</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class='dfnKey'>Validity</td>
+									<td class='dfnValue'>The ratio of valid to invalid samples in the export data, where any samples that did not have a validity code 0 for both the left and right eyes is considered invalid.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Duration</td>
+									<td class='dfnValue'>The human readable time period elapsed from experiment start to finish</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="dfnTable">
+							<caption>Counts</caption>
+							<thead>
+								<tr>
+									<th>Metric</th>
+									<th>Definition</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class='dfnKey'>Fixation Count</td>
+									<td class='dfnValue'>The number of discrete gazes marked as Fixation during the experiment.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Saccade Count</td>
+									<td class='dfnValue'>The number of discrete gazes marked as Saccade during the experiment.</td>
+								</tr>
+							</tbody>
+						</table>
+						<table class="dfnTable">
+							<caption>Descriptive Statistics</caption>
+							<thead>
+								<tr>
+									<th>Metric</th>
+									<th>Definition</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td class='dfnKey'>Mean</td>
+									<td class='dfnValue'>The arithmetic mean found by dividing the set of values by the number of values in the set.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Median</td>
+									<td class='dfnValue'>The middle value of the data set.</td>
+								</tr>
+								<tr>
+									<td class='dfnKey'>Mode</td>
+									<td class='dfnValue'>The value in the data set which occurs most.</td>
+								</tr>								
+								<tr>
+									<td class='dfnKey'>Variance</td>
+									<td class='dfnValue'>Measure how how far the set of values spread from their mean.</td>
+								</tr>																
+								<tr>
+									<td class='dfnKey'>Standard Deviation</td>
+									<td class='dfnValue'>A measure of how much a variation exist in a data set, higher standard deviations denote a widely varying data set, while lower standard deviations denote a more constricted range of values.</td>
+								</tr>																								
+								<tr>
+									<td class='dfnKey'>Minimum</td>
+									<td class='dfnValue'>The absolute smallest value within a data set.</td>
+								</tr>										
+								<tr>
+									<td class='dfnKey'>Maximum</td>
+									<td class='dfnValue'>The absolute largest value within a data set.</td>
+								</tr>																		
+								<tr>
+									<td class='dfnKey'>Sum</td>
+									<td class='dfnValue'>The result of aggregating the data set through addition, giving total combined value of all entries in the set.</td>
+								</tr>																									
+							</tbody>
+						</table>						
+					</div>
+					<div class='measFooter'>
+					</div>
+					</div>										
+				</div>
+			</div>
+		</div>
+	</div> <!-- end content -->
+</body>
+	<script type="text/javascript" src="script.js"></script>
+</html>

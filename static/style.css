@@ -1,3 +1,12 @@
+
+#tempLink {
+	display:block;
+	width:100%;
+	text-align: center;
+	text-decoration: underline;
+	margin-bottom: 20px;
+}
+
 body {
 	background-color:#E7E7E7;
 	margin:0;
@@ -98,6 +107,10 @@ caption {
 th {
 	text-align:center;
 	vertical-align: middle;
+	text-align: center;
+	background-color: white;
+	height: 50px;
+	color: #426895;
 }
 
 td {
@@ -183,13 +196,6 @@ a {
 	border:1px solid white;
 }
 
-.measHead {	
-	text-align: center;
-	background-color: white;
-	height: 50px;
-	color: #426895;
-}
-
 .measCell {	
 	height: 100px;
 	text-align: center;
@@ -234,3 +240,28 @@ a {
 .axis path, .axis line {
 	stroke: white;
 }
+
+
+
+/* Manual Page */
+
+.dfnBox {
+	margin-bottom:60px;
+}
+
+.dfnTable {
+	width:80%;
+	margin:40px auto;
+}
+
+.dfnKey {
+	text-align:center;
+	font-weight:bold;
+	min-width:150px;
+}
+
+.dfnValue {
+	text-align:left;
+}
+
+
