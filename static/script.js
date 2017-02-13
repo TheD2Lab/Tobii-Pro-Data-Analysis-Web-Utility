@@ -53,6 +53,8 @@ $('#uploadForm').submit(function(e) {
 
 	e.preventDefault();
 	
+	console.log($(this)[0]);
+	
 	$.ajax({
 			url: '/uploads',
 			type: 'POST',
