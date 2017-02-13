@@ -67,6 +67,7 @@ $('#uploadForm').submit(function(e) {
 	})
 })
 
+
 $('#file').change(function(e) {
 	var path = this.value;
 	var fileBegin = path.lastIndexOf('\\') + 1;
@@ -101,10 +102,14 @@ function showResults(response) {
 
 	console.log(response);
 	
+	var outputContainer = $('#ocontainer');
+	
+	outputContainer.show();
+		
 	parseResponse(response);
 	
 	$('html, body').animate( {
-			scrollTop: $('#resultContainer').offset().top
+			scrollTop: outputContainer.offset().top
 		}, 500);
 }
 		
@@ -166,7 +171,7 @@ function appendMeasuresOfSearch(res) {
 		}
 	];
 	
-	appendMeasureTable('search', d3.select('#searchBox .measText'), tableData);
+	appendMeasureTable('search', d3.select('#sBox .measText'), tableData);
 }
 
 
@@ -199,7 +204,7 @@ function appendMeasuresOfProcessing(res) {
 		}
 	]
 	
-	appendMeasureTable('processing', d3.select('#procBox .measText'), tableData);
+	appendMeasureTable('processing', d3.select('#pBox .measText'), tableData);
 }
 
 
@@ -244,7 +249,7 @@ function appendMeasuresOfCognition(res) {
 		}
 	];
 	
-	appendMeasureTable('cognition', d3.select('#cogBox .measText'), tableData);
+	appendMeasureTable('cognition', d3.select('#cBox .measText'), tableData);
 }
 
 
@@ -279,8 +284,7 @@ function appendKeyValueTable(data, name) {
 	var headings = ['Measure', 'Value'];
 	
 	var table = d3.select('#' + name.toLowerCase())
-		.append('table')
-		.attr('class', 'rawTable');
+		.append('table');
 		
 	table.append('caption')
 		.html(name);
@@ -427,9 +431,6 @@ function appendMeasureTable(name, elem, data) {
 				.append('td')
 				.attr('class', 'measCell')
 				.style('font-weight', function(d, i) { return i == 0 ? 'bold' : 'normal'; })
-				.style('width', function(d, i) { 
-					return i != headings.length - 1 ? '40%' : '20%'; 
-				})
 				.html(function(d, i) { 
 						switch(i) {
 							case 0: 
@@ -745,7 +746,7 @@ function showPlotLegend() {
 // line graph
 function appendLine(metric, yAxisTitle, data) {
 
-	var parent = d3.select('#rawBox');
+	var parent = d3.select('#rBox');
 	
 	parent.selectAll('svg').remove();
 	

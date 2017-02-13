@@ -1,329 +1,236 @@
-	body {
-		background-color:#E7E7E7;
-		margin:0;
-	}
-	
-	.gold {
-		background-color: #920C25;
-	}
-	
-	.blue {
-		background-color: #426895;
-	}
-	
-	#content {
-		margin:none;
-		border:none;
-		padding:none;
-		width:100%;
-		min-width:700px;
-		font-family:sans-serif;
-		font-size:16px;
-	}
-	
-	#header {
-		width:100%;
-		height:200px;
-		margin:0;
-		padding:0;
-	}
-	
-	#title {
-		color:white;
-		margin: 0 0 0 40px;
-		line-height:150px;
-		font-size:30px;
-		font-weight:bold;
-		font-family:sans-serif;
-	}
-	
-	#navBar {
-		width:60%;
-		height:50px;
-		margin:auto;
-	}
-	
-	.navItem {
-		width:24%;
-		height:50px;
-		display:inline-block;
-		margin:0;
-		color:white;
-		text-align: center;
-		line-height: 50px;
-		vertical-align: middle;
-	}
-	
-	h1 {
-		width:75%;
-		height: 80px;
-		margin:50px auto 0 auto;
-		max-width:720px;
-		min-width:480px;
-		line-height: 80px;
-		color: #426895;
-	}
-	
-	h2 {
-		text-align: center;
-	}
-	
-	#formContainer {
-		background-color: #426895;
-		width:80%;
-		max-width:720px;
-		min-width:480px;
-		display:block;
-		margin: 0 auto;
-		border:1px solid #426895;
-		border-radius:10px;
-	}
-	
+body {
+	background-color:#E7E7E7;
+	margin:0;
+}
 
-	
-	#uploadForm {
-		color:white;
-		width:90%;
-		margin:auto;
-	}
-	
-	.formSec {
-		width:100%;
-		min-height:40px;
-	}
-	
-	.secTitle {
-		width:100%;
-		height:40px;
-		font-weight:bold;
-		font-size: 18px;
-	}
-	
-	.metricBox {
-		width:49%;
-		height: 175px;
-		display:inline-block;
-		margin:0;
-		padding:0;
-		border:none;
-	}
-	
-	.metricTitle {
-		padding-left:40px;
-	}
-	
-	.metricContentBox {
-		width:120px;
-		margin:auto;
-	}
-	
-	label {
-		display:block;
-		width:auto;
-		height:20px;
-		margin:0 0 0 20px;
-		font-size:12px;
-	}
+#content {
+	margin:none;
+	border:none;
+	padding:none;
+	width:100%;
+	min-width:700px;
+	font-family:sans-serif;
+	font-size:16px;
+}
 
-	
-	.leftRange {
-		width:25%;
-		margin: 0 5% 0 0;
-		display:inline-block;
-		text-align:right;
-	}
-	
-	.rightRange {
-		width:25%;
-		margin: 0 0 0 5%;
-		display:inline-block;
-		text-align:left;
-	}
-	
-	.slider {
-		width:38%;
-		display:inline-block;
-	}
-	
-	
-	
-	
-		#resultContainer {
-		width:80%;
-		margin:auto;
+#header {
+	width:100%;
+	height:200px;
+	margin:0;
+	padding:0;
+	background-color: #426895;
+}
 
-		min-width:480px;
-	}
-	
-	
-	.measBox {
-		width: 100%;
-		margin:20px auto;
-		color:white;
-		background-color: #426895;
-		border:1px solid #426895;
-		border-radius: 10px;
-	}
-	
-	.measHeader, .measFooter {
-		height:60px;
-		margin:20px auto;
-		padding:0;
-	}
-	
-	.measTextFooter {
-		height:100%;
-		width: 40%;
-		display:inline-block;
-	}
-	
-	.measGraphFooter {
-		height:100%;
-		width:59%;
-		display:inline-block;
-	}
-	
-	.measBody {
+#title {
+	color:white;
+	margin: 0 0 0 40px;
+	line-height:150px;
+	font-size:30px;
+	font-weight:bold;
+	font-family:sans-serif;
+}
 
-	}
-	
-	.measText {
-		width:30%;
-		padding:0;
-		height:350px;
-		overflow-y:scroll;
-		overflow-x:hidden;
-		margin:0 5%;
-		display:inline-block;
-		border-top:2px solid white;
-		border-bottom:2px solid white;
-		border-left: 2px solid white;
-		
-	}
-	
-	.halfTable {
-		width: 40%;
-		margin: 4.5%;
-		display: inline-block;
-	}
-	
-	.halfTable td {
-		width: 50%;
-	}
-	
-	.fullTable {
-		width: 90%;
-		margin: 5% auto;
-	}
-	
-	.measTable {
-		border-collapse: collapse;
-		margin:0;
-		padding:0;
-		border:1px solid white;
-	}
-	
-	.searchGraph, .procGraph, .cogGraph {
-		display: none;
-	}
-	
-	.measHead {	
-		text-align: center;
-		background-color: white;
-		height: 50px;
-		color: #426895;
-	}
-	
-	.measCell {	
-	 height: 100px;
-		text-align: center;
-		border: 1px solid white;
-	}
+#navBar {
+	width:40%;
+	height:50px;
+	margin:auto;
+}
 
-	.uploadLbl {
-		width: 80%;
-		height: 50px;
-		margin: 40px auto;
-		display:block;
-		text-align:center;
-		line-height: 50px;
-		font-size:18px;
-		font-weight: bold;
-		border-radius: 10px;
-		border:1px solid #426895;
-		color: #426895;
-	}	
-	
-	#fileLbl {
-		background-color: white;
-		color: #FECA3D
-	}
-	
-	#submitLbl {
-		background-color:#FECA3D;
-		color:white;
-	}
-		
-	
-	.upload {
-		display:none;
-	}
-	
-	.rawTable {
-		border-collapse: collapse;
-	}
-	
-	.rawTable td {
-		border: 1px solid white;
-	}
-	
-	
-	.measGraph {
-		width:59%;
-		display:inline-block;
-	}
-	
-	#searchGraph {
-		display:none;
-	}
-	
-	.axis path, .axis line {
-		stroke: white;
-	}
-	
-	
-	
-	.tableBounds {
-		width: 75%;
-		margin:40px auto;
-		padding:20px;
-		color:white;
-		background-color: #426895;
-		border:1px solid #426895;
-		border-radius: 10px;
-	}
-	
-	table {
-		width:100%;
-		padding:20px;
-		border-collapse: collapse;
-	}
-	
-	caption {
-		font-size:20px;
-		height:40px;
-		font-weight:bold;
-	}
+.navItem {
+	width:49%;
+	height:50px;
+	display:inline-block;
+	margin:0;
+	color:white;
+	text-align: center;
+	line-height: 50px;
+	vertical-align: middle;
+}
 
-	th {
-		text-align:center;
-		vertical-align: middle;
-	}
+.navLoc {
+	color: #FECA3D;
+	font-weight:bold;
+}
+
+h1 {
+	width:95%;
+	height: 80px;
+	margin:auto 0 auto 5%;
+	min-width:480px;
+	line-height: 80px;
+	color: #426895;
+	text-align:left;
+}
+
+.container {
+	display:block;
+	width:80%;
+	min-width:480px;
+	margin: 80px auto;
+}
 	
-	td {
-		height:40px;
-		padding:5px;
-		text-align: right;
-		vertical-align: middle;
-	}
+#ocontainer {
+	display: none;
+}
+
+.box {
+	width: 100%;
+	margin:20px auto;
+	color:white;
+	background-color: #426895;
+	border:1px solid #426895;
+	border-radius: 4px;
+}
+
+table {
+	width:100%;
+	padding:20px;
+	border-collapse: collapse;
+	border: 1px solid white;
+}
+
+caption {
+	font-size:20px;
+	height:40px;
+	font-weight:bold;
+}
+
+th {
+	text-align:center;
+	vertical-align: middle;
+}
+
+td {
+	height:40px;
+	padding:5px;
+	text-align: right;
+	vertical-align: middle;
+	border: 1px solid white;
+}
+
+a { 
+	color: inherit; 
+	text-decoration: none;
+}
+
+.uploadLbl {
+	width: 80%;
+	height: 50px;
+	margin: 40px auto;
+	display:block;
+	text-align:center;
+	line-height: 50px;
+	font-size:18px;
+	font-weight: bold;
+	border-radius: 10px;
+	border:1px solid #426895;
+	color: #426895;
+}	
+
+#fileLbl {
+	background-color: white;
+	color: #FECA3D
+}
+
+#submitLbl {
+	background-color:#FECA3D;
+	color:white;
+}
+
+.upload {
+	display:none;
+}
+
+.uploadLbl:active {
+	position:relative;
+	top:1px;
+}
+
+/* measure boxes */
+
+.measBox {
+	margin-bottom:100px;
+}
+
+.measHeader, .measFooter {
+	height:40px;
+	width:100%;
+	margin:20px auto;
+	line-height:40px;
+	font-size:24px;
+	font-weight: bold;
+	text-align:center;
+}
+
+.measText {
+	width:30%;
+	padding:0;
+	height:350px;
+	overflow-y:scroll;
+	overflow-x:hidden;
+	margin:0 5%;
+	display:inline-block;
+	border-top:2px solid white;
+	border-bottom:2px solid white;
+	border-left: 2px solid white;
 	
+}
+
+.measTable {
+	border-collapse: collapse;
+	margin:0;
+	padding:0;
+	border:1px solid white;
+}
+
+.measHead {	
+	text-align: center;
+	background-color: white;
+	height: 50px;
+	color: #426895;
+}
+
+.measCell {	
+	height: 100px;
+	text-align: center;
+}
+
+.measGraph {
+	width:59%;
+	display:inline-block;
+}
+
+.measTextFooter {
+	height:100%;
+	width: 40%;
+	display:inline-block;
+}
+
+.measGraphFooter {
+	height:100%;
+	width:59%;
+	display:inline-block;
+}
+
+
+/* raw box */	
+
+
+.halfTable {
+	width: 40%;
+	margin: 40px 4.5%;
+	display: inline-block;
+}
+
+.halfTable td {
+	width: 50%;
+}
+
+.fullTable {
+	width: 90%;
+	margin: 40px 5%;
+}
+
+.axis path, .axis line {
+	stroke: white;
+}

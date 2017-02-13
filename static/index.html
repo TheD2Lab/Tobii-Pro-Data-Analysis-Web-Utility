@@ -9,30 +9,29 @@
 </head>
 <body>
 	<div id="content">
-		<div id="header" class="blue">
-			<p id="title">Tobii Eye Tracking Data Analysis</p>
+		<div id="header">
+			<p id="title">Tobii Pro Studio Export Data Analysis</p>
 			<div id="navBar">
-				<p class="navItem">Input</p>
-				<p class="navItem">Output</p>
-				<p class="navItem">Usage</p>				
-				<p class="navItem">About</p>				
+				<p class="navItem navLoc">Analysis</p>
+				<p class="navItem"><a href='manual.html'>Manual</a></p>
+			</div>	
 		</div>
 		<div id="body">
-			<h1>Upload Form</h1>
-			<div id="formContainer">
-				<form id="uploadForm">
-					<label for="file" id='fileLbl' class='uploadLbl'>Select a File to Upload</label>	
+			<div id="icontainer" class='container'>
+				<h1>Export Upload Form</h1>
+				<form id="uploadForm" class="box">
+					<label for="file" id='fileLbl' class='uploadLbl'>Select an Export File to Upload</label>	
 					<input type="file" id="file" class='upload' name="file">
-					<label id='submitLbl' class='uploadLbl'>Process File
+					<label id='submitLbl' class='uploadLbl'>Process Export
 						<input type="submit" id="compute"  class='upload' name="submit" value="Compute">
 					</label>
 				</form>
 			</div>
-			<h1 id='resultTitle'>Result Tables</h1>
-			<div id="resultContainer">
-				<div id="searchBox" class="measBox">
+			<div id="ocontainer" class='container'>
+				<h1>Export Result Categories</h1>
+				<div id='sBox' class="box measBox">
 					<div class='measHeader'>
-						<h2>Measures of Search</h2>
+						Measures of Search
 					</div>
 					<div class='measBody'>
 						<div class='measText'>
@@ -47,9 +46,9 @@
 					</div>
 					</div>
 				</div>
-				<div id="procBox" class="measBox">
+				<div id='pBox' class="box measBox">
 					<div class='measHeader'>
-						<h2>Measures of Processing</h2>
+						Measures of Processing
 					</div>
 					<div class='measBody'>
 						<div class='measText'>
@@ -65,9 +64,9 @@
 					</div>
 					</div>
 				</div>
-				<div id="cogBox" class="measBox">
+				<div id='cBox' class="box measBox">
 					<div class='measHeader'>
-						<h2>Measures of Cognitive Workload</h2>
+						Measures of Cognitive Workload
 					</div>
 					<div class='measBody'>
 						<div class='measText'>
@@ -85,10 +84,15 @@
 					</div>
 					</div>
 				</div>
-				<div id="rawBox" class="measBox">
-					<div id='metadata' class='halfTable'></div>
-					<div id='counts' class='halfTable'></div>
-					<div id='stats' class='fullTable'></div>
+				<div id='rBox' class="box measBox">
+					<div class='measHeader'>
+						All Export Measures
+					</div>
+					<div class='measBody'>
+						<div id='metadata' class='rawTable halfTable'></div>
+						<div id='counts' class='rawTable halfTable'></div>
+						<div id='stats' class='rawTable fullTable'></div>
+					</div>
 				</div>
 			</div>
 		</div>
