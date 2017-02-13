@@ -239,7 +239,35 @@
 		text-align: center;
 		border: 1px solid white;
 	}
+
+	.uploadLbl {
+		width: 80%;
+		height: 50px;
+		margin: 40px auto;
+		display:block;
+		text-align:center;
+		line-height: 50px;
+		font-size:18px;
+		font-weight: bold;
+		border-radius: 10px;
+		border:1px solid #426895;
+		color: #426895;
+	}	
 	
+	#fileLbl {
+		background-color: white;
+		color: #FECA3D
+	}
+	
+	#submitLbl {
+		background-color:#FECA3D;
+		color:white;
+	}
+		
+	
+	.upload {
+		display:none;
+	}
 	
 	.rawTable {
 		border-collapse: collapse;

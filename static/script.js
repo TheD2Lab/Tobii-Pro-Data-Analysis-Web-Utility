@@ -65,6 +65,13 @@ $('#uploadForm').submit(function(e) {
 	})
 })
 
+$('#file').change(function(e) {
+	var path = this.value;
+	var fileBegin = path.lastIndexOf('\\') + 1;
+	var file = path.substring(fileBegin)
+	$('#fileLbl').text(file);
+})
+
 
 $("#validitySlider").slider({
 	min: 0,
