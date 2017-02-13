@@ -241,71 +241,19 @@ function appendMeasuresOfCognition(res) {
 
 function appendRawMeasures(res) {
 
-	appendMetadata(getMetadata(res));
+	appendKeyValueTable(getMetadata(res), 'Metadata');
 	
-	appendCounts(getCounts(res));
+	appendKeyValueTable(getCounts(res), 'Counts');
 	
 	appendStats(getStats(res));
 }
 
 
 // result box building
-function appendMetadata(metadata) {
-
-	var headings = ['Measure', 'Value'];
-	
-	var table = d3.select('#metadata')
-		.append('table')
-		.attr('class', 'metadataTable rawTable');
-		
-	table.append('caption')
-		.html('Metadata');
-		
-	appendTableHead(table, headings); 
-	
-	var cells = table.append('tbody')
-		.selectAll('tr')
-		.data(Object.entries(metadata))
-			.enter()
-			.append('tr')
-			.selectAll('td')
-			.data(function(d) { return d; })
-			.enter()
-				.append('td')
-				.html(function(d, i) { return formatCell(d); });
-}
-
-
 function getMetadata(res) {
 	var meta = res[META];
 	meta['Validity'] = decimalFormat(meta['Validity']) + '%';
 	return meta;
-}
-
-
-function appendCounts(counts) {
-
-	var headings = ['Measure', 'Value'];
-	
-	var table = d3.select('#counts')
-		.append('table')
-		.attr('class', 'countTable rawTable');
-		
-	table.append('caption')
-		.html('Select Measure Counts');
-		
-	appendTableHead(table, headings); 
-	
-	var cells = table.append('tbody')
-		.selectAll('tr')
-		.data(Object.entries(counts))
-			.enter()
-			.append('tr')
-			.selectAll('td')
-			.data(function(d) { return d; })
-			.enter()
-				.append('td')
-				.html(function(d, i) { return d; });
 }
 
 
@@ -314,6 +262,53 @@ function getCounts(res) {
 	counts[SACCADE] = res[SACCADE][COUNT];
 	counts[FIXATION] = res[FIXATION][COUNT];
 	return counts;
+}
+
+
+function appendKeyValueTable(data, name) {
+
+	var headings = ['Measure', 'Value'];
+	
+	var table = d3.select('#' + name.toLowerCase())
+		.append('table')
+		.attr('class', 'rawTable');
+		
+	table.append('caption')
+		.html(name);
+		
+	appendTableHead(table, headings); 
+	
+	var cells = table.append('tbody')
+		.selectAll('tr')
+		.data(Object.entries(data))
+			.enter()
+			.append('tr')
+			.selectAll('td')
+			.data(function(d) { return d; })
+			.enter()
+				.append('td')
+				.style('font-weight', function(d, i) { return i == 0 ? 'bold' : 'normal'; })
+				.style('text-align', function(d, i) { return i == 0 ? 'center' : 'right'; })
+				.html(function(d, i) { return d; });
+}
+
+
+function getStats(res) {
+
+	var stats = [];
+	
+	for (var k1 in res) {
+		var obj = res[k1];
+		for (var k2 in obj) {
+			var subObj = obj[k2];
+			if (subObj.hasOwnProperty(STATS)) {
+				subObj['name'] = k2;
+				stats.push(subObj);
+			}
+		}
+	}
+	
+	return stats;
 }
 
 
@@ -351,6 +346,12 @@ function appendStats(stats) {
 			})
 			.enter()
 				.append('td')
+				.style('text-align', function(d, i) { 
+					return (i == 0 || i == 1) ? 'center' : 'right'; 
+				})
+				.style('font-weight', function(d, i) { 
+					return i == 0 ? 'bold' : 'normal' 
+				})
 				.html(function(d, i) { 
 					var key = Object.keys(d)[0];
 					if (key == 'Plot') {
@@ -374,25 +375,6 @@ function appendStats(stats) {
 			});
 			
 	click(radios.nodes()[0]);
-}
-
-
-function getStats(res) {
-
-	var stats = [];
-	
-	for (var k1 in res) {
-		var obj = res[k1];
-		for (var k2 in obj) {
-			var subObj = obj[k2];
-			if (subObj.hasOwnProperty(STATS)) {
-				subObj['name'] = k2;
-				stats.push(subObj);
-			}
-		}
-	}
-	
-	return stats;
 }
 
 
@@ -435,6 +417,7 @@ function appendMeasureTable(name, elem, data) {
 			.enter()
 				.append('td')
 				.attr('class', 'measCell')
+				.style('font-weight', function(d, i) { return i == 0 ? 'bold' : 'normal'; })
 				.style('width', function(d, i) { 
 					return i != headings.length - 1 ? '40%' : '20%'; 
 				})
