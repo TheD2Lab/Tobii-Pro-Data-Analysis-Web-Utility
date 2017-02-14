@@ -1,0 +1,280 @@
+  498  mongo
+  499  clr
+  500  cd knowcrash/
+  501  python api/server_eve.py 
+  502  exit
+  503  clr
+  504  ls
+  505  cd /
+  506  ls
+  507  cd 
+  508  ls
+  509  clr
+  510  ls
+  511  mongo
+  512  clr
+  513  ls
+  514  mongodump
+  515  clr
+  516  ls
+  517  zip dump db.zip
+  518  sudo apt install zip
+  519  clr
+  520  ls
+  521  zip db.zip dump
+  522  clr
+  523  ls
+  524  du -hs *
+  525  rm db.zip 
+  526  zip db.zip dump/
+  527  rm db.zip 
+  528  zip -r db.zip dump/
+  529  du -hs *
+  530  unzip db.zip  db
+  531  ls
+  532  mv dump db
+  533  ls
+  534  unzip db.zip 
+  535  ls
+  536  du -hs *
+  537  rm -rf dump
+  538  clr
+  539  ls
+  540  rm db.zip 
+  541  ls
+  542  zip -r db.zip db/*
+  543  clr
+  544  ls
+  545  exit
+  546  mongo
+  547  clr
+  548  cd /etc/
+  549  ls
+  550  cat mongodb.conf 
+  551  cat mongodb.conf |less
+  552  cd /var/log/
+  553  cat mongodb/mongodb.log 
+  554  ls
+  555  cd /etc/
+  556  ls
+  557  cat host.a
+  558  cat hosts.allow 
+  559  cat nsswitch.conf 
+  560  cat host
+  561  cat hosts
+  562  cat hostname
+  563  exit
+  564  clr
+  565  ls
+  566  clr
+  567  ls
+  568  clr
+  569  ls
+  570  git clone https://github.com/drewmstiles/TobiiAnalysis
+  571  which java
+  572  sudo apt-get install oracle-java8-installer
+  573  sudo apt-get update
+  574  sudo apt-get install oracle-java8-installer
+  575  apt-get install openjdk-8-jdk
+  576  sudo apt-get install openjdk-8-jdk
+  577  which java
+  578  sudo apt-get install node-js
+  579  sudo apt-get install nodejs
+  580  clr
+  581  ls
+  582  cd TobiiAnalysis/
+  583  ls
+  584  node app.js 
+  585  node -b
+  586  node -v
+  587  nodejs -v
+  588  nodejs app.js 
+  589  ls
+  590  java -jar analysis/analysis.jar 
+  591  sudo apt-get install npm
+  592  npm install express
+  593  npm install multer
+  594  ls
+  595  cd node_modules/
+  596  ls
+  597  nodejs app.js 
+  598  cd ../
+  599  ls
+  600  nodejs app.js 
+  601  ls
+  602  nodejs app.js 
+  603  npm update
+  604  nodejs app.js 
+  605  ls
+  606  cat package.json 
+  607  clr
+  608  ls
+  609  rm -rf node_modules/
+  610  npm install
+  611  npm install multer
+  612  npm install childProcess
+  613* npm install 
+  614  nodejs app.js 
+  615  ls
+  616  ls -la
+  617  mkdir uploads
+  618  ls
+  619  ls -la
+  620  clr
+  621* 
+  622  nodejs app.js 
+  623  ls
+  624  clr
+  625  ls
+  626  cd ../
+  627  ls
+  628  sudo rm -rf TobiiAnalysis
+  629  git clone https://github.com/drewmstiles/TobiiAnalysis
+  630  clr
+  631  ls
+  632  cd TobiiAnalysis/
+  633  ls
+  634  npm install
+  635  clr
+  636  nodejs app.js 
+  637  touch tobiianalysis.service
+  638  vi tobiianalysis.service 
+  639  pwd
+  640  vi tobiianalysis.service 
+  641  ls
+  642  cp tobiianalysis.service /etc/systemd/system/
+  643  sudo cp tobiianalysis.service /etc/systemd/system/
+  644  systemctl start tobiianalysis
+  645  sudo systemctl start tobiianalysis
+  646  journalctl -u tobiianalysis
+  647  sudo systemctl start tobiianalysis
+  648  journalctl -u tobiianalysis
+  649  sudo systemctl restart tobiianalysis
+  650  journalctl -u tobiianalysis
+  651  sudo systemctl stop tobiianalysis
+  652  journalctl -u tobiianalysis
+  653  clr
+  654  cd /usr/local/
+  655  ls
+  656  cd bin/
+  657  ls
+  658  cd ../
+  659  ls
+  660  which nodejs
+  661  ls
+  662  cd
+  663  ls
+  664  cd TobiiAnalysis/
+  665  ls
+  666  vi app.js 
+  667  ls
+  668  ls -la
+  669  sudo chmod a+x app.js 
+  670  ls
+  671  ./app.js 
+  672  vi app.js 
+  673  ./app.js 
+  674  clr
+  675  sudo systemctl start tobiianalysis
+  676  journalctl -u tobiianalysis
+  677  sudo systemctl start tobiianalysis
+  678  journalctl -u tobiianalysis
+  679  sudo systemctl stop tobiianalysis
+  680  sudo systemctl start tobiianalysis
+  681  journalctl -u tobiianalysis
+  682  ls
+  683  cd ../
+  684  ls
+  685  cd /etc/systemd/
+  686  ls
+  687  cd system/
+  688  ls
+  689  vi tobiianalysis.service 
+  690  sudo vi tobiianalysis.service 
+  691  clr
+  692  sudo systemctl start tobiianalysis
+  693  journalctl -u tobiianalysis
+  694  cd /home/ubuntu/TobiiAnalysis/
+  695  ls
+  696  cd /etc/systemd/system/
+  697  ls
+  698  sudo vi tobiianalysis.service 
+  699  sudo systemctl start tobiianalysis
+  700  journalctl -u tobiianalysis
+  701  cd 
+  702  ls
+  703  cd TobiiAnalysis/
+  704  ls
+  705  clr
+  706  ls
+  707  cd /etc/systemd/system/
+  708  sudo vi tobiianalysis.service 
+  709  /home/ubuntu/TobiiAnalysis/app.js 
+  710  sudo systemctl daemon-reload
+  711  sudo systemctrl start tobiianalysis
+  712  sudo systemctl start tobiianalysis
+  713  journalctl -u tobiianalysis
+  714  cd
+  715  ls
+  716  cd TobiiAnalysis/
+  717  ls
+  718  ls -la
+  719  clr
+  720  ls
+  721  cd /etc/systemd/system/
+  722  ls
+  723  vi tobiianalysis.service 
+  724  sudo vi tobiianalysis.service 
+  725  sudo systemctl enable tobiianalysis
+  726  sudo systemctl start tobiianalysis
+  727  journalctl -u tobiianalysis
+  728  cd /var/log/
+  729  ls
+  730  man journalctl
+  731  journalctl --flush
+  732  journalctl -u tobiianalysis
+  733  clear
+  734  ls
+  735  clr
+  736  cd /etc/
+  737  ls
+  738  cd systemd/
+  739  ls
+  740  cd system/
+  741  ls
+  742  ls -la
+  743  chmod +x tobiianalysis.service 
+  744  sudo chmod +x tobiianalysis.service 
+  745  ls
+  746  sudo systemctl start tobiianalysis
+  747  journalctl -u tobiianalysis
+  748  clr
+  749  whoami
+  750  groups
+  751  clr
+  752  ls
+  753  sudo bi tobiianalysis.service 
+  754  sudo vi tobiianalysis.service 
+  755  clr
+  756  sudo systemctl start tobiianalysis
+  757  sudo systemctl daemon-reload tobiianalysis
+  758  sudo systemctl daemon-reload
+  759  sudo systemctl start tobiianalysis
+  760  journalctl -u tobiianalysis
+  761  rm /home/ubuntu/TobiiAnalysis/tobiianalysis.service 
+  762  cp tobiianalysis.service /home/ubuntu/TobiiAnalysis/
+  763  cd
+  764  cd TobiiAnalysis/
+  765  clr
+  766  ls
+  767  scp tobiianalysis.service:~/
+  768  scp tobiianalysis.service 98.148.150.147:~/
+  769  scp tobiianalysis.service dms@98.148.150.147
+  770  clr
+  771  ls
+  772  history
+  773  history | tail - 172
+  774  history | tail -172
+  775  history | tail -160
+  776  history | tail -280
+  777  history | tail -280 >> install-env

@@ -1,0 +1,14 @@
+[Unit]
+Description=Tobii Analysis
+
+[Service]
+ExecStart=/home/ubuntu/TobiiAnalysis/app.js
+Restart=always
+User=ubuntu
+Group=ubuntu
+Environment=PATH=/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+WorkingDirectory=/home/ubuntu/TobiiAnalysis/
+
+[Install]
+WantedBy=multi-user.target
