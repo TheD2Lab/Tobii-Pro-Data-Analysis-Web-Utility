@@ -1,16 +1,28 @@
 'use strict'
 
+/*
+ * Dependencies
+ */
+ 
+// internal
 var fs = require('fs');
 var parse = require('csv-parse/lib/sync');
 
+// external
 var Table = require('./table.js');
 var Analyzer = require('./analyzer.js');
 	
-var distance = function(p1, p2) {
+
+/*
+ * Definitions
+ */
+ 
+function distance(p1, p2) {
 	var dx = p1.x - p2.x;
 	var dy = p1.y - p2.y;
 	return Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 }
+
 
 function values(i) {
 	return function(table) {
@@ -19,6 +31,7 @@ function values(i) {
 		})
 	}
 }
+
 
 function pointDistances(arr, dist) {
 	if (arr.length == 1) {
@@ -32,6 +45,7 @@ function pointDistances(arr, dist) {
 	}
 }
 
+
 function gazePoints(table) {
 	
 	var xidx = table.index('GazePointX (ADCSpx)');
@@ -41,11 +55,9 @@ function gazePoints(table) {
 		return { x: r[xidx], y: r[yidx] };
 	})
 
-	var ds = pointDistances(points, []);
-	console.log(ds);
-	return ds;
+	return pointDistances(points, []);
 }
-	
+
 
 function columns(pred, column) {
 	return function(table) {
@@ -90,8 +102,17 @@ var sacLength = new Analyzer('Saccade Length',
 	gazePoints);
 analyzers.push(sacLength);
 
-// angles...
+var relAngle = new Analyzer('Relative Angle',
+	columns(function(c) { return c; }, 'RelativeSaccadicDirection'),
+	values(table.index('RelativeSaccadicDirection')));
+analyzers.push(relAngle);
 
+var absAngle = new Analyzer('Absolute Angle',
+	columns(function(c) { return c; }, 'AbsoluteSaccadicDirection'),
+	values(table.index('AbsoluteSaccadicDirection')));
+analyzers.push(absAngle);
+	
+	
 var response = {};
 
 for (var i = 0; i < analyzers.length; i++) {

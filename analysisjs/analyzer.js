@@ -10,12 +10,15 @@ var Analyzer = function(n, f, t) {
 	
 		var stats = {};
 		
+		
 		stats['mean'] = arithmeticMean(arr);
 		stats['median'] = median(arr);
 		stats['mode'] = mode(arr);
 		stats['variance'] = variance(arr);
 		stats['stddev'] = standardDeviation(arr);
 		stats['sum'] = sum(arr);
+		stats['min'] = min(arr);
+		stats['max'] = max(arr);
 		
 		return stats;
 	}
@@ -32,12 +35,12 @@ var Analyzer = function(n, f, t) {
 	const VAL = 1;
 
 	var min = function(arr) {
-		return Math.min(arr);
+		return Math.min.apply(null, arr);
 	}
 
 
 	var max = function(arr) {
-		return Math.max(arr);
+		return Math.max.apply(null, arr);
 	}
 
 
