@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, Bo Fu 
+ * Copyright (c) 2017, HDSC Lab
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -23,9 +23,9 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
  
-This analysis tool is compatible with Tobii 2150  eye tracker and the ClearView 2.7.1. 
+This analysis tool is compatible with Tobii X3-120 eye tracker and Tobii Studio Version 3.4.5 
 
-Inputs: Tobii Recording Data 
+Inputs: Tobii Studio Export Data 
 
 Outputs (validated results):
 
@@ -61,12 +61,8 @@ D. Raw data
 		- saccade length (px)
 		- absolute angle (degrees)
 		- relative angle (degrees)
-
-	2. Counts 	
-		- saccade count (int)
-		- fixation count (int)
 	
-	3. Dataset Statistics
+	2. Dataset Statistics
 		- validity (%)
 		- duration (s)
 		
