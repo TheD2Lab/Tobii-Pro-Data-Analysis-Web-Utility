@@ -30,7 +30,6 @@ var Table = function(dd) {
 	}
 	
 	this.index = function(columnName) {
-		console.log('%s\t%d', columnName, columnMap[columnName]);
 		return columnMap[columnName];
 	};
 	

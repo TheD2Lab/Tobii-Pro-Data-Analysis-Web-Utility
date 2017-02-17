@@ -251,6 +251,10 @@ function getCounts(res) {
 
 function appendKeyValueTable(data, name) {
 
+	data = Object.keys(data).map(function(k) {
+		return [data[k]];
+	});
+	
 	var headings = ['Measure', 'Value'];
 	
 	var table = d3.select('#' + name.toLowerCase())
@@ -263,7 +267,7 @@ function appendKeyValueTable(data, name) {
 	
 	var cells = table.append('tbody')
 		.selectAll('tr')
-		.data(Object.entries(data))
+		.data(data)
 			.enter()
 			.append('tr')
 			.selectAll('td')

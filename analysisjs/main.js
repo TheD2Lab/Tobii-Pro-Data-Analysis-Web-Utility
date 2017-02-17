@@ -199,8 +199,6 @@ module.exports = function(tsv) {
 		measure['stats'] = analyzer.analyze(new Table(data));
 		measure['units'] = analyzer.units;
 		measure['samples'] = analyzer.samples;
-		console.log(analyzer.name);
-		console.log(analyzer.samples);
 		response['data']['measures'][analyzer.name] = measure;
 	}
 
