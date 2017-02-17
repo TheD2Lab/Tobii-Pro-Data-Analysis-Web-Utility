@@ -3,7 +3,7 @@
 // internal
 var fs = require('fs');
 var parse = require('csv-parse/lib/sync');
-var ch = require('convex-hull');
+var ch = require('hull.js');
 
 // external
 var Table = require('./table.js');
@@ -103,7 +103,7 @@ module.exports = function(tsv) {
 	
 		var points = extractPoints(table);
 	
-		var hullPoints = ch(points.map(function(p) { return [ p.x, p.y ]; }));
+		var hullPoints = ch(points.map(function(p) { return [ p.x, p.y ]; }), Number.POSITIVE_INFINITY);
 		var hullArea = polygonArea(hullPoints);
 	
 	
@@ -153,12 +153,12 @@ module.exports = function(tsv) {
 	var analyzers = [];
 
 	var rpupil = new Analyzer('Right Pupil', 'mm',
-		columns(function(c) { return c && c !== '-1.00' }, 'PupilRight'), 
+		columns(function(c) { return c && parseFloat(c) > 0 }, 'PupilRight'), 
 		values(table.index('PupilRight')));
 	analyzers.push(rpupil);
 
 	var lpupil = new Analyzer('Left Pupil', 'mm',
-		columns(function(c) { return c && c !== -1 }, 'PupilLeft'), 
+		columns(function(c) { return c && parseFloat(c) > 0 }, 'PupilLeft'), 
 		values(table.index('PupilLeft')));
 	analyzers.push(lpupil);
 
@@ -197,10 +197,10 @@ module.exports = function(tsv) {
 		measure['stats'] = analyzer.analyze(new Table(data));
 		measure['units'] = analyzer.units;
 		measure['samples'] = analyzer.samples;
+		console.log(analyzer.name);
+		console.log(analyzer.samples);
 		response['data']['measures'][analyzer.name] = measure;
 	}
-
-	console.log(JSON.stringify(response, null, 2));
 
 	return response;
 };
