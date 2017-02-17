@@ -1,25 +1,30 @@
-#!/usr/bin/nodejs
-
 'use strict'
 
-const express = require('express');
-const multer = require('multer');
-const exec = require('child_process').exec;
-const fs = require('fs');
-
-const lys = require('./analysisjs/main.js');
-
-const app = express();
+/*
+ * Environment Config
+ */
+const PORT = 3000;
 
 const INPUT_FILE = 'in.tsv';
 const OUTPUT_FILE = 'out.json';
 const UPLOAD_DIR = './uploads/';
 const INPUT_PATH = UPLOAD_DIR + INPUT_FILE;
-const JAVA_DIR = './analysis/';
-const OUTPUT_PATH = JAVA_DIR + OUTPUT_FILE;
-const JAVA_FILE = 'analysis.jar';
-const JAVA_PATH = JAVA_DIR + JAVA_FILE;
-const JAVA_COMMAND = 'java -jar ' + JAVA_PATH + ' ' + INPUT_PATH + ' ' + OUTPUT_PATH;
+const ANALYSIS_PATH = './analysis/main.js';
+
+// external deps
+const express = require('express');
+const multer = require('multer');
+const fs = require('fs');
+
+// internal deps
+const lys = require(ANALYSIS_PATH);
+
+
+/*
+ * Middleware Initialization
+ */
+ 
+const app = express();
  
 const storage = multer.diskStorage({
 	destination: function(req, file, cb) {
@@ -52,7 +57,10 @@ app.post('/uploads', function(req, res) {
 	})
 })
 		
-
-app.listen(3000, function() {
+/*
+ * Run
+ */
+ 
+app.listen(PORT, function() {
 	console.log('App listening on port 3000.')
 });
