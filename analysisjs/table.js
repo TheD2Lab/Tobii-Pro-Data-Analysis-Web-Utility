@@ -24,8 +24,8 @@ var Table = function(dd) {
 	}
 	
 	this.getCol = function(c) {
-		return records.map(function(row) {
-			return this.row[c];
+		return this.records.map(function(row) {
+			return row[c];
 		})
 	}
 	

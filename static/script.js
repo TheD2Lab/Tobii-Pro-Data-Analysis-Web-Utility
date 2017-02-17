@@ -17,7 +17,7 @@ const COUNT = "Count";
 const SACCADE_LENGTH = 'SaccadeLength';
 const POINTS = "Points";
 const SAMPLES = 'Samples';
-const STATS = 'DescriptiveStats';
+const STATS = 'stats';
 const PUPIL = "Pupil";
 const PUPIL_LEFT = "PupilLeft";
 const PUPIL_RIGHT = "PupilRight";
@@ -47,7 +47,6 @@ const GRAPH_LABEL_FONT_SIZE = 12;
 
 var decimalFormat = d3.format('.2f');
 
-
 // event handlers
 $('#uploadForm').submit(function(e) {
 
@@ -59,7 +58,7 @@ $('#uploadForm').submit(function(e) {
 			url: '/uploads',
 			type: 'POST',
 			success: function(data) {
-				showResults(data);
+				handleResponse(data);
 			},
 			data: new FormData($(this)[0]),
 			processData: false,
@@ -98,15 +97,15 @@ $("#eventSlider").slider({
 
 
 // response parsing
-function showResults(response) {
-
-	console.log(response);
+function handleResponse(data) {
+	
+	Responder.parse(data);
 	
 	var outputContainer = $('#ocontainer');
 	
 	outputContainer.show();
 		
-	parseResponse(response);
+	displayResults(Responder);
 	
 	$('html, body').animate( {
 			scrollTop: outputContainer.offset().top
@@ -114,95 +113,77 @@ function showResults(response) {
 }
 		
 
-function parseResponse(res) {
+function displayResults(responder) {
 
-	appendMeasuresOfSearch(res);
+	appendMeasuresOfSearch(responder);
 	
-	appendMeasuresOfProcessing(res);
+	appendMeasuresOfProcessing(responder);
 	
-	appendMeasuresOfCognition(res);
+	appendMeasuresOfCognition(responder);
 	
-	appendRawMeasures(res);
+	appendRawMeasures(responder);
 	
 }
 
 
 function appendMeasuresOfSearch(res) {
-
-	var fixCount = res[FIXATION][COUNT];
-	var sacCount = res[SACCADE][COUNT];
-	var avgSacLength = res[SACCADE][SACCADE_LENGTH][STATS][MEAN];
-	var scanLength = res[SACCADE][SACCADE_LENGTH][STATS][SUM];
-	var hullArea = res[FIXATION][HULL][AREA];
-	var hullPoints = res[FIXATION][HULL][POINTS];
-	var fixationPoints = res[FIXATION][POINTS];
-	var saccadeLengths = res[SACCADE][SACCADE_LENGTH][SAMPLES];
 	
-	var tableData = [
-		{ 
-			'Measure' : 'Fixation Count', 
-			'Units' : '#',
-			'Value' : fixCount, 
-			'Plot' : null 
-		},
-		{ 
-			'Measure' : 'Saccade Count', 
-			'Units' : '#',
-			'Value' : sacCount, 
-			'Plot' : null 
-		},
-		{ 
-			'Measure' : 'Average Saccade Length', 
-			'Units' : res[SACCADE][SACCADE_LENGTH][UNITS],
-			'Value' : avgSacLength, 
-			'Plot' : function() { showHistogram('avgSacLengthGraph', 'searchGraph', saccadeLengths) } 
-		},
-		{ 
-			'Measure' : 'Scanpath Length', 
-			'Units' : res[SACCADE][SACCADE_LENGTH][UNITS],
-			'Value' : scanLength, 
-			'Plot' : function() { showCoordinatePlot('hullGraph', 'searchGraph', fixationPoints, hullPoints) } 
-		},
-		{ 
-			'Measure' : 'Convex Hull Area', 
-			'Units' : 'px<sup>2</sup>',
-			'Value' : hullArea, 
-			'Plot' : function() { showCoordinatePlot('hullGraph', 'searchGraph', fixationPoints, hullPoints) } 
-		}
-	];
+	var histGrapher = function(title, samples) {
+		return function() { showHistogram('searchGraph', title, samples) };
+	}
+	
+	var tableData = [];
+	
+	var fixCountRow = getMeasureRowData('Fixation Duration', 'Fixation Count', 'count', null, res);
+	tableData.push(fixCountRow);
+	
+	var sacCountRow = getMeasureRowData('Saccade Duration', 'Saccade Count', 'count', null, res);
+	tableData.push(sacCountRow);
+	
+	var sacLengthRow = getMeasureRowData('Saccade Length', 'Average Scanpath Length', 'mean', histGrapher, res);
+	tableData.push(sacLengthRow);
+	
+	var points = res.getProp('points', 'Fixation Hull');
+	var hullPoints = res.getProp('hullPoints', 'Fixation Hull');
+	
+	var scanpathRow = getMeasureRowData('Saccade Length', 'Total Scanpath Length', 'sum', null, res);
+	scanpathRow.graph = function() { showCoordinatePlot('searchGraph', points, hullPoints) };
+	tableData.push(scanpathRow);
+	
+	tableData.push(
+		measureRowData(
+			'Fixation Convex Hull Area',
+			'px<sup>2</sup>',
+			res.getProp('area', 'Fixation Hull'),
+			function() { showCoordinatePlot('searchGraph', points, hullPoints) }
+		)
+	)
 	
 	appendMeasureTable('search', d3.select('#sBox .measText'), tableData);
 }
 
-
 function appendMeasuresOfProcessing(res) {
 
-	var avgFixDur = res[FIXATION][FIXATION + DURATION][STATS][MEAN];
-	var fixDurSamples = res[FIXATION][FIXATION + DURATION][SAMPLES];
-	var avgSacDur = res[SACCADE][SACCADE + DURATION][STATS][MEAN];
-	var sacDurSamples = res[SACCADE][SACCADE + DURATION][SAMPLES];
-	var fixToSacDurRatio = avgFixDur / avgSacDur;
+	var histGrapher = function(title, samples) {
+		return function() { showHistogram('procGraph', title, samples) };
+	}
 	
-	var tableData = [
-		{ 
-			'Measure': 'Average Fixation Duration', 
-			'Units' : res[FIXATION][FIXATION + DURATION][UNITS],
-			'Value': avgFixDur, 
-			'Plot': function() { showHistogram('avgFixDurGraph', 'procGraph', fixDurSamples) }
-		},
-		{
-			'Measure': 'Average Saccade Duration',
-			'Units' : res[SACCADE][SACCADE + DURATION][UNITS],
-			'Value': avgSacDur,
-			'Plot': function() { showHistogram('avgSacDurGraph', 'procGraph', sacDurSamples) }
-		},
-		{
-			'Measure': 'Fixation to Saccade Duration Ratio',
-			'Units' : '#',
-			'Value': fixToSacDurRatio,
-			'Plot': null
-		}
-	]
+	var tableData = [];
+	
+	tableData.push(getMeasureRowData('Fixation Duration', 'Average Fixation Duration', 'mean', histGrapher, res));
+	
+	tableData.push(getMeasureRowData('Saccade Duration', 'Average Saccade Duration', 'mean', histGrapher, res));
+	
+	var avgFixDur = res.getStat('mean', 'Fixation Duration');
+	var avgSacDur = res.getStat('mean', 'Saccade Duration');
+	tableData.push(
+		measureRowData(
+			'Fixation to Saccade Duration Ratio',
+			'#',
+		 	avgFixDur / avgSacDur,
+		 	null
+		)
+	)
 	
 	appendMeasureTable('processing', d3.select('#pBox .measText'), tableData);
 }
@@ -210,56 +191,52 @@ function appendMeasuresOfProcessing(res) {
 
 function appendMeasuresOfCognition(res) {
 	
-	var avgPupilL = res[PUPIL][PUPIL_LEFT][STATS][MEAN];
-	var pupilLSamples = res[PUPIL][PUPIL_LEFT][SAMPLES];
+	var histGrapher = function(title, samples) {
+		return function() { showHistogram('cogGraph', title, samples) };
+	}
 	
-	var avgPupilR = res[PUPIL][PUPIL_RIGHT][STATS][MEAN];
-	var pupilRSamples = res[PUPIL][PUPIL_RIGHT][SAMPLES];
+	var tableData = [];
 	
-	var absAngleSum = res[ANGLE][ABS_ANGLE][STATS][SUM];
-	var absAngleSamples = res[ANGLE][ABS_ANGLE][SAMPLES];
-	
-	var relAngleSum = res[ANGLE][REL_ANGLE][STATS][SUM];
-	var relAngleSamples = res[ANGLE][REL_ANGLE][SAMPLES];
-	
-	var tableData = [
-		{ 
-			'Measure': 'Average Pupil Left', 
-			'Units' : res[PUPIL][PUPIL_LEFT][UNITS],
-			'Value': avgPupilL, 
-			'Plot': function() { showHistogram('avgPupilLGraph', 'cogGraph', pupilLSamples) }
-		},
-		{ 
-			'Measure': 'Average Pupil Right', 
-			'Units' : res[PUPIL][PUPIL_RIGHT][UNITS],
-			'Value': avgPupilR, 
-			'Plot': function() { showHistogram('avgPupilRGraph', 'cogGraph', pupilRSamples) }
-		},
-		{ 
-			'Measure': 'Sum of Absolute Angles', 
-			'Units' : res[ANGLE][ABS_ANGLE][UNITS],		
-			'Value': absAngleSum, 
-			'Plot': function() { showHistogram('absAngleSumGraph', 'cogGraph', absAngleSamples) }
-		},
-		{ 
-			'Measure': 'Sum of Relative Angles', 
-			'Units' : res[ANGLE][REL_ANGLE][UNITS],			
-			'Value': relAngleSum, 
-			'Plot': function() { showHistogram('relAngleSumGraph', 'cogGraph', relAngleSamples) }
-		}
-	];
-	
+	tableData.push(getMeasureRowData('Left Pupil', 'Average Left Pupil Width', 'mean', histGrapher, res));
+	tableData.push(getMeasureRowData('Right Pupil', 'Average Right Pupil Width', 'mean', histGrapher, res));
+	tableData.push(getMeasureRowData('Relative Angle', 'Sum of Relative Angles', 'sum', histGrapher, res));	
+	tableData.push(getMeasureRowData('Absolute Angle', 'Sum of Absolute Angles', 'sum', histGrapher, res));
+
 	appendMeasureTable('cognition', d3.select('#cBox .measText'), tableData);
 }
 
 
-function appendRawMeasures(res) {
+function getMeasureRowData(measure, name, metric, grapher, responder) {
+	
+	var units = metric == 'count' ? '#' : responder.getUnits(measure);
+	
+	var stat = responder.getStat(metric, measure);
+	var value = stat ? stat : responder.getProp(metric, measure);
+	
+	var graph = grapher ? grapher(name, responder.getSamples(measure)) : null;
+	
+	return measureRowData(name, units, value, graph);
+}
 
-	appendKeyValueTable(getMetadata(res), 'Metadata');
+function measureRowData(m, u, v, g) {	
+		return {
+			'measure' : m,
+			'units' : u,
+			'value' : v,
+			'graph' : g
+	}
+}
+
+
+
+
+function appendRawMeasures(responder) {
+
+	appendKeyValueTable(responder.meta, 'Metadata');
 	
-	appendKeyValueTable(getCounts(res), 'Counts');
+// 	appendKeyValueTable(getCounts(res), 'Counts'); TODO
 	
-	appendStats(getStats(res));
+	appendStats(getStats(responder));
 }
 
 
@@ -306,18 +283,15 @@ function appendKeyValueTable(data, name) {
 }
 
 
-function getStats(res) {
+function getStats(responder) {
+
+	var measures = responder.getMeasures();
 
 	var stats = [];
 	
-	for (var k1 in res) {
-		var obj = res[k1];
-		for (var k2 in obj) {
-			var subObj = obj[k2];
-			if (subObj.hasOwnProperty(STATS)) {
-				subObj['name'] = k2;
-				stats.push(subObj);
-			}
+	for (var m in measures) {
+		if (m.hasOwnProperty(STATS)) {
+			stats.push(m);
 		}
 	}
 	
@@ -466,17 +440,13 @@ function appendMeasureTable(name, elem, data) {
 
 
 // histogram graph
-function showHistogram(id, group, data) {
-
-	$('.' + group).hide();
-	$('#' + id).show();
-
+function showHistogram(graphId, title, data) {
 	data = Object.values(data).map(function(d) { return parseFloat(d); });
-	appendHistogram(d3.select('#' + id), data);
+	appendHistogram(title, d3.select('#' + graphId), data);
 }
 
 
-function appendHistogram(svg, data) {
+function appendHistogram(graphTitle, svg, data) {
 
 	svg.selectAll('*').remove();
 		
@@ -527,7 +497,7 @@ function appendHistogram(svg, data) {
 	
 	svg.attr('width', width).attr('height', height);
 
-	appendTitle(svg, margin, dimensions, "Saccade Length Distribution")
+	appendTitle(svg, margin, dimensions, graphTitle)
 	appendYAxis(svg, yaxis, margin, dimensions, 'Count');
 	appendXAxis(svg, xaxis, margin, dimensions, 'Length (px)');
 	
@@ -552,11 +522,7 @@ function appendHistogram(svg, data) {
 
 
 // coordinate plot graph
-function showCoordinatePlot(id, group, points1, points2) {
-
-	$('.' + group).hide();
-	$('#' + id).show();
-
+function showCoordinatePlot(id, points1, points2) {
 	appendCoordinatePlot(d3.select('#' + id), points1, points2);
 }
 

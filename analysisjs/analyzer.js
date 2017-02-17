@@ -1,15 +1,14 @@
 'use strict'
 
-var Analyzer = function(n, f, t) {
+var Analyzer = function(n, u, f, t) {
 
 	this.name = n;
+	this.units = u;
 	var filter = f;
 	var transform = t;
-	
 	function stats(arr) {
 	
-		var stats = {};
-		
+		var stats = {};		
 		
 		stats['mean'] = arithmeticMean(arr);
 		stats['median'] = median(arr);
@@ -19,12 +18,14 @@ var Analyzer = function(n, f, t) {
 		stats['sum'] = sum(arr);
 		stats['min'] = min(arr);
 		stats['max'] = max(arr);
+		stats['count'] = arr.length;
 		
 		return stats;
 	}
 	
 	this.analyze = function(table) {
-		return stats(transform(filter(table)));
+		this.samples = transform(filter(table));
+		return stats(this.samples);
 	}
 	
 	/*

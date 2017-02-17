@@ -7,6 +7,8 @@ const multer = require('multer');
 const exec = require('child_process').exec;
 const fs = require('fs');
 
+const lys = require('./analysisjs/main.js');
+
 const app = express();
 
 const INPUT_FILE = 'in.tsv';
@@ -38,28 +40,18 @@ const upload = multer({ storage: storage }).single('file')
 app.use('/', express.static('static'))
 
 app.post('/uploads', function(req, res) {
-	console.log(req);
 	upload(req, res, function(err) {
 		if (err) {
 			res.status(err.status).send('Upload Failed');
 		}
 		else {
-			exec(JAVA_COMMAND, function(error, stdout, stderr) {
-				res.setHeader('Content-Type', 'application/json');
-				res.sendFile(OUTPUT_PATH, { root: './'}, function(err) {
-					if (err) {
-						res.status(err.status).send('Response Json not found.');
-					}
-					else {
-						fs.unlink(INPUT_PATH);
-						fs.unlink(OUTPUT_PATH);
-					}
-				});	
-			});
+			var csv = fs.readFileSync(INPUT_PATH);
+			res.send(lys(csv));
+			fs.unlink(INPUT_PATH);
 		}
-	});
-});
-
+	})
+})
+		
 
 app.listen(3000, function() {
 	console.log('App listening on port 3000.')

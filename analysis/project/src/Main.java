@@ -52,15 +52,17 @@ public class Main {
 	
 	public static void main(String args[]) throws IOException{
 		
+		long start = TimeUtilities.getCurrentTime();
+		
 		File f = new File(args[INPUT_PATH_INDEX]);
 		TobiiExport export = new TobiiExport(f);
 		
-		long start = TimeUtilities.getCurrentTime();
 		Map<String, Object> analysisMap = analyze(export);
-		long stop = TimeUtilities.getCurrentTime();
-		System.out.printf("Analysis runtime duration: %s\n", TimeUtilities.parseDuration(stop - start));
 		
 		JsonUtilities.write(analysisMap, args[OUTPUT_PATH_INDEX]);
+		
+		long stop = TimeUtilities.getCurrentTime();
+		System.out.printf("Analysis runtime duration: %s\n", TimeUtilities.parseDuration(stop - start));
 	}
 	
 	
