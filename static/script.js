@@ -252,7 +252,7 @@ function getCounts(res) {
 function appendKeyValueTable(data, name) {
 
 	data = Object.keys(data).map(function(k) {
-		return [data[k]];
+		return [k, data[k]];
 	});
 	
 	var headings = ['Measure', 'Value'];
