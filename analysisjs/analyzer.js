@@ -24,8 +24,8 @@ var Analyzer = function(n, u, f, t) {
 	}
 	
 	this.analyze = function(table) {
-		this.samples = transform(filter(table));
-		return stats(this.samples);
+		this.samples = transform(filter(table)).filter(function(s) { return s.t && s.v; });
+		return stats(this.samples.map(function(s) { return s.v; }));
 	}
 	
 	/*

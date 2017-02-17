@@ -51,8 +51,9 @@ module.exports = function(tsv) {
 
 	function values(i) {
 		return function(table) {
+			var timeCol = table.index('EyeTrackerTimestamp');
 			return table.records.map(function(row) {
-				return parseFloat(row[i]);
+				return { t: row[timeCol], v: parseFloat(row[i]) };
 			})
 		}
 	}
@@ -63,9 +64,9 @@ module.exports = function(tsv) {
 			return dist;
 		}
 		else {
-			var p1 = arr[0];
-			var p2 = arr[1];
-			dist.push(distance(p1, p2));
+			var p1 = arr[0].p;
+			var p2 = arr[1].p;
+			dist.push({ t: arr[0].t, v: distance(p1, p2) });
 			return pointDistances(arr.slice(1), dist);
 		}
 	}
@@ -73,13 +74,14 @@ module.exports = function(tsv) {
 
 	function extractPoints(table) {
 	
+		var tidx = table.index('EyeTrackerTimestamp');
 		var xidx = table.index('GazePointX (ADCSpx)');
 		var yidx = table.index('GazePointY (ADCSpx)');
-
+		
 		return table.records.filter(function(r) {
 				return r[xidx] !== '' && r[yidx] !== '';
 			}).map(function(r) {
-			return { x: parseInt(r[xidx]), y: parseInt(r[yidx]) };
+			return { t: r[tidx], p: { x: parseInt(r[xidx]), y: parseInt(r[yidx]) } };
 		})
 	}
 

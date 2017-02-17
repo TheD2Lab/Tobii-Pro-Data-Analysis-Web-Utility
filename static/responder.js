@@ -11,6 +11,9 @@ var Responder = (function() {
  	measures = response['data']['measures'];
  }
  
+ responder.getMeta = function() {
+ 	return meta;
+ }
  responder.getMeasure = function(m) {
  	return measures[m];
  }

@@ -34,7 +34,7 @@ const ALL_STATS = [
 	'mean', 
 	'median', 
 	'mode', 
-	'standard deviation', 
+	'stddev', 
 	'variance', 
 	'sum', 
 	'min',
@@ -162,6 +162,7 @@ function appendMeasuresOfSearch(res) {
 	appendMeasureTable('search', d3.select('#sBox .measText'), tableData);
 }
 
+
 function appendMeasuresOfProcessing(res) {
 
 	var histGrapher = function(title, samples) {
@@ -218,6 +219,7 @@ function getMeasureRowData(measure, name, metric, grapher, responder) {
 	return measureRowData(name, units, value, graph);
 }
 
+
 function measureRowData(m, u, v, g) {	
 		return {
 			'measure' : m,
@@ -228,11 +230,9 @@ function measureRowData(m, u, v, g) {
 }
 
 
-
-
 function appendRawMeasures(responder) {
 
-	appendKeyValueTable(responder.meta, 'Metadata');
+	appendKeyValueTable(responder.getMeta(), 'Metadata');
 	
 // 	appendKeyValueTable(getCounts(res), 'Counts'); TODO
 	
@@ -241,13 +241,6 @@ function appendRawMeasures(responder) {
 
 
 // result box building
-function getMetadata(res) {
-	var meta = res[META];
-	meta['Validity'] = decimalFormat(meta['Validity']) + '%';
-	return meta;
-}
-
-
 function getCounts(res) {
 	var counts = {};
 	counts[SACCADE] = res[SACCADE][COUNT];
@@ -289,12 +282,15 @@ function getStats(responder) {
 
 	var stats = [];
 	
-	for (var m in measures) {
-		if (m.hasOwnProperty(STATS)) {
+	for (var name in measures) {
+		var m = measures[name];
+		if (m.hasOwnProperty('stats')) {
+			m['name'] = name;
 			stats.push(m);
 		}
 	}
 	
+	console.log(stats);
 	return stats;
 }
 
@@ -319,7 +315,7 @@ function appendStats(stats) {
 			.append('tr')
 			.selectAll('td')
 			.data(function(d, i) { 
-				var stats = d[STATS];
+				var stats = d['stats'];
 				var data = [];
 				data[0] = { 'name': d['name'] };
 				data[1] = { 'units' : formatUnits(d['units']) };
@@ -328,7 +324,7 @@ function appendStats(stats) {
 					data.push({ [s] : stats[ALL_STATS[i]] });
 				}
 				var n = formatCell(d['name']);
-				data.push({ 'Plot' : function() { appendLine(n, n + '( ' + d['units'] + ')', d['Samples']); } });
+				data.push({ 'Plot' : function() { appendLine(n, n + '( ' + d['units'] + ')', d['samples']); } });
 				return data;
 			})
 			.enter()
@@ -341,6 +337,7 @@ function appendStats(stats) {
 				})
 				.html(function(d, i) { 
 					var key = Object.keys(d)[0];
+					console.log(key);
 					if (key == 'Plot') {
 						return '';
 					}
@@ -441,7 +438,7 @@ function appendMeasureTable(name, elem, data) {
 
 // histogram graph
 function showHistogram(graphId, title, data) {
-	data = Object.values(data).map(function(d) { return parseFloat(d); });
+	data = data.map(function(s) { return s.v; });
 	appendHistogram(title, d3.select('#' + graphId), data);
 }
 
@@ -729,7 +726,7 @@ function appendLine(metric, yAxisTitle, data) {
 	var graphWidth = width - margin.left - margin.right;
 	
 	// scales and generators
-	var times = Object.keys(data).map(function(t) { return parseInt(t); });
+	var times = data.map(function(s) { return +s.t; });
 	var timeExtent = d3.extent(times);
 	var minTime = timeExtent[0];
 	var adjustedTimes = times.map(function(t) { return (t - minTime) / 1000000; });
@@ -738,7 +735,7 @@ function appendLine(metric, yAxisTitle, data) {
 		.domain(d3.extent(adjustedTimes))
 		.rangeRound([0, graphWidth]);
 
-	var values = Object.values(data).map(function(t) { return parseFloat(t); })
+	var values = data.map(function(s) { return s.v; })
 	var valueExtent = d3.extent(values);
 	
 	var y = d3.scaleLinear()
@@ -775,8 +772,8 @@ function appendLine(metric, yAxisTitle, data) {
 		.y(function(d) { return y(d[1]); })
 		.curve(d3.curveCatmullRom);
 		
-	var points = Object.entries(data).map(function(d) {
-		return [ parseInt(d[0]), parseFloat(d[1]) ];
+	var points = data.map(function(d) {
+		return [ parseInt(d.t), d.v ];
 	}).sort(function(a,b) {
 		return a[0] - b[0];
 	});
