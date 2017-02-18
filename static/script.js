@@ -530,6 +530,8 @@ function showCoordinatePlot(id, points1, points2) {
 
 function appendCoordinatePlot(svg, points, hull) {
 
+	points = points.map(function(p) { return p.p; });
+	
 	svg.selectAll('*').remove();
 	
 	// sizing

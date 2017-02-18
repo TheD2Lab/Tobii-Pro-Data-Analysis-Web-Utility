@@ -105,7 +105,8 @@ module.exports = function(tsv) {
 	
 		var points = extractPoints(table);
 	
-		var hullPoints = ch(points.map(function(p) { return [ p.x, p.y ]; }), Number.POSITIVE_INFINITY);
+		var hullPoints = ch(points.map(function(p) { return [ p.p.x, p.p.y ]; }), Number.POSITIVE_INFINITY);
+		console.log(hullPoints);
 		var hullArea = polygonArea(hullPoints);
 	
 	
